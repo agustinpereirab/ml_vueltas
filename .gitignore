@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.venv/
+.env
+
+# La tabla del modelo no se sube a un repositorio sin decidirlo antes:
+# no es publica (ver datos/DICCIONARIO.md, "Limites").
+datos/*.csv

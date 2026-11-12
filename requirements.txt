@@ -1,0 +1,11 @@
+# Modelado (modelo/). Probado con Python 3.14.4:
+#   py -m venv .venv
+#   .venv/Scripts/python -m pip install -r requirements.txt
+# La exportacion (exportacion/) corre solo dentro de la empresa y usa ademas
+# duckdb y psycopg.
+numpy==2.5.4
+pandas==3.1.1
+scikit-learn==1.9.1
+scipy==1.18.1
+lightgbm==4.7.0
+joblib==1.6.0
