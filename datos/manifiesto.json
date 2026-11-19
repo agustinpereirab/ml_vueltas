@@ -1,0 +1,83 @@
+{
+  "archivo": "tabla_modelo.csv",
+  "armado": "2026-11-11T18:48:44",
+  "foto_tomada": "2026-11-11T13:52:14",
+  "ultima_compra_en_la_foto": "2026-11-09",
+  "cohortes": [
+    "2023-01-01",
+    "2025-08-31"
+  ],
+  "filas": 37398,
+  "columnas": 40,
+  "sha256": "77b71c49b21dcf1ba5393f9b069cde6c2c9e0fcb9bbec7ddef523f65328df2f5",
+  "por_bloque": {
+    "validacion": {
+      "clientes": 13595,
+      "vuelven": 2780
+    },
+    "entrenamiento": {
+      "clientes": 13655,
+      "vuelven": 2985
+    },
+    "prueba": {
+      "clientes": 10148,
+      "vuelven": 2109
+    }
+  },
+  "anonimato": {
+    "k_conocido_del_viaje": 5,
+    "columnas_k_1": [
+      "cohorte",
+      "region_destino",
+      "pais_destino",
+      "pasajeros",
+      "noches",
+      "tipo_producto",
+      "lleva_hotel"
+    ],
+    "k_con_detalle": 3,
+    "columnas_k_2": [
+      "cohorte",
+      "region_destino",
+      "pais_destino",
+      "pasajeros",
+      "noches",
+      "tipo_producto",
+      "lleva_hotel",
+      "aerolinea",
+      "regimen_hotel",
+      "destinos"
+    ],
+    "minimo_por_categoria": 20,
+    "nota": "los grupos se midieron ademas con el anio de viaje, que no se publica"
+  },
+  "armado_informe": {
+    "filas_entrada": 37429,
+    "cortes_60_20_20": [
+      "2024-09-01",
+      "2025-03-01"
+    ],
+    "vendedores_con_codigo": 144,
+    "categorias_raras_agrupadas": 0,
+    "supresiones_cuasi_1": {
+      "noches": 4605,
+      "pais_destino": 2856,
+      "pasajeros": 1427,
+      "tipo_producto": 308,
+      "region_destino": 182
+    },
+    "supresiones_cuasi_2": {
+      "aerolinea": 8901,
+      "regimen_hotel": 4786,
+      "destinos": 3331,
+      "prestadas": 1087,
+      "grupo_completo": 1620
+    },
+    "filas_retiradas": 31,
+    "filas_salida": 37398,
+    "grupos_chicos_al_final": {
+      "cuasi_1": 0,
+      "cuasi_2": 0
+    }
+  }
+}

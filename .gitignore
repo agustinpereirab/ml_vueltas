@@ -1,0 +1,22 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+
+# Datos: no se versionan. La tabla del modelo se arma con exportacion/ y no es
+# publica (ver datos/DICCIONARIO.md, "Limites"). Tampoco predicciones por cliente.
+*.csv
+*.parquet
+*.xlsx
+*.json
+!datos/manifiesto.json
+!modelo/resultados/*.json
+
+# Modelos entrenados y archivos de trabajo de CatBoost
+catboost_info/
+*.cbm
+*.pkl
+*.joblib
+
+scratch*

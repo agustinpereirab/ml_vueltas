@@ -1,0 +1,242 @@
+# Cambios respecto de la propuesta
+
+Este registro compara la propuesta presentada en clase ([`presentacion_propuesta.html`](../presentacion_propuesta.html), Entrega 1) con lo que efectivamente se hizo. Cada entrada dice qué decía la propuesta, qué se hizo, qué medición lo motivó y qué implica para la defensa.
+
+**De dónde salen las cifras.** Salvo que se indique otra fuente, salen de la tabla del modelo ([`datos/tabla_modelo.csv`](../datos/DICCIONARIO.md)). La tabla se armó el 2026-11-11 sobre una foto de la base de ese mismo día, con compras hasta el 2026-11-09. Las cifras que miran la etiqueta usan solo el bloque de entrenamiento (cohorte 2023); la excepción son los conteos por bloque. Las cifras marcadas como *preliminares* son de una copia anterior de la base (septiembre de 2026), con un universo aproximado; sirvieron para decidir, no para citar como resultado.
+
+## Resumen
+
+| # | Tema | Propuesta | Ahora |
+|---|---|---|---|
+| 1 | Cohortes | primera compra entre 2021 y 2025 | primera compra entre enero de 2023 y agosto de 2025 |
+| 2 | Partición | entrenar con 2021–2023, evaluar en 2024 | entrenar con 2023, validar con 2024, probar con enero–agosto de 2025 |
+| 3 | Prevalencia | vuelven entre 10 y 20 de cada 100 | vuelven 21,9 de cada 100 |
+| 4 | Etiqueta | otra ficha en 12 meses, con viaje a más de 7 días | igual, con tres precisiones |
+| 5 | Universo | sin quienes entraron con una compra corporativa | igual, y además sin menores de 18 y sin 31 clientes retirados por anonimato |
+| 6 | Variables | la lista de la diapositiva 6 | sin mes de compra ni de viaje, sin ciudad ni categoría de hotel; montos redondeados; utilidad como índice; variables nuevas |
+| 7 | Anonimización | ids reemplazados por códigos, sin datos de contacto | además bandas, redondeo, grupos de al menos 5 y 3 clientes, y supresión |
+| 8 | Ficha del día 0 | «reconstruida con lo que se sabía ese día» | el registro usado en la primera compra, tal como está hoy |
+| 9 | Regla simple | primer viaje de más de 10 mil ⇒ vuelve | se mantiene y se suma «viajó antes como acompañante ⇒ vuelve» |
+| 10 | Simulación de campaña | sobre la cohorte 2024 | sobre el bloque de prueba (enero a agosto de 2025) |
+
+El estado de las tres hipótesis está al final.
+
+---
+
+## 1. Cohortes: de 2021–2025 a enero de 2023 – agosto de 2025
+
+**Propuesta.** Primera compra facturada entre 2021 y 2025. La cohorte 2021 (salida del COVID) se analizaba aparte y 2025 se etiquetaba hasta la fecha de corte.
+
+**Ahora.** Primera compra entre el 2023-01-01 y el 2025-08-31. Son 37.398 clientes.
+
+**Por qué.**
+
+- **Jetmar no tiene detalle de servicios antes de enero de 2023.**
+  - En la base, el tipo de producto figura como `sin_detalle` en el 100% de las fichas de titular compradas entre 2019 y 2022, y en menos del 2% desde 2023.
+  - La tabla de servicios (aerolínea, hotel, régimen) empieza en 2023.
+  - El destino falta en el 34% al 55% de las fichas anteriores a 2023, y en el 10% al 12% de las posteriores.
+  - Las otras cinco marcas del grupo sí tienen detalle desde 2019, así que es un hueco de carga de Jetmar.
+- **El corte en agosto de 2025 deja margen para la facturación.**
+  - La ventana de 12 meses del último cliente se cierra en agosto de 2026, unos dos meses antes de la foto.
+  - La etiqueta solo cuenta fichas facturadas, y facturar demora. En la copia de septiembre, el 31,2% de las fichas abiertas en el último mes seguía en proceso, contra el 0,6% de las de 2024 *(preliminar)*.
+
+**Implica.**
+
+- La discusión sobre 2021 y el COVID deja de aplicar.
+- Todas las cohortes del modelo tienen las mismas variables disponibles.
+- Para usar 2021–2022 habría que conseguir el detalle de servicios de esos años en el back-office. No se sabe si existe.
+
+## 2. Partición: tres bloques por año
+
+**Propuesta.** Partición por tiempo: entrenar con 2021–2023 (2021 aparte) y evaluar en 2024. No había bloque de validación.
+
+**Ahora.** Tres bloques por año calendario, en la columna `bloque`:
+
+| Bloque | Primera compra | Clientes |
+|---|---|---|
+| Entrenamiento | 2023 | 13.655 |
+| Validación | 2024 | 13.595 |
+| Prueba | enero a agosto de 2025 | 10.148 |
+
+La tabla trae además `bloque_60_20_20`, que corta en septiembre de 2024 y en marzo de 2025 (23.017 / 6.551 / 7.830 clientes).
+
+**Por qué.**
+
+- Hace falta un bloque para elegir hiperparámetros y comparar escalones sin tocar la prueba.
+- Con años enteros, la etiqueta del último cliente de entrenamiento se cierra el 2024-12-31, antes de que compre el primero de prueba. El modelo evaluado podría haber existido el 1 de enero de 2025.
+- Con el 60-20-20 eso no se cumple: las etiquetas de entrenamiento se cierran durante el período de prueba. Se dejó la columna por si la cátedra pide esa proporción.
+
+**Implica.**
+
+- El bloque de prueba se usa una sola vez, al final.
+- Si el modelo final se reentrena con 2023 + 2024, sus etiquetas se cierran durante 2025 y se superponen con la prueba. Ese resultado se reporta como secundario.
+- La prueba no tiene clientes de septiembre a diciembre. En 2023–2024 esos meses son el 30,8% de los clientes nuevos (8.391 de 27.277) y vuelven el 19,8%, contra el 21,8% de los de enero a agosto.
+
+## 3. Prevalencia: 21,9%, no «entre 10 y 20»
+
+**Propuesta.** «De cada 100 clientes nuevos, vuelven entre 10 y 20» (diapositiva 2). «Un modelo que dice "nadie vuelve" acierta el 85%» (diapositiva 11).
+
+**Ahora.** Vuelve el 21,9% del entrenamiento (2.985 de 13.655), el 20,4% de la validación y el 20,8% de la prueba. Predecir que nadie vuelve acierta el 78,1%.
+
+**Por qué.** La cifra de la propuesta era una estimación previa a fijar el universo y la etiqueta.
+
+**Implica.** Cambian los números de las diapositivas 2, 11 y 13. El argumento para no usar accuracy se mantiene.
+
+## 4. Etiqueta: la misma definición, con tres precisiones
+
+**Propuesta.** `vuelve_12` = 1 si el cliente tiene otra ficha dentro de los 12 meses, con fecha de viaje a más de 7 días del primer viaje; solo para clientes con 12 meses observados.
+
+**Ahora.** Igual, con estas precisiones:
+
+1. **Vuelve también quien vuelve como pasajero de otro cliente.** Se agregó la etiqueta alternativa `vuelve_12_comprando`, que solo cuenta las vueltas como titular. Vale 16,9% en entrenamiento, contra 21,9% de `vuelve_12`.
+2. **Solo cuentan fichas facturadas.** La base trae ahora también fichas en proceso. Contarlas cambiaría la etiqueta de 1, 10 y 29 clientes de las cohortes 2023, 2024 y 2025.
+3. **La primera compra se calcula sobre todo el historial desde 2019.** Quien ya compraba antes de 2023 no entra como nuevo. Si el día 0 compró más de una ficha, todas son la primera compra: venta y utilidad se suman, y el viaje se describe con la ficha de más pasajeros.
+
+## 5. Universo: también sin menores de edad
+
+**Propuesta.** «Fuera quienes entraron con una compra corporativa.»
+
+**Ahora.**
+
+| Paso | Clientes |
+|---|---|
+| Primera compra entre enero de 2023 y agosto de 2025 | 40.186 |
+| − entraron con una compra corporativa | 2.493 |
+| − menores de 18 el día 0 (con fecha de nacimiento cargada) | 264 |
+| = universo | 37.429 |
+| − retirados porque ni suprimiendo todo quedaban en un grupo de al menos 5 | 31 |
+| = tabla | 37.398 |
+
+**Definición de corporativo.** Alguna ficha del día 0 tiene la marca `es_corporativa`. En las fichas facturadas de Jetmar esa marca coincide con «pagó una empresa» en el 98,5% de los casos (51.238 de 52.033). Ya no marca los canjes de millas de Itaú Volar, que el análisis de cohortes tenía que corregir a mano.
+
+## 6. Variables
+
+| Propuesta (diapositiva 6) | En la tabla | Por qué cambió |
+|---|---|---|
+| venta y gasto por pasajero | `venta_usd`, `venta_por_pasajero_usd`, redondeados y con tope | el monto exacto junto al mes de compra dejaba único al 53% de los clientes *(preliminar)* |
+| productos | `tipo_producto`, `lleva_hotel`, `tiene_seguro`, `servicios` | — |
+| categoría y régimen del hotel | solo `regimen_hotel` | la «categoría» de la base es la de la habitación (estándar, superior…) y está cargada en 13.744 de 33.009 fichas con hotel desde 2023 |
+| aerolínea | `aerolinea`: 11 aerolíneas y «otra» | se suprimió en el 29% de las filas por anonimato (punto 7) |
+| quién pagó | `pagador`, `canje_millas` | — |
+| destino y región | `pais_destino` (14 países y «otro»), `region_destino`; sin ciudad | 283 de 428 ciudades tenían menos de 10 clientes *(preliminar)* |
+| cantidad de destinos | `destinos`: 1, 2, 3+ | — |
+| duración | `noches`, en 4 bandas | — |
+| anticipación | `anticipacion`, en 7 bandas | — |
+| **mes de compra y de viaje** | **no está** | ver abajo |
+| tipo de grupo | `pasajeros`: 1, 2, 3, 4, 5-9, 10+ | — |
+| viaja con clientes previos | `viaja_con_cliente_previo` y `viaja_con_alguien_con_historial` | se separó «ya había comprado» de «ya había viajado» |
+| viajó antes como acompañante | `fue_acompaniante_antes`, `viajes_previos_acompaniante` | — |
+| antigüedad del vendedor | `vendedor_antiguedad`, en 3 bandas | la base arranca en 2019: «4+» quiere decir «desde antes de 2020» |
+| cartera al momento de la venta | `vendedor_fichas_12m`, en 5 bandas | se aproxima con las fichas del vendedor en los 12 meses previos |
+
+**Por qué no están los meses.**
+
+- **Reidentifican.** Con mes de viaje, ciudad y cantidad de pasajeros, el 28,3% de los clientes quedaba en grupos de menos de 5 *(preliminar)*.
+- **No ordenaban.** Medidos solos, el AUC fue de 0,499 para el mes de compra y de 0,504 para el de viaje *(preliminar)*.
+- **Se perdió la estacionalidad fina.** La temporada del viaje queda en parte reflejada en `anticipacion` y `noches`.
+
+**Variables nuevas.**
+
+- `utilidad_indice`: la utilidad del día 0 dividida por una constante que no se publica.
+- `vendedor` (código) y `vendedor_es_persona`.
+- Los datos de contacto en dos versiones, `fu_*` y `d0_*`, más `fu_registros`, para la hipótesis 3 (punto 8).
+- `vuelve_12_comprando` (punto 4).
+
+**Quedaron afuera sin estar en la propuesta: edad, género y nacionalidad.** Medido sobre el universo definitivo, agregar edad (3 bandas) y género a cohorte, año y trimestre de viaje, país y pasajeros lleva los clientes en grupos de menos de 5 del 1,6% al 25,4%. La fecha de nacimiento queda solo como «está cargada o no».
+
+## 7. Anonimización
+
+**Propuesta.** «Exportación única y disociada»; ids de cliente y vendedor reemplazados por códigos; sin nombres, documentos, mails ni teléfonos (Ley 18.331).
+
+**Ahora.** Además de eso:
+
+- **Bandas y montos.** Bandas en todas las variables numéricas, montos redondeados y con tope, y utilidad como índice.
+- **Códigos al azar.** No son un hash del id. La tabla de correspondencia queda dentro de la empresa.
+- **Vendedores chicos agrupados.** Los vendedores con menos de 50 clientes van en `V-otros` (1.831 clientes).
+- **Grupos de al menos 5 clientes** en la combinación de lo que alguien de afuera puede saber del viaje de un conocido: cohorte, región, país, pasajeros, noches, tipo de producto y hotel.
+- **Grupos de al menos 3 clientes** sumando aerolínea, régimen del hotel y cantidad de destinos.
+- **Ninguna categoría con menos de 20 clientes.**
+
+El detalle está en [`datos/DICCIONARIO.md`](../datos/DICCIONARIO.md). La verificación ([`exportacion/03_verificar.py`](../exportacion/03_verificar.py)) la puede correr cualquiera que reciba la tabla.
+
+**Implica.**
+
+- **Para llegar a esos grupos se suprimieron valores:**
+  - aerolínea en el 29% de las filas;
+  - régimen en el 19,7%;
+  - cantidad de destinos en el 16%;
+  - noches en el 12,2%.
+- **`sin_dato` mezcla dos cosas:** «la base no lo trae» y «se suprimió». Se trata como una categoría más.
+- **Límite declarado.** Mirando todas las columnas juntas, el 93,6% de las filas es única: quien tenga la base de Jetmar puede volver a cruzarlas. La tabla no es pública.
+
+## 8. Ficha del día 0: el registro de la primera compra, tal como está hoy
+
+**Propuesta.** Entrenar dos veces: con las variables de la ficha única (`dim_persona`, que junta todos los registros del cliente) y con las mismas variables «reconstruidas con lo que se sabía el día 0». El ejemplo era la fecha de nacimiento: vuelve el 10,4% de quienes no la tienen, contra 16% a 20% de quienes sí.
+
+**Ahora.**
+
+- **`fu_tiene_*`:** el dato está cargado hoy en la ficha única o en cualquier registro de la persona.
+- **`d0_tiene_*`:** el dato está cargado en el registro de cliente que se usó en la primera compra.
+- **`fu_registros`:** cuántos registros junta hoy la ficha única. Solo existe en la versión con fuga.
+
+**Limitación.** El registro del día 0 se ve como está hoy. Si alguien completó el mail después sobre ese mismo registro, cuenta como cargado el día 0. La reconstrucción saca la fuga que viene de registros nuevos, pero no la que viene de editar el mismo registro. La base no guarda la fecha de cada dato.
+
+**Lo que se ve, en entrenamiento, cada variable sola.** La cifra de la propuesta sobre la fecha de nacimiento queda así: vuelve el 12,3% de quienes no la tienen hoy y el 22,8% de quienes sí.
+
+| Dato | Cargado el día 0 | Cargado después | No cargado |
+|---|---|---|---|
+| Mail | 30,1% (5.824) | 17,2% (2.191) | 15,2% (5.640) |
+| Teléfono | 27,2% (6.388) | 19,0% (1.767) | 16,6% (5.500) |
+| Fecha de nacimiento | 23,3% (11.643) | 15,6% (815) | 12,3% (1.197) |
+
+Según cuántos registros junta hoy la ficha única: vuelve el 18,8% con uno (6.213 clientes), el 21,8% con dos (3.742) y el 27,1% con tres o más (3.700).
+
+## 9. Regla simple: se suma una segunda
+
+**Propuesta.** El segundo escalón era una regla de negocio: «si el primer viaje supera los 10 mil dólares, vuelve».
+
+**Ahora.** Se mantiene, y se suma «si viajó antes como acompañante, vuelve».
+
+**Por qué.**
+
+- La regla de la propuesta separa poco: vuelve el 24,6% de quienes la cumplen (890 clientes) contra el 21,7% del resto.
+- La regla nueva separa 36,5% (2.043 clientes) contra 19,3%. Se eligió mirando solo el bloque de entrenamiento.
+
+**Implica.** La escalera tiene dos reglas, y cada modelo tiene que ganarle a la mejor de las dos. Para medir calibración, cada regla predice la tasa de vuelta de su grupo en entrenamiento.
+
+## 10. Simulación de campaña: sobre la prueba, con utilidad en índice
+
+**Propuesta.** «Ordenamos por probabilidad × utilidad esperada y simulamos la campaña sobre la cohorte 2024.»
+
+**Ahora.** La simulación final va sobre el bloque de prueba (enero a agosto de 2025), porque 2024 pasó a ser validación.
+
+La utilidad viene como índice. Multiplicar por una constante no cambia el orden, así que la priorización es la misma. Lo que cambia es la unidad: los resultados salen en índice. Para leerlos en dólares, alguien de la empresa los multiplica por la constante, que queda adentro.
+
+---
+
+## Estado de las hipótesis
+
+Hasta ahora es exploración: cada variable mirada sola, en entrenamiento. Se actualiza cuando esté la escalera de modelos.
+
+**H1 · La recompra se puede predecir por encima de la prevalencia y de una regla simple.** Pendiente de la escalera de modelos.
+
+**H2 · Pesan el destino regional, viajar con un cliente previo o haber sido acompañante, y el vendedor.**
+
+- **Destino regional:** como grupo (Argentina, Brasil, Chile y Paraguay) no separa: vuelve el 21,7%, contra el 21,4% de los otros destinos. Por país sí varía: Argentina 23,2%, Brasil 20,4%, Chile 18,1%.
+- **Compañía:** va en la dirección esperada.
+  - Quien viajó antes como acompañante vuelve el 36,5%, contra el 19,3%.
+  - Con tres viajes o más como acompañante, el 61,2%.
+  - Quien viaja con un cliente previo, el 26,5%, contra el 20,8%.
+- **Vendedor:** entre los 53 vendedores con 100 clientes o más en entrenamiento, el décimo de menor tasa vuelve 15,6% y el de mayor, 27,7%. No se publican resultados por vendedor.
+
+**H3 · Parte de la asociación entre «datos de contacto cargados» y volver es fuga.**
+
+- En los datos de contacto no se ve: quienes cargaron el dato después vuelven parecido a quienes no lo tienen (punto 8).
+- Si hay fuga, la cantidad de registros es la candidata: va de 18,8% a 27,1% y solo existe en la ficha única.
+- La escalera con las dos versiones lo va a medir.
+
+## Riesgos de la propuesta: dónde quedaron
+
+- **2025 sin 12 meses completos.** Resuelto con el corte en agosto de 2025 (punto 1).
+- **El id de cliente es una identidad resuelta hoy.** Sigue sin auditar: la resolución de identidad viene de la base y este proyecto no la controla.
+- **Propensión a volver no es el efecto de contactar.** Sin cambios: es una limitación declarada.
