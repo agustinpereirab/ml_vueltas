@@ -23,6 +23,7 @@ Este registro compara la propuesta presentada en clase ([`presentacion_propuesta
 | 13 | Calibración | — | los modelos sobreestiman en 2024 porque cambió cómo se cargan los datos de contacto |
 | 14 | Recalibración | no estaba prevista | la logística se recalibra con validación corriendo el intercepto |
 | 15 | Interpretación (H2) | SHAP sobre el mejor modelo | SHAP más reentrenar sin cada grupo de variables, con intervalo |
+| 16 | Prueba | un modelo, evaluado en la cohorte nueva | principal más secundarios declarados en un plan versionado antes de abrir la prueba |
 
 El estado de las tres hipótesis está al final.
 
@@ -347,6 +348,26 @@ H2 habla de «destino regional», así que además se probó un modelo que cambi
 - **Modelo más chico:** un modelo con solo compañía, contacto y viaje podría rendir igual que el completo, porque los otros cuatro grupos no aportan nada propio en validación. Probarlo sería elegir otro modelo mirando validación, que es para lo que está ese bloque, y queda como opción antes de ir a la prueba.
 - Resultados completos: [`modelo/resultados/interpretacion_validacion.md`](../modelo/resultados/interpretacion_validacion.md).
 
+## 16. Modelo secundario y plan de la prueba escrito antes de abrirla
+
+**Propuesta.** Un solo modelo final, evaluado en la cohorte que el modelo nunca vio.
+
+**Ahora.**
+
+- **Modelo principal:** la logística completa recalibrada, que es la que salió de la escalera.
+- **Modelo secundario: logística reducida.** Usa 12 variables: compañía previa, datos de contacto del día 0 y viaje. Son los únicos grupos con aporte propio en validación (punto 15).
+  - En validación rinde igual que la completa en orden: PR-AUC 0,342 contra 0,340; la diferencia es +0,002 [−0,004; 0,009].
+  - Queda mejor calibrada: pendiente 0,99 contra 0,89, y log-loss −0,0019 [−0,0037; −0,0001].
+  - Se recalibra con el mismo criterio que la principal; quedó el intercepto.
+- **Plan de la prueba:** antes de abrir 2025 se escribió y versionó [`docs/plan_de_la_prueba.md`](plan_de_la_prueba.md), junto con el script que la corre. Fija qué se evalúa, el criterio que confirma H1 y los análisis secundarios.
+
+**Por qué.**
+
+- Los grupos del modelo reducido se eligieron mirando validación. Por eso su evaluación limpia es la prueba, y por eso es secundario y no reemplaza al principal.
+- Fijar el plan en git antes de abrir la prueba deja constancia de que nada se eligió mirando 2025.
+
+**Implica.** En la defensa se puede mostrar el commit del plan con su fecha, anterior al de los resultados. Resultados de validación del reducido: [`modelo/resultados/reducido_validacion.md`](../modelo/resultados/reducido_validacion.md).
+
 ---
 
 ## Estado de las hipótesis
@@ -368,6 +389,16 @@ Actualizado con la escalera, la recalibración y la interpretación, todo en val
 | H2 · destino | −0,004 [−0,007; −0,002] | 0,214 |
 
 Modelo completo: 0,340. Prevalencia: 0,204.
+
+**Cómo leer la tabla.**
+
+- **PR-AUC:** mide qué tan bien el modelo pone arriba a los clientes que vuelven. Ordenar al azar da 0,204 (la tasa de vuelta); un orden perfecto da 1.
+- **«El modelo pierde sin él»:** cuánto baja el PR-AUC si se saca ese grupo y se vuelve a entrenar. Es lo que el grupo aporta y ningún otro reemplaza. Ejemplo: sin la compañía previa, el modelo baja de 0,340 a 0,278.
+- **Los corchetes:** el rango plausible del 95%.
+  - Los dos extremos positivos: el grupo ayuda.
+  - Incluyen el cero: no se puede afirmar que ayude.
+  - Los dos negativos: el modelo está mejor sin el grupo (el caso del destino).
+- **«El grupo solo»:** cuánto ordena el grupo por su cuenta, comparado con el 0,204 del azar.
 
 - **Compañía previa: sí.** Es el grupo que más aporta.
   - Lo que pesa es haber viajado antes como acompañante, y más cuantas más veces. Frente a no haberlo hecho, las chances de volver se multiplican por 1,51 con un viaje previo, por 2,15 con dos y por 4,23 con tres o más (odds ratios de la logística, con el resto de las variables fijas).

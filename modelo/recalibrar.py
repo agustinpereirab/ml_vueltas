@@ -53,26 +53,9 @@ def main():
         raise SystemExit("la logistica no reproduce la escalera (PR-AUC %.6f contra %.6f)"
                          % (metricas.pr_auc(y_v, p_v), esperado))
 
-    oof = {m: cal.fuera_de_pliegue(p_v, y_v, m, PLIEGUES, SEMILLA) for m in cal.ORDEN}
-    evaluacion = {}
-    for m, q in oof.items():
-        pendiente, intercepto = metricas.pendiente_e_intercepto(y_v, q)
-        evaluacion[m] = {"log_loss": metricas.log_loss(y_v, q), "brier": metricas.brier(y_v, q),
-                         "ece": metricas.ece(y_v, q), "p_media": float(q.mean()),
-                         "tasa_observada": float(y_v.mean()), "pendiente": pendiente,
-                         "intercepto": intercepto, "pr_auc": metricas.pr_auc(y_v, q),
-                         "roc_auc": metricas.roc_auc(y_v, q), "lift_20": metricas.lift_en(y_v, q, 0.2)}
-
-    puntual = {m: e["log_loss"] for m, e in evaluacion.items()}
-    mejor = min(puntual, key=puntual.get)
-    pares = [(m, "identidad") for m in cal.ORDEN if m != "identidad"]
-    pares += [(m, mejor) for m in cal.ORDEN if m != mejor and (m, mejor) not in pares]
-    boot = metricas.bootstrap(y_v, oof, METRICAS_BOOT, pares, REPETICIONES, SEMILLA)
-    contra_mejor = {m: (boot["diferencias"]["%s - %s" % (m, mejor)]["log_loss"]["desde"],
-                        boot["diferencias"]["%s - %s" % (m, mejor)]["log_loss"]["hasta"])
-                    for m in cal.ORDEN if m != mejor}
-    elegido = cal.elegir(puntual, contra_mejor)
-    final = cal.METODOS[elegido]().fit(p_v, y_v)
+    c = comparar_calibraciones(p_v, y_v)
+    evaluacion, boot, pares = c["evaluacion"], c["bootstrap"], c["pares"]
+    mejor, elegido, final, oof = c["mejor"], c["elegido"], c["final"], c["oof"]
 
     resultado = {
         "generado": datetime.datetime.now().isoformat(timespec="seconds"),
@@ -96,6 +79,33 @@ def main():
         e = evaluacion[m]
         print("  %-10s log-loss %.4f · Brier %.4f · ECE %.4f · prob. media %.1f%% · pendiente %.2f" % (
             m, e["log_loss"], e["brier"], e["ece"], 100 * e["p_media"], e["pendiente"]))
+
+
+def comparar_calibraciones(p_v, y_v):
+    """Compara los cuatro metodos fuera de pliegue dentro de validacion y elige
+    con el criterio fijado. Devuelve evaluacion, bootstrap, pares, mejor por
+    log-loss, elegido, el calibrador final (ajustado con toda la validacion) y
+    las probabilidades fuera de pliegue."""
+    oof = {m: cal.fuera_de_pliegue(p_v, y_v, m, PLIEGUES, SEMILLA) for m in cal.ORDEN}
+    evaluacion = {}
+    for m, q in oof.items():
+        pendiente, intercepto = metricas.pendiente_e_intercepto(y_v, q)
+        evaluacion[m] = {"log_loss": metricas.log_loss(y_v, q), "brier": metricas.brier(y_v, q),
+                         "ece": metricas.ece(y_v, q), "p_media": float(q.mean()),
+                         "tasa_observada": float(y_v.mean()), "pendiente": pendiente,
+                         "intercepto": intercepto, "pr_auc": metricas.pr_auc(y_v, q),
+                         "roc_auc": metricas.roc_auc(y_v, q), "lift_20": metricas.lift_en(y_v, q, 0.2)}
+    puntual = {m: e["log_loss"] for m, e in evaluacion.items()}
+    mejor = min(puntual, key=puntual.get)
+    pares = [(m, "identidad") for m in cal.ORDEN if m != "identidad"]
+    pares += [(m, mejor) for m in cal.ORDEN if m != mejor and (m, mejor) not in pares]
+    boot = metricas.bootstrap(y_v, oof, METRICAS_BOOT, pares, REPETICIONES, SEMILLA)
+    contra_mejor = {m: (boot["diferencias"]["%s - %s" % (m, mejor)]["log_loss"]["desde"],
+                        boot["diferencias"]["%s - %s" % (m, mejor)]["log_loss"]["hasta"])
+                    for m in cal.ORDEN if m != mejor}
+    elegido = cal.elegir(puntual, contra_mejor)
+    return {"evaluacion": evaluacion, "bootstrap": boot, "pares": pares, "mejor": mejor,
+            "elegido": elegido, "final": cal.METODOS[elegido]().fit(p_v, y_v), "oof": oof}
 
 
 def grafico(r, ruta):
