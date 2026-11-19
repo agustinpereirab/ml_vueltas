@@ -6,12 +6,13 @@ Proyecto final de Aprendizaje Automático I. El objetivo es predecir, el día de
 
 | Carpeta o archivo | Qué es |
 |---|---|
+| [`HALLAZGOS.md`](HALLAZGOS.md) | **El resumen de todo: empezar por acá.** |
 | [`presentacion_propuesta.html`](presentacion_propuesta.html) | La propuesta presentada en clase (Entrega 1). |
 | [`docs/cambios_respecto_de_la_propuesta.md`](docs/cambios_respecto_de_la_propuesta.md) | Qué cambió desde la propuesta y por qué. Se actualiza con cada decisión. |
 | [`datos/`](datos/) | `DICCIONARIO.md` (las columnas de la tabla) y `manifiesto.json` (fecha, filas y huella de la tabla). **La tabla no se versiona.** |
 | [`exportacion/`](exportacion/) | Cómo se arma y se verifica la tabla. Los pasos 1 y 2 solo corren dentro de la empresa. |
 | [`analisis/`](analisis/) | Exploración de la tabla: `exploracion.html`. |
-| [`modelo/`](modelo/) | La escalera de modelos y sus métricas. |
+| [`modelo/`](modelo/) | La escalera de modelos y sus métricas. Los modelos listos para usar están en `modelo/exportado/` y se aplican con `modelo/puntuar.py`. |
 
 ## La tabla
 

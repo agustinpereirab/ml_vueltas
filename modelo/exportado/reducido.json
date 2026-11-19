@@ -1,0 +1,115 @@
+{
+  "formato": "logistica_v1",
+  "meta": {
+    "nombre": "reducido",
+    "exportado": "2026-11-19T17:00:09",
+    "que_predice": "probabilidad de que un cliente nuevo vuelva a viajar con Jetmar dentro de los 12 meses posteriores a su primera compra",
+    "entrenado_con": "cohorte 2023 (13.655 clientes)",
+    "recalibrado_con": "cohorte 2024",
+    "tabla_sha256": "77b71c49b21dcf1ba5393f9b069cde6c2c9e0fcb9bbec7ddef523f65328df2f5",
+    "C": 1.0,
+    "variables": [
+      "fue_acompaniante_antes",
+      "viajes_previos_acompaniante",
+      "viaja_con_cliente_previo",
+      "viaja_con_alguien_con_historial",
+      "d0_tiene_mail",
+      "d0_tiene_telefono",
+      "d0_tiene_documento",
+      "d0_tiene_nacimiento",
+      "pasajeros",
+      "destinos",
+      "noches",
+      "anticipacion"
+    ],
+    "resultado_en_la_prueba": {
+      "pr_auc": 0.3193931572644606,
+      "roc_auc": 0.628099436536595,
+      "lift_10": 1.8441599494231071,
+      "lift_20": 1.5808440018966337,
+      "p_media": 0.23496767816613,
+      "tasa_observada": 0.20782420181316516
+    },
+    "advertencias": [
+      "Solo para clientes en su primera compra: no aplica a quien ya compró antes.",
+      "Las filas tienen que venir en el formato de datos/tabla_modelo.csv (mismas bandas y categorías; ver datos/DICCIONARIO.md).",
+      "En 2025 sobreestimó: predijo 23.5% en promedio y volvió el 20.8%. Sirve más para ordenar que como probabilidad exacta.",
+      "Mide propensión a volver, no el efecto de contactar al cliente."
+    ],
+    "verificacion": "reproduce las probabilidades del modelo original en los 13595 clientes de validación (diferencia máxima 2.8e-16)"
+  },
+  "intercepto": -0.15786593422388423,
+  "categoricas": {
+    "fue_acompaniante_antes": {
+      "0": -0.3405990350003994,
+      "1": 0.18819475410288325
+    },
+    "viajes_previos_acompaniante": {
+      "0": -0.3405990350003994,
+      "1": -0.4588838964740137,
+      "2": -0.07515017774080537,
+      "3+": 0.7222288283177026
+    },
+    "viaja_con_cliente_previo": {
+      "0": -0.10298877837209004,
+      "1": -0.04941550252542281
+    },
+    "viaja_con_alguien_con_historial": {
+      "0": -0.18075430529883632,
+      "1": 0.028350024401324034
+    },
+    "d0_tiene_mail": {
+      "0": -0.41272166894026513,
+      "1": 0.26031738804274024
+    },
+    "d0_tiene_telefono": {
+      "0": -0.11674419994207458,
+      "1": -0.035660080955440085
+    },
+    "d0_tiene_documento": {
+      "0": -0.002739637503907709,
+      "1": -0.14966464339361032
+    },
+    "d0_tiene_nacimiento": {
+      "0": -0.28662477916442486,
+      "1": 0.1342204982669072
+    },
+    "pasajeros": {
+      "1": 0.052632737291799805,
+      "10+": -0.4762380774975759,
+      "2": 0.019819535870070105,
+      "3": -0.00809604353766252,
+      "4": 0.07796139295387373,
+      "5-9": -0.0018740988731460887,
+      "sin_dato": 0.1833902728951264
+    },
+    "destinos": {
+      "1": -0.16411887286935992,
+      "2": -0.031764560616326015,
+      "3+": 0.03210778195195391,
+      "sin_dato": 0.011371370636217671
+    },
+    "noches": {
+      "0-3": -0.07758039490561464,
+      "15+": 0.0042222753070047,
+      "4-7": -0.12748860722202818,
+      "8-14": 0.04040028712307973,
+      "sin_dato": 0.008042158800042404
+    },
+    "anticipacion": {
+      "0-7": 0.10701125865500487,
+      "15-30": 0.06023382362087853,
+      "181+": -0.3264964442734557,
+      "31-60": 0.09834506938011058,
+      "61-90": -0.004397464713216136,
+      "8-14": 0.047355785165897085,
+      "91-180": -0.06886092205144936,
+      "sin_dato": -0.06559538668128694
+    }
+  },
+  "numericas": {},
+  "calibrador": {
+    "metodo": "intercepto",
+    "b": -0.2152349150052863
+  }
+}
