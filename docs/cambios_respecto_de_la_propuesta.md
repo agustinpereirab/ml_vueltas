@@ -22,6 +22,7 @@ Este registro compara la propuesta presentada en clase ([`presentacion_propuesta
 | 12 | Resultado de la escalera | cada escalón tiene que ganarle al anterior | la logística gana; CatBoost no le gana a la logística; la regla de 10 mil no le gana a la prevalencia |
 | 13 | Calibración | — | los modelos sobreestiman en 2024 porque cambió cómo se cargan los datos de contacto |
 | 14 | Recalibración | no estaba prevista | la logística se recalibra con validación corriendo el intercepto |
+| 15 | Interpretación (H2) | SHAP sobre el mejor modelo | SHAP más reentrenar sin cada grupo de variables, con intervalo |
 
 El estado de las tres hipótesis está al final.
 
@@ -317,22 +318,70 @@ Tasa observada: 20,4%. ECE: distancia promedio entre probabilidad y tasa observa
 - **Supuesto:** el calibrador se ajustó con 2024 y supone que 2025 se le parece. La prueba lo va a mostrar.
 - Resultados completos: [`modelo/resultados/calibracion_validacion.md`](../modelo/resultados/calibracion_validacion.md).
 
+## 15. Hipótesis 2: SHAP más una prueba por grupo
+
+**Propuesta.** «Sobre el mejor modelo aplicamos SHAP, leído como asociación y no como causa.»
+
+**Ahora.** SHAP sobre la logística del día 0, que es el mejor modelo (punto 12). Para un modelo lineal, SHAP es exacto: la contribución de cada variable es su coeficiente por la distancia a la media de entrenamiento. Se verificó contra la librería `shap`. Se sumaron dos medidas por grupo de variables, en validación:
+
+- **Sin el grupo.** La logística se reentrena sin las variables del grupo y se compara con el modelo completo, con intervalo bootstrap pareado. Mide lo que el grupo aporta y ningún otro grupo reemplaza.
+- **El grupo solo.** Cuánto ordena el grupo por su cuenta.
+
+H2 habla de «destino regional», así que además se probó un modelo que cambia país y región por una sola marca regional sí/no (Argentina, Brasil, Chile, Paraguay).
+
+**Por qué.** SHAP dice cuánto usa el modelo una variable, no si ese uso predice mejor fuera de la muestra. El vendedor y el destino son el caso: el modelo los usa (SHAP medio de 0,148 y 0,092 por grupo), pero sacarlos no empeora la validación.
+
+**Grupos.**
+
+- **H2 · compañía previa:** viajó antes como acompañante, cuántas veces, viaja con cliente previo, viaja con alguien con historial.
+- **H2 · destino:** país y región.
+- **H2 · vendedor:** código, si es persona, cartera de 12 meses, antigüedad.
+- **Datos de contacto del día 0.**
+- **Montos:** venta, venta por pasajero, utilidad.
+- **Producto:** tipo, aerolínea, régimen, hotel, seguro, servicios, canje de millas, pagador.
+- **Viaje:** pasajeros, destinos, noches, anticipación.
+
+**Implica.**
+
+- **Resultado:** H2 se sostiene en parte (ver «Estado de las hipótesis»).
+- **Modelo más chico:** un modelo con solo compañía, contacto y viaje podría rendir igual que el completo, porque los otros cuatro grupos no aportan nada propio en validación. Probarlo sería elegir otro modelo mirando validación, que es para lo que está ese bloque, y queda como opción antes de ir a la prueba.
+- Resultados completos: [`modelo/resultados/interpretacion_validacion.md`](../modelo/resultados/interpretacion_validacion.md).
+
 ---
 
 ## Estado de las hipótesis
 
-Actualizado con la escalera en validación (2024). Falta confirmar en prueba (2025), una sola vez y al final.
+Actualizado con la escalera, la recalibración y la interpretación, todo en validación (2024). Falta confirmar en prueba (2025), una sola vez y al final.
 
 **H1 · La recompra se puede predecir por encima de la prevalencia y de una regla simple.** Se sostiene en validación. La logística supera a la prevalencia y a la mejor regla en las cuatro métricas, con intervalo: PR-AUC 0,340 contra 0,243 y 0,204, y lift 20% de 1,66. La regla de la propuesta (primer viaje de 10 mil o más) no supera a la prevalencia (punto 12).
 
-**H2 · Pesan el destino regional, viajar con un cliente previo o haber sido acompañante, y el vendedor.** Falta la interpretación del modelo (coeficientes de la logística y SHAP). Por ahora, cada variable mirada sola en entrenamiento:
+**H2 · Pesan el destino regional, viajar con un cliente previo o haber sido acompañante, y el vendedor.** Se sostiene en parte: la compañía previa sí pesa, el destino regional y el vendedor no (punto 15). Medido en validación, reentrenando la logística sin cada grupo:
 
-- **Destino regional:** como grupo (Argentina, Brasil, Chile y Paraguay) no separa: vuelve el 21,7%, contra el 21,4% de los otros destinos. Por país sí varía: Argentina 23,2%, Brasil 20,4%, Chile 18,1%.
-- **Compañía:** va en la dirección esperada.
-  - Quien viajó antes como acompañante vuelve el 36,5%, contra el 19,3%.
-  - Con tres viajes o más como acompañante, el 61,2%.
-  - Quien viaja con un cliente previo, el 26,5%, contra el 20,8%.
-- **Vendedor:** entre los 53 vendedores con 100 clientes o más en entrenamiento, el décimo de menor tasa vuelve 15,6% y el de mayor, 27,7%. No se publican resultados por vendedor.
+| Grupo | El modelo pierde sin él (PR-AUC) | El grupo solo (PR-AUC) |
+|---|---|---|
+| H2 · compañía previa | 0,062 [0,050; 0,074] | 0,288 |
+| Datos de contacto (día 0) | 0,022 [0,015; 0,030] | 0,262 |
+| Viaje (pasajeros, destinos, noches, anticipación) | 0,005 [0,001; 0,008] | 0,229 |
+| H2 · vendedor | 0,002 [−0,003; 0,006] | 0,226 |
+| Montos | 0,001 [−0,001; 0,003] | 0,225 |
+| Producto | −0,001 [−0,004; 0,003] | 0,217 |
+| H2 · destino | −0,004 [−0,007; −0,002] | 0,214 |
+
+Modelo completo: 0,340. Prevalencia: 0,204.
+
+- **Compañía previa: sí.** Es el grupo que más aporta.
+  - Lo que pesa es haber viajado antes como acompañante, y más cuantas más veces. Frente a no haberlo hecho, las chances de volver se multiplican por 1,51 con un viaje previo, por 2,15 con dos y por 4,23 con tres o más (odds ratios de la logística, con el resto de las variables fijas).
+  - Viajar con un cliente previo no agrega nada una vez que está lo anterior (×1,02). Viajar con alguien con historial, poco (×1,19).
+- **Destino regional: no.**
+  - Una marca «regional sí/no» no aporta nada frente a no tener destino: PR-AUC −0,000 [−0,000; 0,000].
+  - Los cuatro países regionales tienen efectos de ×0,94 (Brasil) a ×1,09 (Paraguay), contra ×0,97 de promedio regional y ×1,01 del resto.
+  - El destino en general tampoco ayuda: sin país ni región, el modelo mejora levemente (+0,004 [0,002; 0,007]).
+  - Los efectos por país aprendidos en 2023 no se repiten en 2024. Ejemplo: Paraguay, 26,3% de vuelta en 2023 (76 clientes) y 14,1% en 2024 (85).
+- **Vendedor: no, como aporte propio.**
+  - Sacar el grupo cambia el PR-AUC en 0,002 [−0,003; 0,006]; sacar solo el código, en 0,001 [−0,004; 0,006].
+  - El modelo sí distingue vendedores: el código del percentil 10 multiplica las chances por 0,82 y el del 90 por 1,36. Pero esas diferencias, aprendidas en 2023, no mejoran la predicción de 2024.
+  - No se listan ni se ordenan vendedores.
+- **Fuera de H2 pesan los datos de contacto del día 0.** Sin ellos, el ROC-AUC cae 0,046, la mayor caída de todos los grupos. El mail cargado el día 0 es la variable con mayor contribución individual (SHAP medio 0,374, contra 0,136 de «viajó antes como acompañante»).
 
 **H3 · Parte de la asociación entre «datos de contacto cargados» y volver es fuga, y se reduce al reconstruir desde la primera compra.** No se sostiene en validación. Entrenar con la ficha única no rinde más que entrenar con la del día 0:
 

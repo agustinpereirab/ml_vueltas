@@ -39,6 +39,7 @@ python exportacion/03_verificar.py                        # verificar la tabla
 python analisis/graficas.py                               # exploracion.html
 python modelo/escalera.py                                 # escalera de modelos (validación), ~70 min
 python modelo/recalibrar.py                               # recalibración con validación, ~1 min
+python modelo/interpretar.py                              # hipótesis 2: grupos y SHAP, ~6 min
 python -m unittest discover -s exportacion/pruebas -t .   # pruebas de la tabla
 python -m unittest discover -s modelo/pruebas -t .        # pruebas del modelo
 ```
