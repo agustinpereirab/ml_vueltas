@@ -36,7 +36,7 @@ SALIDA = os.path.join(REPO, "modelo", "resultados")
 METRICAS_BOOT = {"pr_auc": metricas.pr_auc, "roc_auc": metricas.roc_auc, "log_loss": metricas.log_loss}
 PAISES = {"BR": "Brasil", "AR": "Argentina", "ES": "España", "US": "Estados Unidos", "MX": "México",
           "CL": "Chile", "DO": "Rep. Dominicana", "UY": "Uruguay", "IT": "Italia", "CO": "Colombia",
-          "GE": "Alemania", "PE": "Perú", "GB": "Reino Unido", "PY": "Paraguay", "otro": "otro país",
+          "GE": "Alemania (GE)", "PE": "Perú", "GB": "Reino Unido", "PY": "Paraguay", "otro": "otro país",
           "sin_dato": "sin dato"}
 COMPANIA = {"fue_acompaniante_antes": "Viajó antes como acompañante",
             "viajes_previos_acompaniante": "Viajes previos como acompañante",
@@ -112,6 +112,19 @@ def main():
                           "shap_medio": float(s[v].loc[idx].mean()), "odds_ratio_vs_0": ors.get(str(c))})
         compania[v] = sorted(filas, key=lambda r: r["valor"])
 
+    # Dos pares de variables estan anidadas: quien tiene viajes previos como
+    # acompaniante tiene "fue acompaniante" = 1, y quien viaja con un cliente
+    # previo viaja con alguien con historial. El efecto contra "ninguna de las
+    # dos" es el producto de los dos odds ratios.
+    fue = {f["valor"]: f["odds_ratio_vs_0"] for f in compania["fue_acompaniante_antes"]}["1"]
+    alguien = {f["valor"]: f["odds_ratio_vs_0"] for f in compania["viaja_con_alguien_con_historial"]}["1"]
+    combinados = {
+        "viajes_previos_acompaniante": {f["valor"]: fue * f["odds_ratio_vs_0"]
+                                        for f in compania["viajes_previos_acompaniante"] if f["valor"] != "0"},
+        "viaja_con_cliente_previo": {"1": alguien * {f["valor"]: f["odds_ratio_vs_0"]
+                                                     for f in compania["viaja_con_cliente_previo"]}["1"]},
+    }
+
     cod = s["vendedor"].to_numpy()
     vendedor = {"codigos_en_validacion": int(x_v["vendedor"].nunique()),
                 "clientes_en_V_otros": int((x_v["vendedor"] == "V-otros").sum()),
@@ -125,7 +138,7 @@ def main():
         "metricas": {m: {k: f(y_v, p) for k, f in METRICAS_BOOT.items()} for m, p in pred.items()},
         "bootstrap": boot, "shap_base": base, "shap_medio_abs_variable": shap_variables,
         "shap_medio_abs_grupo": shap_grupos, "destino_por_pais": por_pais, "destino_regional": regional,
-        "compania": compania, "vendedor": vendedor,
+        "compania": compania, "compania_odds_ratios_combinados": combinados, "vendedor": vendedor,
     }
     with open(os.path.join(SALIDA, "interpretacion_validacion.json"), "w", encoding="utf-8") as fh:
         json.dump(resultado, fh, indent=2, ensure_ascii=False)
@@ -257,6 +270,19 @@ def informe(r):
                 COMPANIA[v], f["valor"], "{:,}".format(f["n"]).replace(",", "."), pct(f["vuelven"]),
                 "—" if f["odds_ratio_vs_0"] is None else "×" + num(f["odds_ratio_vs_0"], 2), num(f["shap_medio"])))
     l.append("")
+
+    cb = r["compania_odds_ratios_combinados"]
+    l.append("**Variables anidadas.** Quien tiene viajes previos como acompañante tiene también «viajó antes "
+             "como acompañante» = 1, y quien viaja con un cliente previo también viaja con alguien con "
+             "historial. Por eso el odds ratio de una sola de esas columnas no se lee solo: el efecto contra "
+             "«ninguna de las dos» es el producto de los dos.\n")
+    l.append("| Comparado con nunca haber sido acompañante | Odds ratio combinado |")
+    l.append("|---|---|")
+    for valor, x in cb["viajes_previos_acompaniante"].items():
+        l.append("| %s viaje%s previo%s como acompañante | ×%s |" % (valor, "" if valor == "1" else "s",
+                                                                  "" if valor == "1" else "s", num(x, 2)))
+    l.append("\nViajar con un cliente previo, contra viajar sin nadie con historial: ×%s.\n" % num(
+        cb["viaja_con_cliente_previo"]["1"], 2))
 
     l.append("## 3. Destino\n")
     rg = r["destino_regional"]

@@ -36,7 +36,13 @@ Proyecto final de Aprendizaje Automático I: «¿Vuelve a viajar?». Busca prede
    - No se vuelve a elegir, ajustar ni comparar modelos nuevos con ese bloque como si fuera limpio.
    - Todo análisis nuevo que lo toque se anota como **posterior a la prueba**.
    - `modelo/prueba.py` se niega a correr de nuevo. No forzarlo: no borrar `modelo/resultados/prueba.json`.
-2. **Vocabulario.** «Prueba» o «bloque de prueba» es ese conjunto de clientes de 2025. Las carpetas `exportacion/pruebas/` y `modelo/pruebas/` son **pruebas automáticas** del código (tests unitarios). No confundirlos.
+   - [`docs/plan_de_la_prueba.md`](docs/plan_de_la_prueba.md) **no se edita**: es el registro de lo que se fijó antes de abrir la prueba. Si algo de su notación confunde, se aclara en otro documento.
+   - Antes de abrir la prueba ya se conocían el tamaño del bloque y su tasa de vuelta (están en el manifiesto de la tabla). Decir «no se había entrenado ni evaluado ningún modelo con esos clientes», no «no se miró nada de 2025».
+2. **Vocabulario.**
+   - «Prueba» o «bloque de prueba» es ese conjunto de clientes de 2025. Las carpetas `exportacion/pruebas/` y `modelo/pruebas/` son **pruebas automáticas** del código (tests unitarios). No confundirlos.
+   - «Ficha» es una compra en la base. «Ficha única» y «ficha del día 0» son los datos de contacto de una persona, hoy o en el registro de su primera compra.
+   - «Vuelve a 12 meses»: la **compra** de vuelta cae dentro de los 12 meses, no necesariamente el viaje.
+   - Detalle en el glosario de `HALLAZGOS.md`.
 3. **Los datos no viajan.**
    - `datos/tabla_modelo.csv` no está en el repo ni en el zip de hallazgos, y no se versiona. Está anonimizada pero no es pública.
    - La foto de la base, la tabla de correspondencia de códigos y la constante de la utilidad viven solo en la máquina del usuario, fuera de OneDrive, y nunca entran al repo.
@@ -45,6 +51,8 @@ Proyecto final de Aprendizaje Automático I: «¿Vuelve a viajar?». Busca prede
    - La prevalencia es 21,9%, no «10 a 20».
    - Las cohortes son 2023 a agosto de 2025, no 2021 a 2025.
    - La regla de «10 mil USD» no le gana al azar.
+
+   - El «≈1% de margen neto» de la diapositiva 2 no tiene fuente dentro del proyecto. No citarlo sin confirmarlo con el usuario.
 
    La propuesta sirve para comparar; las cifras vigentes están en el registro de cambios y en `modelo/resultados/`.
 5. **Toda decisión o cambio respecto de la propuesta se anota en el registro de cambios,** con su medición, en el mismo paso en que se toma. El usuario lo pidió porque se usa en la defensa.
@@ -85,3 +93,4 @@ Cada script se niega a correr si la tabla no coincide con la huella de `datos/ma
 - **Entorno virtual:** crearlo fuera de OneDrive; si no, sincroniza cientos de MB.
 - **En la máquina del usuario:** el intérprete es `py`, porque `python` no responde.
 - **Git:** no tiene identidad global configurada. Los commits van con `-c user.name=... -c user.email=...`. Los datos nunca se versionan.
+- **Desde el zip de hallazgos** (no trae `.git`): el historial está en `HISTORIAL_GIT.txt` y en `repo.bundle`, que se recupera con `git clone repo.bundle ml_vueltas`. Ahí se ven las fechas del plan de la prueba (`69632ac`) y de sus resultados (`4fb21b8`).

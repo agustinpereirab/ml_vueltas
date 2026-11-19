@@ -1,5 +1,5 @@
 {
-  "generado": "2026-11-19T16:32:04",
+  "generado": "2026-11-19T18:00:54",
   "tabla_sha256": "77b71c49b21dcf1ba5393f9b069cde6c2c9e0fcb9bbec7ddef523f65328df2f5",
   "C": 0.1,
   "validacion_clientes": 13595,
@@ -849,6 +849,16 @@
         "odds_ratio_vs_0": 1.185668372382738
       }
     ]
+  },
+  "compania_odds_ratios_combinados": {
+    "viajes_previos_acompaniante": {
+      "1": 1.5074308077523775,
+      "2": 2.1537419490940883,
+      "3+": 4.232092147414954
+    },
+    "viaja_con_cliente_previo": {
+      "1": 1.2054428576515355
+    }
   },
   "vendedor": {
     "codigos_en_validacion": 133,

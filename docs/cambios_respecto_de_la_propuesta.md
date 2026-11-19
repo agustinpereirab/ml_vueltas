@@ -2,7 +2,7 @@
 
 Este registro compara la propuesta presentada en clase ([`presentacion_propuesta.html`](../presentacion_propuesta.html), Entrega 1) con lo que efectivamente se hizo. Cada entrada dice qué decía la propuesta, qué se hizo, qué medición lo motivó y qué implica para la defensa.
 
-**De dónde salen las cifras.** Salvo que se indique otra fuente, salen de la tabla del modelo ([`datos/tabla_modelo.csv`](../datos/DICCIONARIO.md)). La tabla se armó el 2026-11-11 sobre una foto de la base de ese mismo día, con compras hasta el 2026-11-09. En los puntos 1 a 10, las cifras que miran la etiqueta usan solo el bloque de entrenamiento (cohorte 2023), salvo los conteos por bloque. Desde el punto 11, cada cifra dice si es de validación (2024) o de la prueba (2025). Las cifras marcadas como *preliminares* son de una copia anterior de la base (septiembre de 2026), con un universo aproximado; sirvieron para decidir, no para citar como resultado.
+**De dónde salen las cifras.** Salvo que se indique otra fuente, salen de la tabla del modelo ([`datos/tabla_modelo.csv`](../datos/DICCIONARIO.md)). La tabla se armó el 2026-11-11 sobre una foto de la base de ese mismo día, con compras hasta el 2026-11-09. En los puntos 1 a 10, las cifras que miran la etiqueta usan solo el bloque de entrenamiento (cohorte 2023). Hay tres excepciones: los conteos por bloque, la comparación por estación del punto 2 (que usa 2023 y 2024) y los conteos de fichas en proceso del punto 4. Desde el punto 11, cada cifra dice si es de validación (2024) o de la prueba (2025). Los análisis hechos después de correr la prueba están marcados *(posterior a la prueba)*. Las cifras marcadas como *preliminares* son de una copia anterior de la base (septiembre de 2026), con un universo aproximado; sirvieron para decidir, no para citar como resultado.
 
 ## Resumen
 
@@ -26,6 +26,7 @@ Este registro compara la propuesta presentada en clase ([`presentacion_propuesta
 | 16 | Prueba | un modelo, evaluado en la cohorte nueva | principal más secundarios declarados en un plan versionado antes de abrir la prueba |
 | 17 | Resultado final | rendimiento moderado pero útil, lift claro en el decil superior | H1 confirmada en la prueba: lift 1,87 en el 10% y 1,59 en el 20% superior |
 | 18 | Uso del modelo | no se preveía dejarlo para usar | exportado y portable; puntuar fichas nuevas desde la base, sin automatizar por decisión del usuario |
+| 19 | Identidad del cliente | «verificamos que no use información posterior» | no se verificó |
 
 El estado de las tres hipótesis está al final.
 
@@ -78,7 +79,7 @@ La tabla trae además `bloque_60_20_20`, que corta en septiembre de 2024 y en ma
 
 - El bloque de prueba se usa una sola vez, al final.
 - Si el modelo final se reentrena con 2023 + 2024, sus etiquetas se cierran durante 2025 y se superponen con la prueba. Ese resultado se reporta como secundario.
-- La prueba no tiene clientes de septiembre a diciembre. En 2023–2024 esos meses son el 30,8% de los clientes nuevos (8.391 de 27.277) y vuelven el 19,8%, contra el 21,8% de los de enero a agosto.
+- La prueba no tiene clientes de septiembre a diciembre. En 2023–2024 esos meses son el 30,8% de los clientes nuevos (8.391 de 27.277, contados antes de retirar los 31 clientes por anonimato) y vuelven el 19,8%, contra el 21,8% de los de enero a agosto.
 
 ## 3. Prevalencia: 21,9%, no «entre 10 y 20»
 
@@ -266,22 +267,27 @@ Brazo día 0, sobre 13.595 clientes de 2024, de los que vuelve el 20,4%. Entre c
 
 - Con la regla de la propuesta («cada escalón tiene que ganarle al anterior»), el modelo candidato es la **logística**.
 - CatBoost queda como escalón evaluado que no mejoró, lo que también es un resultado.
-- La comparación final se hace una sola vez sobre la prueba.
+- La comparación final se hizo una sola vez sobre la prueba (punto 17).
 
 ## 13. Calibración: los modelos sobreestiman en 2024
 
 **Lo que se ve.** La logística del día 0 predice en promedio 24,0% y en validación vuelve el 20,4%. En el décimo de clientes con mayor probabilidad predice 48,4% y vuelve el 38,8%. CatBoost tiene el mismo patrón (23,7% de promedio).
 
-**Por qué.** Cambió cómo se cargan los datos de contacto, no los clientes.
+**Por qué.** Hay dos causas, y la segunda pesa más.
 
-| | 2023 (entrenamiento) | 2024 (validación) |
-|---|---|---|
-| Clientes con mail cargado el día 0 | 42,7% | 59,2% |
-| Vuelven, entre los que tienen mail | 30,1% | 25,0% |
-| Clientes sin mail ni teléfono el día 0 | 45,9% | 32,7% |
-| Vuelven, entre los que no tienen ninguno | 15,6% | 13,4% |
+1. **Bajó la tasa de vuelta:** 21,9% en 2023 contra 20,4% en 2024. Eso explica 1,5 puntos de la sobreestimación: la prevalencia de entrenamiento, aplicada a 2024, predice 21,9%.
+2. **Cambió cómo se cargan los datos de contacto.**
 
-En 2024 se cargó el mail a más clientes, y «tener mail» pasó a separar menos. El modelo aprendió la relación de 2023 y la aplica a 2024. Sin datos de contacto, la logística predice 22,1% en promedio, más cerca de lo observado.
+| | 2023 (entrenamiento) | 2024 (validación) | Ene–ago 2025 (prueba) *(posterior a la prueba)* |
+|---|---|---|---|
+| Clientes con mail cargado el día 0 | 42,7% | 59,2% | 94,7% |
+| Vuelven, entre los que tienen mail | 30,1% | 25,0% | 21,3% |
+| Clientes sin mail ni teléfono el día 0 | 45,9% | 32,7% | 3,3% |
+| Vuelven, entre los que no tienen ninguno | 15,6% | 13,4% | 10,4% |
+
+En 2024 se cargó el mail a más clientes, y «tener mail» pasó a separar menos. El modelo aprendió la relación de 2023 y la aplica a 2024. La logística entrenada sin datos de contacto predice 22,1% en promedio y la del día 0, 24,0%: esa diferencia de 1,9 puntos es la parte que agregan los datos de contacto.
+
+En 2025 el mail se cargó al 94,7% de los clientes nuevos y ya casi no distingue a nadie. Esa columna se midió después de correr la prueba, como descriptivo; no se usó para elegir nada.
 
 **Implica.**
 
@@ -312,13 +318,13 @@ Tasa observada: 20,4%. ECE: distancia promedio entre probabilidad y tasa observa
   - ECE: baja de 0,0375 a 0,0142.
 - **El orden no cambia:** PR-AUC 0,340 y lift 20% de 1,66, antes y después.
 - **Platt tiene la menor log-loss, pero no le gana al intercepto con intervalo** (intercepto − Platt: +0,0003 [−0,0002; 0,0008]). Por el criterio queda el intercepto, que es más simple.
-- **Queda un residuo en los extremos.** En el décimo de mayor probabilidad predice 43,1% y vuelve 38,7%; en el de menor, predice 7,7% y vuelve 10,1%. Con pendiente 0,89, las probabilidades siguen algo extremas, y Platt la lleva a 1,00.
+- **Queda un residuo en los extremos.** En el décimo de mayor probabilidad predice 43,1% y vuelve 38,7%; en el de menor, predice 7,7% y vuelve 10,1%. Estos décimos se arman con la probabilidad recalibrada fuera de pliegue, así que no coinciden exactamente con los del punto 13 (38,8%). Con pendiente 0,89, las probabilidades siguen algo extremas, y Platt la lleva a 1,00.
 
 **Implica.**
 
 - **Simulación de campaña:** usa las probabilidades recalibradas. Si reporta vueltas *esperadas*, en el décimo superior las sobreestima en unos 4 puntos (medido en validación). Las vueltas *observadas* en la prueba no dependen de esto.
 - **Para la defensa:** cambiar a Platt después de ver este residuo sería elegir mirando el resultado. Se mantiene el criterio y se declara el residuo.
-- **Supuesto:** el calibrador se ajustó con 2024 y supone que 2025 se le parece. La prueba lo va a mostrar.
+- **Supuesto:** el calibrador se ajustó con 2024 y supone que 2025 se le parece. No se cumplió del todo: en la prueba el modelo siguió sobreestimando (punto 17).
 - Resultados completos: [`modelo/resultados/calibracion_validacion.md`](../modelo/resultados/calibracion_validacion.md).
 
 ## 15. Hipótesis 2: SHAP más una prueba por grupo
@@ -347,7 +353,7 @@ H2 habla de «destino regional», así que además se probó un modelo que cambi
 **Implica.**
 
 - **Resultado:** H2 se sostiene en parte (ver «Estado de las hipótesis»).
-- **Modelo más chico:** un modelo con solo compañía, contacto y viaje podría rendir igual que el completo, porque los otros cuatro grupos no aportan nada propio en validación. Probarlo sería elegir otro modelo mirando validación, que es para lo que está ese bloque, y queda como opción antes de ir a la prueba.
+- **Modelo más chico:** un modelo con solo compañía, contacto y viaje podría rendir igual que el completo, porque los otros cuatro grupos no aportan nada propio en validación. Se probó como modelo secundario antes de abrir la prueba (puntos 16 y 17).
 - Resultados completos: [`modelo/resultados/interpretacion_validacion.md`](../modelo/resultados/interpretacion_validacion.md).
 
 ## 16. Modelo secundario y plan de la prueba escrito antes de abrirla
@@ -372,7 +378,7 @@ H2 habla de «destino regional», así que además se probó un modelo que cambi
 
 ## 17. Resultados de la prueba (enero a agosto de 2025)
 
-Corrida una sola vez el 2026-11-19, siguiendo el plan versionado en el commit `69632ac`. Son 10.148 clientes, de los que vuelve el 20,8%. Detalle completo: [`modelo/resultados/prueba.md`](../modelo/resultados/prueba.md).
+Corrida una sola vez el 2026-11-19. El plan y el script se versionaron en el commit `69632ac` (16:46) y los resultados, en el `4fb21b8` (16:53). Son 10.148 clientes, de los que vuelve el 20,8%. Antes de abrir el bloque se conocían su tamaño y su tasa de vuelta, que están en el manifiesto de la tabla; ningún modelo se había entrenado ni evaluado con esos clientes. Detalle completo: [`modelo/resultados/prueba.md`](../modelo/resultados/prueba.md).
 
 | Modelo | PR-AUC | ROC-AUC | Lift 10% | Lift 20% | Captura 20% |
 |---|---|---|---|---|---|
@@ -390,11 +396,12 @@ Corrida una sola vez el 2026-11-19, siguiendo el plan versionado en el commit `6
 - **El rendimiento baja algo respecto de validación:** PR-AUC de 0,340 a 0,319 y ROC-AUC de 0,648 a 0,620. Dos causas posibles: la escalera se comparó en validación, y la relación entre los datos de contacto y la vuelta siguió cambiando (ver calibración).
 - **La regla de la propuesta tampoco le gana a la prevalencia en la prueba:** PR-AUC −0,002 [−0,003; 0,000].
 - **CatBoost no le gana a la logística:** PR-AUC −0,007 [−0,016; 0,002]. Repite lo de validación.
-- **La logística reducida rinde igual que la principal y está mejor calibrada.** PR-AUC +0,000 [−0,007; 0,008]; ROC-AUC +0,009 [0,000; 0,017]; log-loss −0,0026 [−0,0047; −0,0006].
+- **La logística reducida ordena igual que la principal en PR-AUC y algo mejor en ROC-AUC, y está mejor calibrada.** PR-AUC +0,000 [−0,007; 0,008]; ROC-AUC +0,009 [0,0003; 0,017] (en `prueba.md` el extremo inferior aparece redondeado como 0,000); log-loss −0,0026 [−0,0047; −0,0006]. Adoptarla ahora como modelo final sería una elección hecha después de ver la prueba, y habría que declararla así.
 - **Entrenar con 2023 + 2024 mejora el orden:** PR-AUC +0,013 [0,007; 0,019]; ROC-AUC +0,019 [0,011; 0,026]. Sus etiquetas se superponen con el período de prueba (punto 2), así que es un resultado secundario.
 - **Calibración: la sobreestimación siguió en 2025.**
   - La principal recalibrada predice 23,9% en promedio y vuelve el 20,8%. Sin recalibrar predecía 27,9%.
   - La recalibración con 2024 corrigió parte (Brier −0,0046 [−0,0052; −0,0039]), pero no todo: la deriva continuó, como advertía el punto 14.
+  - La logística sin datos de contacto predice 22,5%, y la principal sin recalibrar, 27,9%. La mayor parte de la sobreestimación de 2025 viene de los datos de contacto: en 2025 el mail se cargó al 94,7% de los clientes nuevos (punto 13, *posterior a la prueba*).
 - **Simulación de campaña.** Contactando al 20% de mayor probabilidad (2.030 clientes), quedan contactados 670 de los 2.109 que vuelven (31,8%), contra 422 al azar. Entre los contactados vuelve el 33,0%. Ordenando por probabilidad × utilidad de la primera compra se contacta a menos de los que vuelven (474), pero queda el 67,5% de la utilidad de primera compra de quienes vuelven (38,8% ordenando solo por probabilidad).
 
 **Implica.**
@@ -428,6 +435,21 @@ Detalle, variable por variable: [`docs/uso_del_modelo.md`](uso_del_modelo.md).
 
 - **El score:** es la probabilidad de volver dentro de los 12 meses, solo para clientes en su primera compra. Sirve más para ordenar que como probabilidad exacta, porque en 2025 sobreestimó (23,9% contra 20,8%).
 - **Si se usa en la agencia,** conviene reentrenarlo con todas las cohortes etiquetadas y recalibrarlo cada año. Las dos cosas serían análisis posteriores a la prueba.
+- **Desde 2025 el mail casi no separa:** se cargó al 94,7% de los clientes nuevos (punto 13).
+
+## 19. Identidad del cliente: no se verificó
+
+**Propuesta.** «El id de cliente es una identidad resuelta hoy: verificamos que no use información posterior» (diapositiva 12, riesgos).
+
+**Ahora.** No se verificó. El id (`master_customer_id`) viene resuelto por la base de la empresa, que junta los registros de una misma persona con datos de hoy. El proyecto no tiene acceso a cómo se hace esa resolución ni a su historia.
+
+**Implica.**
+
+- **Si la base juntó de más** (dos personas como una), la vuelta queda sobreestimada.
+- **Si juntó de menos** (una persona como dos), queda subestimada.
+- **En los dos casos** puede haber información posterior en la definición de quién es cliente nuevo.
+
+Es un límite declarado.
 
 ---
 
@@ -437,7 +459,7 @@ Estado final, con la prueba (enero a agosto de 2025) ya corrida, una sola vez (p
 
 **H1 · La recompra se puede predecir por encima de la prevalencia y de una regla simple.** **Confirmada en la prueba**, con el criterio fijado antes de abrirla. La logística principal le gana a la prevalencia y a la mejor regla en PR-AUC y ROC-AUC, con intervalo: PR-AUC 0,319, contra 0,243 de la regla y 0,208 de la prevalencia. El 10% de mayor probabilidad vuelve 1,87 veces el promedio. La regla de la propuesta (primer viaje de 10 mil o más) no supera a la prevalencia, ni en validación ni en la prueba.
 
-**H2 · Pesan el destino regional, viajar con un cliente previo o haber sido acompañante, y el vendedor.** **Se sostiene en parte:** la compañía previa sí pesa, el destino regional y el vendedor no (punto 15). La prueba es consistente: la logística reducida, sin destino, vendedor, montos ni producto, rinde igual que la completa (PR-AUC +0,000 [−0,007; 0,008]). Medido en validación, reentrenando la logística sin cada grupo:
+**H2 · Pesan más el destino regional, viajar con un cliente previo o haber sido acompañante, y el vendedor.** **Se sostiene en parte:** la compañía previa sí pesa, el destino regional y el vendedor no (punto 15). La prueba es consistente: la logística reducida, sin destino, vendedor, montos ni producto, rinde igual que la completa (PR-AUC +0,000 [−0,007; 0,008]). Medido en validación, reentrenando la logística sin cada grupo:
 
 | Grupo | El modelo pierde sin él (PR-AUC) | El grupo solo (PR-AUC) |
 |---|---|---|
@@ -461,9 +483,10 @@ Modelo completo: 0,340. Prevalencia: 0,204.
   - Los dos negativos: el modelo está mejor sin el grupo (el caso del destino).
 - **«El grupo solo»:** cuánto ordena el grupo por su cuenta, comparado con el 0,204 del azar.
 
-- **Compañía previa: sí.** Es el grupo que más aporta.
-  - Lo que pesa es haber viajado antes como acompañante, y más cuantas más veces. Frente a no haberlo hecho, las chances de volver se multiplican por 1,51 con un viaje previo, por 2,15 con dos y por 4,23 con tres o más (odds ratios de la logística, con el resto de las variables fijas).
-  - Viajar con un cliente previo no agrega nada una vez que está lo anterior (×1,02). Viajar con alguien con historial, poco (×1,19).
+- **Compañía previa: sí.** Es el grupo que más aporta (cuatro variables).
+  - Dentro del grupo, lo que pesa es haber viajado antes como acompañante, y más cuantas más veces. Frente a no haberlo hecho, las chances de volver se multiplican por 1,51 con un viaje previo, por 2,15 con dos y por 4,23 con tres o más.
+  - Son odds ratios de la logística entrenada con 2023, con el resto de las variables fijas. «Viajó antes como acompañante» y «cuántas veces» están anidadas, así que el efecto contra «nunca» es el producto de las dos: ×1,66 por la primera, y ×0,91, ×1,29 o ×2,54 por la segunda. Están en `interpretacion_validacion.md`, sección 2.
+  - Viajar con un cliente previo está anidado en viajar con alguien con historial. Contra viajar sin nadie con historial, multiplica las chances por 1,21; por encima de viajar con alguien con historial, solo por 1,02.
 - **Destino regional: no.**
   - Una marca «regional sí/no» no aporta nada frente a no tener destino: PR-AUC −0,000 [−0,000; 0,000].
   - Los cuatro países regionales tienen efectos de ×0,94 (Brasil) a ×1,09 (Paraguay), contra ×0,97 de promedio regional y ×1,01 del resto.
@@ -486,11 +509,11 @@ Modelo completo: 0,340. Prevalencia: 0,204.
 - **El orden no cambia.** En la logística, ficha única y día 0 ordenan igual. El Brier algo mejor de la ficha única viene de que sobreestima menos (22,7% de promedio contra 24,0%), no de que ordene mejor.
 - **Los datos del día 0 sí agregan.** Comparado con no tenerlos, mejoran el PR-AUC y el ROC-AUC con intervalo.
 - **Es consistente con la exploración:** quienes cargaron el dato después vuelven parecido a quienes no lo tienen (punto 8), así que sumar ese dato no agrega señal.
-- **Lo que sí apareció es otro problema:** la relación entre datos de contacto y vuelta cambió entre 2023 y 2024 (punto 13).
+- **Lo que sí apareció es otro problema:** la relación entre datos de contacto y vuelta cambió entre 2023 y 2024, y en 2025 el mail ya se cargaba a casi todos (punto 13).
 - **Limitación:** el registro del día 0 se ve como está hoy (punto 8). Esta medición no descarta fuga por edición del mismo registro.
 
 ## Riesgos de la propuesta: dónde quedaron
 
 - **2025 sin 12 meses completos.** Resuelto con el corte en agosto de 2025 (punto 1).
-- **El id de cliente es una identidad resuelta hoy.** Sigue sin auditar: la resolución de identidad viene de la base y este proyecto no la controla.
+- **El id de cliente es una identidad resuelta hoy.** Sigue sin auditar: la resolución de identidad viene de la base y este proyecto no la controla. Es un cambio respecto de lo que prometía la propuesta (punto 19).
 - **Propensión a volver no es el efecto de contactar.** Sin cambios: es una limitación declarada.

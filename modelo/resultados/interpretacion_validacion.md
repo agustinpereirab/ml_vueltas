@@ -37,6 +37,16 @@ Odds ratio: cuánto multiplica las chances de volver tener ese valor contra «0�
 | Viaja con alguien con historial | 0 | 9.806 | 19,0% | ×1,00 | -0,041 |
 | Viaja con alguien con historial | 1 | 3.789 | 24,1% | ×1,19 | 0,129 |
 
+**Variables anidadas.** Quien tiene viajes previos como acompañante tiene también «viajó antes como acompañante» = 1, y quien viaja con un cliente previo también viaja con alguien con historial. Por eso el odds ratio de una sola de esas columnas no se lee solo: el efecto contra «ninguna de las dos» es el producto de los dos.
+
+| Comparado con nunca haber sido acompañante | Odds ratio combinado |
+|---|---|
+| 1 viaje previo como acompañante | ×1,51 |
+| 2 viajes previos como acompañante | ×2,15 |
+| 3+ viajes previos como acompañante | ×4,23 |
+
+Viajar con un cliente previo, contra viajar sin nadie con historial: ×1,21.
+
 ## 3. Destino
 
 Efecto del destino (país y región juntos) por país, como multiplicador de las chances respecto del cliente promedio: exp(SHAP medio). Solo países con 50 clientes o más en validación.
@@ -49,7 +59,7 @@ Efecto del destino (país y región juntos) por país, como multiplicador de las
 | Paraguay | sí | 85 | 14,1% | ×1,09 |
 | Estados Unidos |  | 965 | 23,9% | ×1,09 |
 | España |  | 1.815 | 20,7% | ×1,05 |
-| Alemania |  | 212 | 16,5% | ×1,02 |
+| Alemania (GE) |  | 212 | 16,5% | ×1,02 |
 | Argentina | sí | 2.284 | 19,6% | ×1,00 |
 | otro país |  | 1.765 | 22,8% | ×0,99 |
 | Rep. Dominicana |  | 397 | 18,6% | ×0,98 |

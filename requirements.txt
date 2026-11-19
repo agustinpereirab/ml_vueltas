@@ -6,6 +6,7 @@ catboost==1.2.10
 shap==0.54.1
 matplotlib==3.11.2
 
-# Solo para rearmar la tabla dentro de la empresa (exportacion/01 y 02).
+# Para rearmar la tabla dentro de la empresa (exportacion/01 y 02) y para las
+# pruebas automáticas de exportacion/ (duckdb).
 duckdb==2.0.0
 psycopg[binary]==3.3.9

@@ -45,8 +45,9 @@ python modelo/recalibrar.py                               # recalibración con v
 python modelo/interpretar.py                              # hipótesis 2: grupos y SHAP, ~6 min
 python modelo/reducido.py                                 # modelo secundario, ~1 min
 python modelo/prueba.py                                   # LA PRUEBA: ya se corrió (2026-11-19) y no vuelve a correr
-python -m unittest discover -s exportacion/pruebas -t .   # pruebas de la tabla
-python -m unittest discover -s modelo/pruebas -t .        # pruebas del modelo
+python modelo/exportar.py                                 # exporta los modelos a modelo/exportado/
+python -m unittest discover -s exportacion/pruebas -t .   # pruebas automáticas (tests) del armado de la tabla
+python -m unittest discover -s modelo/pruebas -t .        # pruebas automáticas (tests) del modelo
 ```
 
 **Regla del proyecto: el bloque de prueba (enero a agosto de 2025) se usa una sola vez, al final.** Para elegir y comparar se usan entrenamiento (2023) y validación (2024). La prueba ya se corrió el 2026-11-19, siguiendo [`docs/plan_de_la_prueba.md`](docs/plan_de_la_prueba.md); los resultados están en [`modelo/resultados/prueba.md`](modelo/resultados/prueba.md). Cualquier cambio de modelo posterior tiene que declararse como análisis hecho después de ver la prueba.

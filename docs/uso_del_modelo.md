@@ -4,7 +4,7 @@ Qué da el modelo, qué necesita para dar un score a un cliente nuevo y qué est
 
 ## Qué hay
 
-[`modelo/exportado/`](../modelo/exportado/) tiene los dos modelos evaluados en la prueba, en JSON:
+[`modelo/exportado/`](../modelo/exportado/) tiene, en JSON, el modelo principal y el reducido. Son dos de los siete que se evaluaron en la prueba:
 
 | Archivo | Modelo | Variables |
 |---|---|---|
@@ -26,6 +26,7 @@ Se verificó que reproducen las probabilidades del modelo original en los 13.595
 - **Solo para clientes en su primera compra.** No aplica a quien ya compró antes.
 - **Sobreestima.** En la prueba (enero a agosto de 2025) predijo 23,9% en promedio y volvió el 20,8%. Sirve más para **ordenar** a quién contactar primero que como probabilidad exacta.
 - **Mide propensión, no efecto.** Un score alto dice que el cliente tiende a volver, no que contactarlo lo haga volver.
+- **El mail ya casi no separa.** `d0_tiene_mail` es la variable con mayor contribución en el modelo principal (SHAP) y también está en el reducido. Pero en 2025 se cargó al 94,7% de los clientes nuevos, contra el 42,7% en 2023, el año con que se entrenaron. A partir de 2025 el modelo le suma esa ventaja a casi todos, y por eso sobreestima. Para usarlo con clientes de hoy conviene reentrenarlo con datos recientes. Es un descriptivo posterior a la prueba: ver el registro de cambios, punto 13.
 
 ## Qué necesita la entrada
 

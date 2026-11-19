@@ -46,7 +46,7 @@ Con `bloque`, la etiqueta del último cliente de entrenamiento se cierra antes d
 | `viajes_previos_acompaniante` | Cuántas fichas tuvo así | 0, 1, 2, 3+ |
 | `viaja_con_cliente_previo` | Alguno de sus acompañantes ya había comprado antes | 0, 1 |
 | `viaja_con_alguien_con_historial` | Alguno de sus acompañantes ya había viajado o comprado antes | 0, 1 |
-| `pasajeros` | Tamaño del grupo | 1, 2, 3, 4, 5-9, 10+, sin_dato |
+| `pasajeros` | Tamaño del grupo. En la interpretación del modelo (hipótesis 2) va en el grupo «viaje», no en «compañía previa» | 1, 2, 3, 4, 5-9, 10+, sin_dato |
 
 ### La compra
 
@@ -75,7 +75,7 @@ Con `bloque`, la etiqueta del último cliente de entrenamiento se cierra antes d
 | `noches` | Días entre la salida y el regreso | 0-3, 4-7, 8-14, 15+, sin_dato |
 | `anticipacion` | Días entre la compra y el viaje | 0-7, 8-14, 15-30, 31-60, 61-90, 91-180, 181+, sin_dato |
 
-`sudamerica` no incluye Brasil ni Uruguay. `caribe` incluye México y Centroamérica. `GE` es Alemania.
+`sudamerica` no incluye Brasil ni Uruguay. `caribe` incluye México y Centroamérica. `GE` es, en la base, sobre todo Alemania: Fráncfort, Múnich, Düsseldorf y Hamburgo, más unos pocos destinos de Georgia (Tiflis, Batumi). Berlín figura aparte como `DE` y en la tabla cae en «otro». Medido con ciudades de destino en la copia de septiembre de 2026: 641 fichas con `GE` y 260 con `DE`.
 
 ### El vendedor
 
@@ -125,6 +125,13 @@ Para llegar a los puntos 5 y 6 se suprimieron valores en los clientes que quedab
 
 Además se retiraron 31 clientes que no llegaban a un grupo de 5 ni suprimiendo todo.
 
+**Los conteos de supresión de `manifiesto.json`** no son por columna: cuentan las filas tocadas en cada paso del algoritmo, y una fila puede pasar por más de un paso.
+
+- `prestadas`: filas de un grupo grande a las que se les suprimió el detalle para completar un grupo de al menos 3.
+- `grupo_completo`: filas a las que se les suprimió el detalle porque ningún grupo podía prestar.
+
+Los porcentajes por columna son los de la tabla de arriba.
+
 ### Límites
 
 - La protección vale contra quien conoce un viaje desde afuera. **Quien tenga acceso a la base de Jetmar puede volver a cruzar la tabla**: mirando todas las columnas juntas, el 93,6% de las filas es única.
@@ -140,11 +147,11 @@ Además se retiraron 31 clientes que no llegaban a un grupo de 5 ni suprimiendo 
 ## Cómo se regenera (solo dentro de la empresa)
 
 ```
-py exportacion/01_tomar_foto.py     # foto mínima de la base, fuera de OneDrive
-py exportacion/02_armar_tabla.py    # arma datos/tabla_modelo.csv
-py exportacion/03_verificar.py      # la revisa; lo puede correr quien reciba la tabla
-py analisis/graficas.py             # analisis/exploracion.html
-py -m unittest discover -s exportacion/pruebas -t .
+python exportacion/01_tomar_foto.py     # foto mínima de la base, fuera de OneDrive
+python exportacion/02_armar_tabla.py    # arma datos/tabla_modelo.csv
+python exportacion/03_verificar.py      # la revisa; lo puede correr quien reciba la tabla
+python analisis/graficas.py             # analisis/exploracion.html
+python -m unittest discover -s exportacion/pruebas -t .   # pruebas automáticas (tests)
 ```
 
 Las reglas de la tabla están en `exportacion/reglas.py`. Volver a correr el paso 2 sobre la misma foto da la misma tabla y los mismos códigos.

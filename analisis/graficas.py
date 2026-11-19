@@ -77,7 +77,7 @@ NOMINALES = ["pagador", "tipo_producto", "regimen_hotel", "aerolinea", "region_d
 CONTRATO = dict(R.CONTRATO)
 PAISES = {"BR": "Brasil", "AR": "Argentina", "ES": "España", "US": "Estados Unidos", "MX": "México",
           "CL": "Chile", "DO": "Rep. Dominicana", "UY": "Uruguay", "IT": "Italia", "CO": "Colombia",
-          "GE": "Alemania", "PE": "Perú", "GB": "Reino Unido", "PY": "Paraguay"}
+          "GE": "Alemania (GE)", "PE": "Perú", "GB": "Reino Unido", "PY": "Paraguay"}
 BONITO = {
     "brasil": "Brasil", "sudamerica": "Sudamérica (resto)", "europa": "Europa",
     "caribe": "Caribe y Centroamérica", "norteamerica": "Norteamérica",
