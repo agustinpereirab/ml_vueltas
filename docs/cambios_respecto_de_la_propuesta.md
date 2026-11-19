@@ -24,6 +24,7 @@ Este registro compara la propuesta presentada en clase ([`presentacion_propuesta
 | 14 | Recalibración | no estaba prevista | la logística se recalibra con validación corriendo el intercepto |
 | 15 | Interpretación (H2) | SHAP sobre el mejor modelo | SHAP más reentrenar sin cada grupo de variables, con intervalo |
 | 16 | Prueba | un modelo, evaluado en la cohorte nueva | principal más secundarios declarados en un plan versionado antes de abrir la prueba |
+| 17 | Resultado final | rendimiento moderado pero útil, lift claro en el decil superior | H1 confirmada en la prueba: lift 1,87 en el 10% y 1,59 en el 20% superior |
 
 El estado de las tres hipótesis está al final.
 
@@ -368,15 +369,50 @@ H2 habla de «destino regional», así que además se probó un modelo que cambi
 
 **Implica.** En la defensa se puede mostrar el commit del plan con su fecha, anterior al de los resultados. Resultados de validación del reducido: [`modelo/resultados/reducido_validacion.md`](../modelo/resultados/reducido_validacion.md).
 
+## 17. Resultados de la prueba (enero a agosto de 2025)
+
+Corrida una sola vez el 2026-11-19, siguiendo el plan versionado en el commit `69632ac`. Son 10.148 clientes, de los que vuelve el 20,8%. Detalle completo: [`modelo/resultados/prueba.md`](../modelo/resultados/prueba.md).
+
+| Modelo | PR-AUC | ROC-AUC | Lift 10% | Lift 20% | Captura 20% |
+|---|---|---|---|---|---|
+| Prevalencia | 0,208 | 0,500 | 1,00 | 1,00 | 20,0% |
+| Regla: primer viaje de 10 mil o más | 0,206 | 0,494 | 0,91 | 0,96 | 19,2% |
+| Regla: viajó antes como acompañante | 0,243 | 0,566 | 1,61 | 1,51 | 30,1% |
+| **Logística principal (recalibrada)** | **0,319 [0,301; 0,339]** | **0,620 [0,606; 0,633]** | **1,87** | **1,59** | **31,8%** |
+| Logística reducida | 0,319 | 0,628 | 1,84 | 1,58 | 31,6% |
+| CatBoost | 0,312 | 0,614 | 1,85 | 1,53 | 30,5% |
+| Logística entrenada con 2023 + 2024 | 0,332 | 0,638 | 1,90 | 1,60 | 31,9% |
+
+**Lo que se ve.**
+
+- **H1 se confirma con el criterio del plan.** La principal le gana a la prevalencia (PR-AUC +0,111 [0,096; 0,129]; ROC-AUC +0,120 [0,106; 0,133]) y a la regla «viajó antes como acompañante» (PR-AUC +0,077 [0,064; 0,090]; ROC-AUC +0,053 [0,042; 0,065]).
+- **El rendimiento baja algo respecto de validación:** PR-AUC de 0,340 a 0,319 y ROC-AUC de 0,648 a 0,620. Dos causas posibles: la escalera se comparó en validación, y la relación entre los datos de contacto y la vuelta siguió cambiando (ver calibración).
+- **La regla de la propuesta tampoco le gana a la prevalencia en la prueba:** PR-AUC −0,002 [−0,003; 0,000].
+- **CatBoost no le gana a la logística:** PR-AUC −0,007 [−0,016; 0,002]. Repite lo de validación.
+- **La logística reducida rinde igual que la principal y está mejor calibrada.** PR-AUC +0,000 [−0,007; 0,008]; ROC-AUC +0,009 [0,000; 0,017]; log-loss −0,0026 [−0,0047; −0,0006].
+- **Entrenar con 2023 + 2024 mejora el orden:** PR-AUC +0,013 [0,007; 0,019]; ROC-AUC +0,019 [0,011; 0,026]. Sus etiquetas se superponen con el período de prueba (punto 2), así que es un resultado secundario.
+- **Calibración: la sobreestimación siguió en 2025.**
+  - La principal recalibrada predice 23,9% en promedio y vuelve el 20,8%. Sin recalibrar predecía 27,9%.
+  - La recalibración con 2024 corrigió parte (Brier −0,0046 [−0,0052; −0,0039]), pero no todo: la deriva continuó, como advertía el punto 14.
+- **Simulación de campaña.** Contactando al 20% de mayor probabilidad (2.030 clientes), quedan contactados 670 de los 2.109 que vuelven (31,8%), contra 422 al azar. Entre los contactados vuelve el 33,0%. Ordenando por probabilidad × utilidad de la primera compra se contacta a menos de los que vuelven (474), pero queda el 67,5% de la utilidad de primera compra de quienes vuelven (38,8% ordenando solo por probabilidad).
+
+**Implica.**
+
+- **Para la agencia:** la propuesta decía que, si el boosting no le ganaba a la logística, alcanzaba con la regla simple. Pasó lo primero, pero la logística sí le gana a la regla con intervalo: la recomendación es la logística, y la versión reducida es más simple de explicar sin perder orden.
+- **Para usarlo de verdad:**
+  - recalibrar cada año, por la deriva en la carga de datos de contacto;
+  - reentrenar con los años más recientes;
+  - medir el efecto del contacto con un experimento.
+
 ---
 
 ## Estado de las hipótesis
 
-Actualizado con la escalera, la recalibración y la interpretación, todo en validación (2024). Falta confirmar en prueba (2025), una sola vez y al final.
+Estado final, con la prueba (enero a agosto de 2025) ya corrida, una sola vez (punto 17).
 
-**H1 · La recompra se puede predecir por encima de la prevalencia y de una regla simple.** Se sostiene en validación. La logística supera a la prevalencia y a la mejor regla en las cuatro métricas, con intervalo: PR-AUC 0,340 contra 0,243 y 0,204, y lift 20% de 1,66. La regla de la propuesta (primer viaje de 10 mil o más) no supera a la prevalencia (punto 12).
+**H1 · La recompra se puede predecir por encima de la prevalencia y de una regla simple.** **Confirmada en la prueba**, con el criterio fijado antes de abrirla. La logística principal le gana a la prevalencia y a la mejor regla en PR-AUC y ROC-AUC, con intervalo: PR-AUC 0,319, contra 0,243 de la regla y 0,208 de la prevalencia. El 10% de mayor probabilidad vuelve 1,87 veces el promedio. La regla de la propuesta (primer viaje de 10 mil o más) no supera a la prevalencia, ni en validación ni en la prueba.
 
-**H2 · Pesan el destino regional, viajar con un cliente previo o haber sido acompañante, y el vendedor.** Se sostiene en parte: la compañía previa sí pesa, el destino regional y el vendedor no (punto 15). Medido en validación, reentrenando la logística sin cada grupo:
+**H2 · Pesan el destino regional, viajar con un cliente previo o haber sido acompañante, y el vendedor.** **Se sostiene en parte:** la compañía previa sí pesa, el destino regional y el vendedor no (punto 15). La prueba es consistente: la logística reducida, sin destino, vendedor, montos ni producto, rinde igual que la completa (PR-AUC +0,000 [−0,007; 0,008]). Medido en validación, reentrenando la logística sin cada grupo:
 
 | Grupo | El modelo pierde sin él (PR-AUC) | El grupo solo (PR-AUC) |
 |---|---|---|
@@ -414,7 +450,7 @@ Modelo completo: 0,340. Prevalencia: 0,204.
   - No se listan ni se ordenan vendedores.
 - **Fuera de H2 pesan los datos de contacto del día 0.** Sin ellos, el ROC-AUC cae 0,046, la mayor caída de todos los grupos. El mail cargado el día 0 es la variable con mayor contribución individual (SHAP medio 0,374, contra 0,136 de «viajó antes como acompañante»).
 
-**H3 · Parte de la asociación entre «datos de contacto cargados» y volver es fuga, y se reduce al reconstruir desde la primera compra.** No se sostiene en validación. Entrenar con la ficha única no rinde más que entrenar con la del día 0:
+**H3 · Parte de la asociación entre «datos de contacto cargados» y volver es fuga, y se reduce al reconstruir desde la primera compra.** **No se sostiene**, ni en validación ni en la prueba. En la prueba, ficha única − día 0 da PR-AUC +0,002 [−0,003; 0,008] y ROC-AUC +0,004 [−0,002; 0,011]. Los datos de contacto del día 0 sí aportan: sin ellos, el PR-AUC baja 0,014 [0,008; 0,020]. En validación:
 
 | Comparación | PR-AUC | ROC-AUC | Brier |
 |---|---|---|---|
