@@ -79,7 +79,7 @@ Las mediciones de cada una están al final de [`docs/cambios_respecto_de_la_prop
 
 ## 5. Qué cambió respecto de la propuesta
 
-Los 17 cambios, cada uno con la medición que lo motivó, están en [`docs/cambios_respecto_de_la_propuesta.md`](docs/cambios_respecto_de_la_propuesta.md). Los que cambian lo que se presentó:
+Los 18 cambios, cada uno con la medición que lo motivó, están en [`docs/cambios_respecto_de_la_propuesta.md`](docs/cambios_respecto_de_la_propuesta.md). Los que cambian lo que se presentó:
 
 - **Prevalencia:** vuelve el 21,9%, no «entre 10 y 20».
 - **Cohortes:** 2023 a agosto de 2025, no 2021 a 2025, por falta de detalle de servicios antes de 2023.
@@ -106,16 +106,29 @@ python modelo/puntuar.py modelo/exportado/principal.json clientes.csv clientes_c
 
 - **Qué devuelve:** agrega la columna `prob_vuelve_12`, la probabilidad de que cada cliente vuelva dentro de los 12 meses de su primera compra.
 - **Qué necesita la entrada:** las columnas en el formato de la tabla del modelo, con las mismas bandas y categorías.
-- **Qué no hace:** no lee una ficha del sistema de gestión tal como viene. Esa conversión requiere la base de la empresa (por ejemplo, para saber si el cliente viajó antes como acompañante), y todavía no está automatizada para clientes nuevos.
+- **Qué no hace:** no lee una ficha del sistema de gestión tal como viene. Antes hay que calcular las variables del día 0 con la base de la empresa.
+  - Del timeline del cliente salen 13 de las 29 variables del modelo principal y 5 de las 12 del reducido.
+  - El resto necesita otras tablas: los acompañantes, el vendedor, el registro de contacto, quién pagó y los servicios.
+  - El 2026-11-19 se decidió no automatizarlo por ahora.
+  - Detalle variable por variable: [`docs/uso_del_modelo.md`](docs/uso_del_modelo.md).
 - **Comprobado:** el JSON reproduce las probabilidades del modelo original en los 13.595 clientes de validación.
 
-## 8. Dónde está cada cosa
+## 8. Estado y pendientes (2026-11-19)
+
+- **Terminado:** la tabla, la exploración, la escalera, la recalibración, la interpretación, la prueba y los modelos exportados.
+- **La prueba ya se usó.** No se vuelve a correr ni se usa para elegir nada. Un análisis nuevo sobre esos clientes se declara como posterior a la prueba.
+- **Decidido no hacer por ahora:** el script que puntúa fichas nuevas desde la base.
+- **Pendiente:** el material para la defensa (informe o presentación). Falta definir el formato y la fecha. Todo el contenido está en este documento y en los archivos que enlaza.
+
+## 9. Dónde está cada cosa
 
 | Archivo | Qué es |
 |---|---|
 | [`HALLAZGOS.md`](HALLAZGOS.md) | Este resumen. |
+| [`CLAUDE.md`](CLAUDE.md) | Instrucciones para una sesión de Claude que retome el proyecto: orden de lectura, estado y reglas. |
+| [`docs/uso_del_modelo.md`](docs/uso_del_modelo.md) | Qué da el modelo, qué necesita para un cliente nuevo y qué está decidido. |
 | [`presentacion_propuesta.html`](presentacion_propuesta.html) | La propuesta presentada en clase (Entrega 1). |
-| [`docs/cambios_respecto_de_la_propuesta.md`](docs/cambios_respecto_de_la_propuesta.md) | Los 17 cambios respecto de la propuesta, con su medición, y el estado de las hipótesis. |
+| [`docs/cambios_respecto_de_la_propuesta.md`](docs/cambios_respecto_de_la_propuesta.md) | Los 18 cambios respecto de la propuesta, con su medición, y el estado de las hipótesis. |
 | [`docs/plan_de_la_prueba.md`](docs/plan_de_la_prueba.md) | El plan fijado antes de abrir la prueba. |
 | [`datos/DICCIONARIO.md`](datos/DICCIONARIO.md) | Las 40 columnas de la tabla, cómo se definió cada cosa y cómo se anonimizó. |
 | [`analisis/exploracion.html`](analisis/exploracion.html) | Gráficas de exploración (abrir en el navegador). |

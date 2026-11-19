@@ -2,7 +2,7 @@
 
 Este registro compara la propuesta presentada en clase ([`presentacion_propuesta.html`](../presentacion_propuesta.html), Entrega 1) con lo que efectivamente se hizo. Cada entrada dice qué decía la propuesta, qué se hizo, qué medición lo motivó y qué implica para la defensa.
 
-**De dónde salen las cifras.** Salvo que se indique otra fuente, salen de la tabla del modelo ([`datos/tabla_modelo.csv`](../datos/DICCIONARIO.md)). La tabla se armó el 2026-11-11 sobre una foto de la base de ese mismo día, con compras hasta el 2026-11-09. Las cifras que miran la etiqueta usan solo el bloque de entrenamiento (cohorte 2023); la excepción son los conteos por bloque. Las cifras marcadas como *preliminares* son de una copia anterior de la base (septiembre de 2026), con un universo aproximado; sirvieron para decidir, no para citar como resultado.
+**De dónde salen las cifras.** Salvo que se indique otra fuente, salen de la tabla del modelo ([`datos/tabla_modelo.csv`](../datos/DICCIONARIO.md)). La tabla se armó el 2026-11-11 sobre una foto de la base de ese mismo día, con compras hasta el 2026-11-09. En los puntos 1 a 10, las cifras que miran la etiqueta usan solo el bloque de entrenamiento (cohorte 2023), salvo los conteos por bloque. Desde el punto 11, cada cifra dice si es de validación (2024) o de la prueba (2025). Las cifras marcadas como *preliminares* son de una copia anterior de la base (septiembre de 2026), con un universo aproximado; sirvieron para decidir, no para citar como resultado.
 
 ## Resumen
 
@@ -25,6 +25,7 @@ Este registro compara la propuesta presentada en clase ([`presentacion_propuesta
 | 15 | Interpretación (H2) | SHAP sobre el mejor modelo | SHAP más reentrenar sin cada grupo de variables, con intervalo |
 | 16 | Prueba | un modelo, evaluado en la cohorte nueva | principal más secundarios declarados en un plan versionado antes de abrir la prueba |
 | 17 | Resultado final | rendimiento moderado pero útil, lift claro en el decil superior | H1 confirmada en la prueba: lift 1,87 en el 10% y 1,59 en el 20% superior |
+| 18 | Uso del modelo | no se preveía dejarlo para usar | exportado y portable; puntuar fichas nuevas desde la base, sin automatizar por decisión del usuario |
 
 El estado de las tres hipótesis está al final.
 
@@ -403,6 +404,30 @@ Corrida una sola vez el 2026-11-19, siguiendo el plan versionado en el commit `6
   - recalibrar cada año, por la deriva en la carga de datos de contacto;
   - reentrenar con los años más recientes;
   - medir el efecto del contacto con un experimento.
+
+## 18. Uso del modelo: exportado; puntuar fichas nuevas, sin automatizar
+
+**Propuesta.** «Lo llevamos al negocio»: ordenar clientes por probabilidad y simular una campaña. No hablaba de dejar el modelo para usar.
+
+**Ahora.**
+
+- Los dos modelos evaluados en la prueba (principal y reducido) están exportados como JSON en [`modelo/exportado/`](../modelo/exportado/). [`modelo/puntuar.py`](../modelo/puntuar.py) los aplica sin instalar nada. Reproducen el modelo original en validación y corren en una computadora sin librerías.
+- **El 2026-11-19 el usuario decidió no armar, por ahora, el script que puntúa fichas nuevas desde la base.** Su indicación: eso «se maneja con el timeline de un cliente».
+
+**Lo medido.** El modelo recibe filas en el formato de la tabla, no fichas. Del timeline del cliente (`gold.mart_jetuy_persona_timeline`) salen 13 de las 29 variables del modelo principal y 5 de las 12 del reducido. Las demás necesitan:
+
+- el historial de los acompañantes;
+- el historial del vendedor;
+- el registro de contacto de la primera compra;
+- quién pagó;
+- los servicios de la ficha.
+
+Detalle, variable por variable: [`docs/uso_del_modelo.md`](uso_del_modelo.md).
+
+**Implica.**
+
+- **El score:** es la probabilidad de volver dentro de los 12 meses, solo para clientes en su primera compra. Sirve más para ordenar que como probabilidad exacta, porque en 2025 sobreestimó (23,9% contra 20,8%).
+- **Si se usa en la agencia,** conviene reentrenarlo con todas las cohortes etiquetadas y recalibrarlo cada año. Las dos cosas serían análisis posteriores a la prueba.
 
 ---
 

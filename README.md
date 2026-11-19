@@ -9,6 +9,8 @@ Proyecto final de Aprendizaje Automático I. El objetivo es predecir, el día de
 | [`HALLAZGOS.md`](HALLAZGOS.md) | **El resumen de todo: empezar por acá.** |
 | [`presentacion_propuesta.html`](presentacion_propuesta.html) | La propuesta presentada en clase (Entrega 1). |
 | [`docs/cambios_respecto_de_la_propuesta.md`](docs/cambios_respecto_de_la_propuesta.md) | Qué cambió desde la propuesta y por qué. Se actualiza con cada decisión. |
+| [`docs/uso_del_modelo.md`](docs/uso_del_modelo.md) | Qué da el modelo, qué necesita para un cliente nuevo y qué está decidido. |
+| [`CLAUDE.md`](CLAUDE.md) | Instrucciones para una sesión de Claude que retome el proyecto. |
 | [`datos/`](datos/) | `DICCIONARIO.md` (las columnas de la tabla) y `manifiesto.json` (fecha, filas y huella de la tabla). **La tabla no se versiona.** |
 | [`exportacion/`](exportacion/) | Cómo se arma y se verifica la tabla. Los pasos 1 y 2 solo corren dentro de la empresa. |
 | [`analisis/`](analisis/) | Exploración de la tabla: `exploracion.html`. |

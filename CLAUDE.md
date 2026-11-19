@@ -1,0 +1,87 @@
+# Instrucciones para sesiones de Claude en este repo
+
+Arranque en frío: qué es el proyecto, qué leer y en qué orden, en qué estado está y qué reglas no se rompen. No repite contenido; dice dónde está.
+
+## Qué es
+
+Proyecto final de Aprendizaje Automático I: «¿Vuelve a viajar?». Busca predecir, el día de su primera compra, si un cliente nuevo de Jetmar (agencia de 5M Travel Group, Uruguay) vuelve a viajar con la agencia dentro de los 12 meses. El equipo son cuatro estudiantes. El que trabaja en la empresa y tiene acceso a la base es Agustín, el usuario de este repo.
+
+## Qué leer, en este orden
+
+1. [`HALLAZGOS.md`](HALLAZGOS.md): el resumen de todo, con índice de archivos y glosario.
+2. [`docs/cambios_respecto_de_la_propuesta.md`](docs/cambios_respecto_de_la_propuesta.md): **la fuente de verdad** de decisiones, resultados y estado de las hipótesis. Si algo de la propuesta o de otro archivo lo contradice, manda este registro.
+3. [`datos/DICCIONARIO.md`](datos/DICCIONARIO.md): las 40 columnas de la tabla y cómo se definió cada cosa.
+4. [`docs/plan_de_la_prueba.md`](docs/plan_de_la_prueba.md) y [`modelo/resultados/prueba.md`](modelo/resultados/prueba.md): la evaluación final.
+5. [`docs/uso_del_modelo.md`](docs/uso_del_modelo.md): qué da el modelo, qué necesita y qué está decidido sobre usarlo con clientes nuevos.
+
+## Estado (2026-11-19)
+
+**Hecho:**
+
+- la tabla anonimizada y la exploración;
+- la escalera de modelos, la recalibración y la interpretación para H2, todo en validación;
+- **la prueba, corrida una sola vez:**
+  - H1 confirmada;
+  - H2 en parte;
+  - H3 no se sostiene;
+- los modelos exportados para usarlos en otra computadora.
+
+**Decidido no hacer:** el script para puntuar fichas nuevas desde la base (decisión del usuario, 2026-11-19; ver `docs/uso_del_modelo.md`).
+
+**Pendiente:** el material para la defensa (informe o presentación). El usuario todavía no dijo el formato ni la fecha. Antes de armarlo, preguntar.
+
+## Reglas que no se rompen
+
+1. **El bloque de prueba ya se usó.** Son los clientes con primera compra entre enero y agosto de 2025, evaluados el 2026-11-19 con el plan versionado en el commit `69632ac`.
+   - No se vuelve a elegir, ajustar ni comparar modelos nuevos con ese bloque como si fuera limpio.
+   - Todo análisis nuevo que lo toque se anota como **posterior a la prueba**.
+   - `modelo/prueba.py` se niega a correr de nuevo. No forzarlo: no borrar `modelo/resultados/prueba.json`.
+2. **Vocabulario.** «Prueba» o «bloque de prueba» es ese conjunto de clientes de 2025. Las carpetas `exportacion/pruebas/` y `modelo/pruebas/` son **pruebas automáticas** del código (tests unitarios). No confundirlos.
+3. **Los datos no viajan.**
+   - `datos/tabla_modelo.csv` no está en el repo ni en el zip de hallazgos, y no se versiona. Está anonimizada pero no es pública.
+   - La foto de la base, la tabla de correspondencia de códigos y la constante de la utilidad viven solo en la máquina del usuario, fuera de OneDrive, y nunca entran al repo.
+   - Al explorar datos de clientes, imprimir conteos y formatos, nunca valores personales.
+4. **Los números de [`presentacion_propuesta.html`](presentacion_propuesta.html) están superados.**
+   - La prevalencia es 21,9%, no «10 a 20».
+   - Las cohortes son 2023 a agosto de 2025, no 2021 a 2025.
+   - La regla de «10 mil USD» no le gana al azar.
+
+   La propuesta sirve para comparar; las cifras vigentes están en el registro de cambios y en `modelo/resultados/`.
+5. **Toda decisión o cambio respecto de la propuesta se anota en el registro de cambios,** con su medición, en el mismo paso en que se toma. El usuario lo pidió porque se usa en la defensa.
+6. **Cómo se cita una cifra.** Va con su base de comparación y sin adjetivos que la valoren («el hallazgo más fuerte»). Lo preliminar o exploratorio se marca como tal. Cada cifra sale de un archivo de resultados (`modelo/resultados/*.json` o `.md`) o del registro; no se recalcula con otra definición.
+7. **Vendedores:** no se listan ni se ordenan resultados por vendedor.
+8. **Anonimato de la tabla:** cualquier cambio pasa por [`exportacion/reglas.py`](exportacion/reglas.py) y tiene que dejar `exportacion/03_verificar.py` en PASA.
+9. **Los informes generados no se editan a mano.** Los `.md`, `.json` y `.png` de `modelo/resultados/` y `analisis/exploracion.html` salen de sus scripts. Para cambiarlos, se cambia el script y se vuelve a correr.
+
+## Qué corre y qué no
+
+**Sin la tabla** (por ejemplo, desde el zip de hallazgos):
+
+- Todas las pruebas automáticas, que usan datos inventados:
+  ```
+  python -m unittest discover -s exportacion/pruebas -t .
+  python -m unittest discover -s modelo/pruebas -t .
+  ```
+- `python modelo/puntuar.py <modelo.json> <entrada.csv> <salida.csv>`, con filas propias en el formato de la tabla.
+- Leer todos los resultados.
+
+**Con la tabla** copiada a `datos/` y verificada con `python exportacion/03_verificar.py`:
+
+| Script | Tiempo |
+|---|---|
+| `modelo/escalera.py` | ~70 min |
+| `modelo/recalibrar.py` | ~1 min |
+| `modelo/interpretar.py` | ~6 min |
+| `modelo/reducido.py` | ~1 min |
+| `modelo/exportar.py` | segundos |
+
+Cada script se niega a correr si la tabla no coincide con la huella de `datos/manifiesto.json`.
+
+**Solo dentro de la empresa** (base de datos y VPN): `exportacion/01_tomar_foto.py` y `exportacion/02_armar_tabla.py`.
+
+## Entorno
+
+- **Python:** 3.14, con las versiones de [`requirements.txt`](requirements.txt).
+- **Entorno virtual:** crearlo fuera de OneDrive; si no, sincroniza cientos de MB.
+- **En la máquina del usuario:** el intérprete es `py`, porque `python` no responde.
+- **Git:** no tiene identidad global configurada. Los commits van con `-c user.name=... -c user.email=...`. Los datos nunca se versionan.
