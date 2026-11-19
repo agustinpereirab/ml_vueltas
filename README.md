@@ -37,7 +37,7 @@ py -m venv <carpeta fuera de OneDrive>
 ```
 python exportacion/03_verificar.py                        # verificar la tabla
 python analisis/graficas.py                               # exploracion.html
-python modelo/escalera.py                                 # escalera de modelos (validación)
+python modelo/escalera.py                                 # escalera de modelos (validación), ~70 min
 python -m unittest discover -s exportacion/pruebas -t .   # pruebas de la tabla
 python -m unittest discover -s modelo/pruebas -t .        # pruebas del modelo
 ```

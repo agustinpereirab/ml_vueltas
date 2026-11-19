@@ -18,6 +18,9 @@ Este registro compara la propuesta presentada en clase ([`presentacion_propuesta
 | 8 | Ficha del día 0 | «reconstruida con lo que se sabía ese día» | el registro usado en la primera compra, tal como está hoy |
 | 9 | Regla simple | primer viaje de más de 10 mil ⇒ vuelve | se mantiene y se suma «viajó antes como acompañante ⇒ vuelve» |
 | 10 | Simulación de campaña | sobre la cohorte 2024 | sobre el bloque de prueba (enero a agosto de 2025) |
+| 11 | Hiperparámetros | no se decía | validación cruzada dentro de entrenamiento; validación solo para comparar |
+| 12 | Resultado de la escalera | cada escalón tiene que ganarle al anterior | la logística gana; CatBoost no le gana a la logística; la regla de 10 mil no le gana a la prevalencia |
+| 13 | Calibración | — | los modelos sobreestiman en 2024 porque cambió cómo se cargan los datos de contacto |
 
 El estado de las tres hipótesis está al final.
 
@@ -212,15 +215,84 @@ Según cuántos registros junta hoy la ficha única: vuelve el 18,8% con uno (6.
 
 La utilidad viene como índice. Multiplicar por una constante no cambia el orden, así que la priorización es la misma. Lo que cambia es la unidad: los resultados salen en índice. Para leerlos en dólares, alguien de la empresa los multiplica por la constante, que queda adentro.
 
+## 11. Cómo se eligen los hiperparámetros
+
+**Propuesta.** La escalera (prevalencia → regla simple → logística → gradient boosting con CatBoost) y la condición de que cada escalón le gane al anterior con intervalo. No decía cómo se eligen los hiperparámetros.
+
+**Ahora.**
+
+- **Todo se elige dentro de entrenamiento (2023),** con validación cruzada estratificada de 5 pliegues.
+  - Logística: el C de la regularización, por PR-AUC.
+  - CatBoost: la cantidad de árboles, por parada temprana sobre la log-loss; la configuración (profundidad y regularización), por PR-AUC entre 4.
+  - Reglas: cada una predice la tasa de vuelta que tuvo su grupo en entrenamiento.
+- **La validación (2024) solo se usa para medir y comparar.** Las comparaciones llevan intervalos bootstrap pareados: 2.000 remuestreos de los mismos clientes para todos los modelos.
+- **La prueba (2025) no se tocó.**
+- **Logística y CatBoost se ajustan en tres brazos para H3:** sin datos de contacto, con los del día 0 y con los de la ficha única.
+
+**Implica.** Los resultados de validación no están optimizados sobre validación, así que las comparaciones entre escalones son limpias. Código: [`modelo/`](../modelo/). Resultados completos: [`modelo/resultados/escalera_validacion.md`](../modelo/resultados/escalera_validacion.md).
+
+## 12. Resultado de la escalera en validación
+
+Brazo día 0, sobre 13.595 clientes de 2024, de los que vuelve el 20,4%. Entre corchetes, intervalo del 95%.
+
+| Escalón | PR-AUC | ROC-AUC | Lift 20% | Lift 10% | Captura 20% |
+|---|---|---|---|---|---|
+| Prevalencia | 0,204 | 0,500 | 1,00 | 1,00 | 20,0% |
+| Regla: primer viaje de 10 mil o más | 0,204 [0,197; 0,211] | 0,498 [0,493; 0,504] | 0,99 [0,95; 1,03] | 0,98 | 19,8% |
+| Regla: viajó antes como acompañante | 0,243 [0,233; 0,253] | 0,571 [0,562; 0,579] | 1,54 [1,47; 1,61] | 1,67 | 30,8% |
+| **Logística** | **0,340 [0,323; 0,357]** | **0,648 [0,637; 0,660]** | **1,66 [1,58; 1,73]** | **1,90** | **33,2%** |
+| CatBoost | 0,339 [0,323; 0,358] | 0,643 [0,631; 0,654] | 1,58 [1,51; 1,66] | 2,00 | 31,7% |
+
+**Lo que se ve.**
+
+- **La regla de la propuesta no le gana a la prevalencia.** La diferencia en PR-AUC es −0,000 [−0,002; 0,001]. En entrenamiento separaba (24,6% contra 21,7%), pero en 2024 no se sostiene.
+- **La regla nueva sí le gana a la prevalencia,** en las cuatro métricas y con intervalo. PR-AUC: +0,038 [0,032; 0,045].
+- **La logística le gana a la regla nueva** en las cuatro métricas y con intervalo:
+  - PR-AUC: +0,097 [0,085; 0,110];
+  - ROC-AUC: +0,078 [0,068; 0,088];
+  - lift 20%: +0,12 [0,05; 0,19].
+- **CatBoost no le gana a la logística.**
+  - PR-AUC: −0,001 [−0,008; 0,007].
+  - ROC-AUC: −0,006 [−0,012; 0,000].
+  - En lift 20% es peor: −0,08 [−0,13; −0,01].
+- **El 10% de clientes con mayor probabilidad** según la logística vuelve 1,9 veces más que el promedio: 38,8%, contra 20,4%.
+
+**Implica.**
+
+- Con la regla de la propuesta («cada escalón tiene que ganarle al anterior»), el modelo candidato es la **logística**.
+- CatBoost queda como escalón evaluado que no mejoró, lo que también es un resultado.
+- La comparación final se hace una sola vez sobre la prueba.
+
+## 13. Calibración: los modelos sobreestiman en 2024
+
+**Lo que se ve.** La logística del día 0 predice en promedio 24,0% y en validación vuelve el 20,4%. En el décimo de clientes con mayor probabilidad predice 48,4% y vuelve el 38,8%. CatBoost tiene el mismo patrón (23,7% de promedio).
+
+**Por qué.** Cambió cómo se cargan los datos de contacto, no los clientes.
+
+| | 2023 (entrenamiento) | 2024 (validación) |
+|---|---|---|
+| Clientes con mail cargado el día 0 | 42,7% | 59,2% |
+| Vuelven, entre los que tienen mail | 30,1% | 25,0% |
+| Clientes sin mail ni teléfono el día 0 | 45,9% | 32,7% |
+| Vuelven, entre los que no tienen ninguno | 15,6% | 13,4% |
+
+En 2024 se cargó el mail a más clientes, y «tener mail» pasó a separar menos. El modelo aprendió la relación de 2023 y la aplica a 2024. Sin datos de contacto, la logística predice 22,1% en promedio, más cerca de lo observado.
+
+**Implica.**
+
+- **Recalibrar con validación** antes de usar las probabilidades como probabilidades. La simulación de campaña ordena por probabilidad × utilidad, así que la necesita. Para eso estaba reservada la validación.
+- **El orden (AUC, lift) se ve menos afectado** que las probabilidades.
+- **Para la defensa:** parte de la señal de los datos de contacto depende de la práctica de carga de la agencia, y esa práctica cambia con el tiempo. Un modelo en uso necesitaría recalibrarse cada año.
+
 ---
 
 ## Estado de las hipótesis
 
-Hasta ahora es exploración: cada variable mirada sola, en entrenamiento. Se actualiza cuando esté la escalera de modelos.
+Actualizado con la escalera en validación (2024). Falta confirmar en prueba (2025), una sola vez y al final.
 
-**H1 · La recompra se puede predecir por encima de la prevalencia y de una regla simple.** Pendiente de la escalera de modelos.
+**H1 · La recompra se puede predecir por encima de la prevalencia y de una regla simple.** Se sostiene en validación. La logística supera a la prevalencia y a la mejor regla en las cuatro métricas, con intervalo: PR-AUC 0,340 contra 0,243 y 0,204, y lift 20% de 1,66. La regla de la propuesta (primer viaje de 10 mil o más) no supera a la prevalencia (punto 12).
 
-**H2 · Pesan el destino regional, viajar con un cliente previo o haber sido acompañante, y el vendedor.**
+**H2 · Pesan el destino regional, viajar con un cliente previo o haber sido acompañante, y el vendedor.** Falta la interpretación del modelo (coeficientes de la logística y SHAP). Por ahora, cada variable mirada sola en entrenamiento:
 
 - **Destino regional:** como grupo (Argentina, Brasil, Chile y Paraguay) no separa: vuelve el 21,7%, contra el 21,4% de los otros destinos. Por país sí varía: Argentina 23,2%, Brasil 20,4%, Chile 18,1%.
 - **Compañía:** va en la dirección esperada.
@@ -229,11 +301,19 @@ Hasta ahora es exploración: cada variable mirada sola, en entrenamiento. Se act
   - Quien viaja con un cliente previo, el 26,5%, contra el 20,8%.
 - **Vendedor:** entre los 53 vendedores con 100 clientes o más en entrenamiento, el décimo de menor tasa vuelve 15,6% y el de mayor, 27,7%. No se publican resultados por vendedor.
 
-**H3 · Parte de la asociación entre «datos de contacto cargados» y volver es fuga.**
+**H3 · Parte de la asociación entre «datos de contacto cargados» y volver es fuga, y se reduce al reconstruir desde la primera compra.** No se sostiene en validación. Entrenar con la ficha única no rinde más que entrenar con la del día 0:
 
-- En los datos de contacto no se ve: quienes cargaron el dato después vuelven parecido a quienes no lo tienen (punto 8).
-- Si hay fuga, la cantidad de registros es la candidata: va de 18,8% a 27,1% y solo existe en la ficha única.
-- La escalera con las dos versiones lo va a medir.
+| Comparación | PR-AUC | ROC-AUC | Brier |
+|---|---|---|---|
+| Logística: ficha única − día 0 | +0,002 [−0,004; 0,008] | +0,000 [−0,006; 0,007] | −0,0015 [−0,0022; −0,0007] |
+| CatBoost: ficha única − día 0 | −0,007 [−0,013; −0,001] | −0,013 [−0,020; −0,006] | +0,0006 [−0,0002; 0,0014] |
+| Logística: día 0 − sin datos de contacto | +0,022 [0,015; 0,030] | +0,046 [0,037; 0,055] | −0,0014 [−0,0025; −0,0005] |
+
+- **El orden no cambia.** En la logística, ficha única y día 0 ordenan igual. El Brier algo mejor de la ficha única viene de que sobreestima menos (22,7% de promedio contra 24,0%), no de que ordene mejor.
+- **Los datos del día 0 sí agregan.** Comparado con no tenerlos, mejoran el PR-AUC y el ROC-AUC con intervalo.
+- **Es consistente con la exploración:** quienes cargaron el dato después vuelven parecido a quienes no lo tienen (punto 8), así que sumar ese dato no agrega señal.
+- **Lo que sí apareció es otro problema:** la relación entre datos de contacto y vuelta cambió entre 2023 y 2024 (punto 13).
+- **Limitación:** el registro del día 0 se ve como está hoy (punto 8). Esta medición no descarta fuga por edición del mismo registro.
 
 ## Riesgos de la propuesta: dónde quedaron
 
