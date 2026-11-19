@@ -51,6 +51,28 @@ def pr_auc(y, score):
     return float(average_precision_score(y, score))
 
 
+def log_loss(y, p):
+    p = np.clip(np.asarray(p, dtype=float), 1e-12, 1 - 1e-12)
+    y = np.asarray(y, dtype=float)
+    return float(-np.mean(y * np.log(p) + (1 - y) * np.log(1 - p)))
+
+
+def ece(y, p, grupos=10):
+    """Error de calibracion esperado: promedio, ponderado por tamanio, de la
+    distancia entre probabilidad media y tasa observada en cada decil."""
+    n = len(y)
+    return float(sum(g["n"] / n * abs(g["p_media"] - g["observada"]) for g in calibracion(y, p, grupos)))
+
+
+def pendiente_e_intercepto(y, p):
+    """Regresion logistica de y sobre logit(p). Bien calibrado: pendiente 1 e
+    intercepto 0. Pendiente < 1: las probabilidades son demasiado extremas."""
+    from modelo.calibracion import logit, newton
+    z = logit(p)
+    a, b = newton(np.column_stack([z, np.ones(len(z))]), y)
+    return float(a), float(b)
+
+
 def calibracion(y, p, grupos=10):
     """Clientes ordenados por probabilidad y partidos en `grupos` del mismo tamanio."""
     y = np.asarray(y, dtype=float)

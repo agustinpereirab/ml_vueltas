@@ -21,6 +21,7 @@ Este registro compara la propuesta presentada en clase ([`presentacion_propuesta
 | 11 | Hiperparámetros | no se decía | validación cruzada dentro de entrenamiento; validación solo para comparar |
 | 12 | Resultado de la escalera | cada escalón tiene que ganarle al anterior | la logística gana; CatBoost no le gana a la logística; la regla de 10 mil no le gana a la prevalencia |
 | 13 | Calibración | — | los modelos sobreestiman en 2024 porque cambió cómo se cargan los datos de contacto |
+| 14 | Recalibración | no estaba prevista | la logística se recalibra con validación corriendo el intercepto |
 
 El estado de las tres hipótesis está al final.
 
@@ -280,9 +281,41 @@ En 2024 se cargó el mail a más clientes, y «tener mail» pasó a separar meno
 
 **Implica.**
 
-- **Recalibrar con validación** antes de usar las probabilidades como probabilidades. La simulación de campaña ordena por probabilidad × utilidad, así que la necesita. Para eso estaba reservada la validación.
+- **Recalibrar con validación** antes de usar las probabilidades como probabilidades. La simulación de campaña ordena por probabilidad × utilidad, así que la necesita. Para eso estaba reservada la validación. Hecho: punto 14.
 - **El orden (AUC, lift) se ve menos afectado** que las probabilidades.
 - **Para la defensa:** parte de la señal de los datos de contacto depende de la práctica de carga de la agencia, y esa práctica cambia con el tiempo. Un modelo en uso necesitaría recalibrarse cada año.
+
+## 14. Recalibración: se corre el intercepto
+
+**Propuesta.** «Brier y curva de calibración, porque las probabilidades tienen que ser probabilidades.» No preveía recalibrar.
+
+**Ahora.** Las probabilidades de la logística del día 0 se recalibran con validación (2024), corriéndolas en la escala logit: p' = sigmoide(logit(p) − 0,2229). Para elegir, se compararon cuatro métodos con validación cruzada de 5 pliegues dentro de validación: cada cliente se recalibra con un ajuste que no lo vio. El criterio se fijó antes de ver los resultados: menor log-loss, salvo que un método más simple no sea peor con intervalo.
+
+| Método | Log-loss | ECE | Prob. media | Pendiente |
+|---|---|---|---|---|
+| Sin recalibrar | 0,4857 | 0,0375 | 24,0% | 0,89 |
+| **Intercepto** | **0,4817** | **0,0142** | **20,4%** | **0,89** |
+| Platt (intercepto y pendiente) | 0,4815 | 0,0110 | 20,4% | 1,00 |
+| Isotónica | 0,4826 | 0,0065 | 20,4% | 0,91 |
+
+Tasa observada: 20,4%. ECE: distancia promedio entre probabilidad y tasa observada por decil. Pendiente ideal: 1.
+
+**Lo que se ve.**
+
+- **Recalibrar mejora, con intervalo:**
+  - log-loss: −0,0039 [−0,0054; −0,0024];
+  - Brier: −0,0017 [−0,0022; −0,0011];
+  - ECE: baja de 0,0375 a 0,0142.
+- **El orden no cambia:** PR-AUC 0,340 y lift 20% de 1,66, antes y después.
+- **Platt tiene la menor log-loss, pero no le gana al intercepto con intervalo** (intercepto − Platt: +0,0003 [−0,0002; 0,0008]). Por el criterio queda el intercepto, que es más simple.
+- **Queda un residuo en los extremos.** En el décimo de mayor probabilidad predice 43,1% y vuelve 38,7%; en el de menor, predice 7,7% y vuelve 10,1%. Con pendiente 0,89, las probabilidades siguen algo extremas, y Platt la lleva a 1,00.
+
+**Implica.**
+
+- **Simulación de campaña:** usa las probabilidades recalibradas. Si reporta vueltas *esperadas*, en el décimo superior las sobreestima en unos 4 puntos (medido en validación). Las vueltas *observadas* en la prueba no dependen de esto.
+- **Para la defensa:** cambiar a Platt después de ver este residuo sería elegir mirando el resultado. Se mantiene el criterio y se declara el residuo.
+- **Supuesto:** el calibrador se ajustó con 2024 y supone que 2025 se le parece. La prueba lo va a mostrar.
+- Resultados completos: [`modelo/resultados/calibracion_validacion.md`](../modelo/resultados/calibracion_validacion.md).
 
 ---
 
