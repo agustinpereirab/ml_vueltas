@@ -14,7 +14,7 @@ Proyecto final de Aprendizaje Automático I, con datos de Jetmar (5M Travel Grou
   - **Tener cargados el mail y la fecha de nacimiento en el registro de la primera compra,** sobre todo el mail.
 - **Lo que no aporta** una vez que están las variables anteriores, también medido en validación: el destino (tampoco la marca «regional»), el vendedor, los montos y el tipo de producto.
 - **Límites:**
-  - El modelo sobreestima: en la prueba predijo 23,9% y volvió el 20,8%. Una causa es que bajó la tasa de vuelta respecto de 2023. La otra, más fuerte, es que cambió la carga del mail: se cargaba al 42,7% de los clientes nuevos en 2023, al 59,2% en 2024 y al 94,7% en 2025, así que tenerlo dejó de distinguir.
+  - El modelo sobreestima: en la prueba, ya recalibrado con 2024, predijo 23,9% y volvió el 20,8%. La causa principal es que cambió la carga del mail: se cargaba al 42,7% de los clientes nuevos en 2023, al 59,2% en 2024 y al 94,7% en enero–agosto de 2025, así que tenerlo dejó de distinguir. La cifra de 2025 es un descriptivo hecho después de la prueba.
   - El modelo mide quién tiende a volver, no cuánto suma contactarlo.
 
 ## 1. Los datos
@@ -90,7 +90,7 @@ Las mediciones de cada una están al final de [`docs/cambios_respecto_de_la_prop
 
 ## 5. Qué cambió respecto de la propuesta
 
-Los 19 cambios, cada uno con la medición que lo motivó, están en [`docs/cambios_respecto_de_la_propuesta.md`](docs/cambios_respecto_de_la_propuesta.md). Los que cambian lo que se presentó:
+Los 20 cambios, cada uno con la medición que lo motivó, están en [`docs/cambios_respecto_de_la_propuesta.md`](docs/cambios_respecto_de_la_propuesta.md). Los que cambian lo que se presentó:
 
 - **Prevalencia:** vuelve el 21,9%, no «entre 10 y 20».
 - **Cohortes:** 2023 a agosto de 2025, no 2021 a 2025, por falta de detalle de servicios antes de 2023.
@@ -99,13 +99,15 @@ Los 19 cambios, cada uno con la medición que lo motivó, están en [`docs/cambi
 - **Regla simple:** se sumó «viajó antes como acompañante», porque la regla de la propuesta no separa.
 - **Lo que no estaba previsto:** la recalibración, el modelo reducido y el plan de la prueba.
 - **Lo que se prometió y no se hizo:** verificar que la identidad del cliente no use información posterior.
+- **La regla de decisión:** la propuesta decía que, si CatBoost no le ganaba a la logística, alcanzaba con la regla simple. CatBoost no le ganó, pero la logística sí le ganó a la regla, así que se recomienda la logística.
 
 ## 6. Límites
 
-- **Sobreestimación.** Una parte viene de que la tasa de vuelta bajó: 21,9% en 2023, 20,4% en 2024 y 20,8% en 2025. La parte más grande viene de la carga del mail: se cargaba al 42,7% de los clientes nuevos en 2023, al 59,2% en 2024 y al 94,7% en 2025.
-  - El modelo aprendió con 2023 que tener mail separa, y en 2025 casi todos lo tienen.
-  - Sin recalibrar, el modelo principal predijo 27,9% en la prueba; la logística entrenada sin datos de contacto, 22,5%.
-  - La recalibración con 2024 corrigió una parte. Para usarlo hay que reentrenar y recalibrar con datos recientes.
+- **Sobreestimación.** Sin recalibrar, el modelo principal predijo 27,9% en la prueba, y volvió el 20,8%: 7,1 puntos de más.
+  - **1,7 puntos no dependen de los datos de contacto:** la logística entrenada sin ellos predice 22,5%. De esos, 1,1 son que la tasa de vuelta es más baja que la de 2023 (21,9%).
+  - **5,4 puntos vienen de los datos de contacto.** El modelo aprendió con 2023 que tener mail separa, y la carga del mail pasó del 42,7% de los clientes nuevos en 2023 al 59,2% en 2024 y al 94,7% en enero–agosto de 2025. Es un descriptivo posterior a la prueba: [`modelo/resultados/carga_contacto.md`](modelo/resultados/carga_contacto.md).
+  - **La recalibración con 2024** corrigió la parte que ya se veía ese año y dejó el modelo en 23,9%. Los 3,1 puntos que quedan son la deriva de 2024 a 2025: la caída de la tasa ya estaba absorbida, y de 2024 a 2025 la tasa incluso subió (20,4% → 20,8%).
+  - **Para usarlo** hay que reentrenar y recalibrar con datos recientes.
 - **Propensión, no efecto.** Cuánto suma contactar a un cliente solo se sabe con un experimento.
 - **Un solo canal.** No se cuentan las vueltas por otras marcas del grupo.
 - **Valor medido por la primera compra.** La tabla no trae la utilidad del viaje de vuelta.
@@ -124,7 +126,7 @@ python modelo/puntuar.py modelo/exportado/principal.json clientes.csv clientes_c
 - **Qué no hace:** no lee una ficha del sistema de gestión tal como viene. Antes hay que calcular las variables del día 0 con la base de la empresa.
   - Del timeline del cliente salen 13 de las 29 variables del modelo principal y 5 de las 12 del reducido.
   - El 2026-11-19 se decidió no automatizarlo por ahora.
-- **Cuidado con el mail:** desde 2025 casi todos los clientes nuevos lo tienen cargado (94,7%), así que esa variable ya no separa como en 2023.
+- **Cuidado con el mail:** en enero–agosto de 2025 casi todos los clientes nuevos lo tenían cargado (94,7%, descriptivo posterior a la prueba), así que esa variable ya no separa como en 2023.
 - **Comprobado:** el JSON reproduce las probabilidades del modelo original en los 13.595 clientes de validación.
 
 Detalle: [`docs/uso_del_modelo.md`](docs/uso_del_modelo.md).
@@ -145,7 +147,7 @@ Detalle: [`docs/uso_del_modelo.md`](docs/uso_del_modelo.md).
 | [`HALLAZGOS.md`](HALLAZGOS.md) | Este resumen. |
 | [`CLAUDE.md`](CLAUDE.md) | Instrucciones para una sesión de Claude que retome el proyecto: orden de lectura, estado y reglas. |
 | [`presentacion_propuesta.html`](presentacion_propuesta.html) | La propuesta presentada en clase (Entrega 1). Sus cifras están superadas. |
-| [`docs/cambios_respecto_de_la_propuesta.md`](docs/cambios_respecto_de_la_propuesta.md) | Los 19 cambios respecto de la propuesta, con su medición, y el estado de las hipótesis. **Es la fuente de verdad.** |
+| [`docs/cambios_respecto_de_la_propuesta.md`](docs/cambios_respecto_de_la_propuesta.md) | Los 20 cambios respecto de la propuesta, con su medición, y el estado de las hipótesis. **Es la fuente de verdad.** |
 | [`docs/plan_de_la_prueba.md`](docs/plan_de_la_prueba.md) | El plan fijado antes de abrir la prueba. No se edita. |
 | [`docs/uso_del_modelo.md`](docs/uso_del_modelo.md) | Qué da el modelo, qué necesita para un cliente nuevo y qué está decidido. |
 | [`datos/DICCIONARIO.md`](datos/DICCIONARIO.md) | Las 40 columnas de la tabla, cómo se definió cada cosa y cómo se anonimizó. |
@@ -155,6 +157,7 @@ Detalle: [`docs/uso_del_modelo.md`](docs/uso_del_modelo.md).
 | [`modelo/resultados/interpretacion_validacion.md`](modelo/resultados/interpretacion_validacion.md) | Hipótesis 2: qué pesa en el modelo, con los odds ratios. |
 | [`modelo/resultados/reducido_validacion.md`](modelo/resultados/reducido_validacion.md) | El modelo reducido. |
 | [`modelo/resultados/prueba.md`](modelo/resultados/prueba.md) | **Resultados finales en la prueba.** |
+| [`modelo/resultados/carga_contacto.md`](modelo/resultados/carga_contacto.md) | Carga de los datos de contacto por año. Descriptivo posterior a la prueba. |
 | [`modelo/exportado/`](modelo/exportado/) | Los modelos listos para usar. |
 | `exportacion/`, `modelo/` | El código, con pruebas automáticas (tests) en sus carpetas `pruebas/`. |
 | `analisis/` | El código de las gráficas, sin tests. |

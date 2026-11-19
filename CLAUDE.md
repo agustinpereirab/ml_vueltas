@@ -4,7 +4,7 @@ Arranque en frío: qué es el proyecto, qué leer y en qué orden, en qué estad
 
 ## Qué es
 
-Proyecto final de Aprendizaje Automático I: «¿Vuelve a viajar?». Busca predecir, el día de su primera compra, si un cliente nuevo de Jetmar (agencia de 5M Travel Group, Uruguay) vuelve a viajar con la agencia dentro de los 12 meses. El equipo son cuatro estudiantes. El que trabaja en la empresa y tiene acceso a la base es Agustín, el usuario de este repo.
+Proyecto final de Aprendizaje Automático I: «¿Vuelve a viajar?». Busca predecir, el día de su primera compra, si un cliente nuevo de Jetmar (agencia de 5M Travel Group, Uruguay) vuelve a comprar con la agencia (para él o como pasajero en la compra de otro cliente) dentro de los 12 meses siguientes. El equipo son cuatro estudiantes. El que trabaja en la empresa y tiene acceso a la base es Agustín, el usuario de este repo.
 
 ## Qué leer, en este orden
 
@@ -82,6 +82,7 @@ Proyecto final de Aprendizaje Automático I: «¿Vuelve a viajar?». Busca prede
 | `modelo/interpretar.py` | ~6 min |
 | `modelo/reducido.py` | ~1 min |
 | `modelo/exportar.py` | segundos |
+| `modelo/carga_contacto.py` (descriptivo posterior a la prueba; no elige nada) | segundos |
 
 Cada script se niega a correr si la tabla no coincide con la huella de `datos/manifiesto.json`.
 

@@ -1,6 +1,6 @@
 # ¿Vuelve a viajar?
 
-Proyecto final de Aprendizaje Automático I. El objetivo es predecir, el día de su primera compra, si un cliente nuevo de Jetmar (5M Travel Group) vuelve a viajar con la agencia dentro de los 12 meses siguientes.
+Proyecto final de Aprendizaje Automático I. El objetivo es predecir, el día de su primera compra, si un cliente nuevo de Jetmar (5M Travel Group) vuelve a comprar con la agencia (para él o como pasajero en la compra de otro cliente) dentro de los 12 meses siguientes.
 
 ## Qué hay en el repo
 
@@ -46,6 +46,7 @@ python modelo/interpretar.py                              # hipótesis 2: grupos
 python modelo/reducido.py                                 # modelo secundario, ~1 min
 python modelo/prueba.py                                   # LA PRUEBA: ya se corrió (2026-11-19) y no vuelve a correr
 python modelo/exportar.py                                 # exporta los modelos a modelo/exportado/
+python modelo/carga_contacto.py                           # descriptivo de datos de contacto por año (posterior a la prueba)
 python -m unittest discover -s exportacion/pruebas -t .   # pruebas automáticas (tests) del armado de la tabla
 python -m unittest discover -s modelo/pruebas -t .        # pruebas automáticas (tests) del modelo
 ```

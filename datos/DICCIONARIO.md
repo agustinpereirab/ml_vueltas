@@ -35,7 +35,7 @@ Con `bloque`, la etiqueta del último cliente de entrenamiento se cierra antes d
 | `cliente` | Código al azar, sin relación con el id de la base | `C-00001` … |
 | `cohorte` | Año de la primera compra | 2023, 2024, 2025 |
 | `bloque`, `bloque_60_20_20` | Partición (ver arriba) | entrenamiento, validacion, prueba |
-| `vuelve_12` | **Etiqueta.** Vuelve a viajar dentro de los 12 meses | 0, 1 |
+| `vuelve_12` | **Etiqueta.** Tiene otra compra, propia o como pasajero, dentro de los 12 meses, para un viaje distinto del primero | 0, 1 |
 | `vuelve_12_comprando` | Etiqueta alternativa: vuelve como titular (paga) | 0, 1 |
 
 ### La compañía
@@ -75,7 +75,7 @@ Con `bloque`, la etiqueta del último cliente de entrenamiento se cierra antes d
 | `noches` | Días entre la salida y el regreso | 0-3, 4-7, 8-14, 15+, sin_dato |
 | `anticipacion` | Días entre la compra y el viaje | 0-7, 8-14, 15-30, 31-60, 61-90, 91-180, 181+, sin_dato |
 
-`sudamerica` no incluye Brasil ni Uruguay. `caribe` incluye México y Centroamérica. `GE` es, en la base, sobre todo Alemania: Fráncfort, Múnich, Düsseldorf y Hamburgo, más unos pocos destinos de Georgia (Tiflis, Batumi). Berlín figura aparte como `DE` y en la tabla cae en «otro». Medido con ciudades de destino en la copia de septiembre de 2026: 641 fichas con `GE` y 260 con `DE`.
+`sudamerica` no incluye Brasil ni Uruguay. `caribe` incluye México y Centroamérica. `GE` es, en la base, sobre todo Alemania: Fráncfort, Múnich, Düsseldorf y Hamburgo, más unos pocos destinos de Georgia (Tiflis, Batumi). Berlín figura aparte como `DE` y en la tabla cae en «otro». Medido con las ciudades de destino en la copia de septiembre de 2026 *(preliminar)*: 641 fichas con `GE`, de las que 3 van a Tiflis y 3 a Batumi, y 260 con `DE`, casi todas a Berlín.
 
 ### El vendedor
 

@@ -1,0 +1,76 @@
+{
+  "generado": "2026-11-19T18:07:46",
+  "tabla_sha256": "77b71c49b21dcf1ba5393f9b069cde6c2c9e0fcb9bbec7ddef523f65328df2f5",
+  "posterior_a_la_prueba": true,
+  "bloques": {
+    "entrenamiento": {
+      "clientes": 13655,
+      "vuelven": 0.21860124496521421,
+      "d0_tiene_mail": {
+        "tienen": 0.426510435737825,
+        "vuelven_con": 0.3008241758241758,
+        "vuelven_sin": 0.1574511556633891
+      },
+      "d0_tiene_telefono": {
+        "tienen": 0.46781398755034787,
+        "vuelven_con": 0.2720726361928616,
+        "vuelven_sin": 0.17159763313609466
+      },
+      "d0_tiene_nacimiento": {
+        "tienen": 0.8526547052361773,
+        "vuelven_con": 0.23284376878811303,
+        "vuelven_sin": 0.13618290258449303
+      },
+      "sin_mail_ni_telefono": {
+        "tienen": 0.4587330648114244,
+        "vuelven": 0.1558109833971903
+      }
+    },
+    "validacion": {
+      "clientes": 13595,
+      "vuelven": 0.20448694372931225,
+      "d0_tiene_mail": {
+        "tienen": 0.5916881206325855,
+        "vuelven_con": 0.24962705121829937,
+        "vuelven_sin": 0.13907404071338497
+      },
+      "d0_tiene_telefono": {
+        "tienen": 0.5117322545053329,
+        "vuelven_con": 0.2616070145177519,
+        "vuelven_sin": 0.14462187405845134
+      },
+      "d0_tiene_nacimiento": {
+        "tienen": 0.8400147112909158,
+        "vuelven_con": 0.21427320490367777,
+        "vuelven_sin": 0.15310344827586206
+      },
+      "sin_mail_ni_telefono": {
+        "tienen": 0.32673777123942627,
+        "vuelven": 0.13372354795137326
+      }
+    },
+    "prueba": {
+      "clientes": 10148,
+      "vuelven": 0.20782420181316516,
+      "d0_tiene_mail": {
+        "tienen": 0.9468860859282617,
+        "vuelven_con": 0.21250910604641482,
+        "vuelven_sin": 0.12430426716141002
+      },
+      "d0_tiene_telefono": {
+        "tienen": 0.630074891604257,
+        "vuelven_con": 0.2578980294025649,
+        "vuelven_sin": 0.12253596164091636
+      },
+      "d0_tiene_nacimiento": {
+        "tienen": 0.7231966890027591,
+        "vuelven_con": 0.23027660444202208,
+        "vuelven_sin": 0.1491634033463866
+      },
+      "sin_mail_ni_telefono": {
+        "tienen": 0.03301143082380765,
+        "vuelven": 0.1044776119402985
+      }
+    }
+  }
+}

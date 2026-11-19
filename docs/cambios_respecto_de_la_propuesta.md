@@ -18,15 +18,16 @@ Este registro compara la propuesta presentada en clase ([`presentacion_propuesta
 | 8 | Ficha del día 0 | «reconstruida con lo que se sabía ese día» | el registro usado en la primera compra, tal como está hoy |
 | 9 | Regla simple | primer viaje de más de 10 mil ⇒ vuelve | se mantiene y se suma «viajó antes como acompañante ⇒ vuelve» |
 | 10 | Simulación de campaña | sobre la cohorte 2024 | sobre el bloque de prueba (enero a agosto de 2025) |
-| 11 | Hiperparámetros | no se decía | validación cruzada dentro de entrenamiento; validación solo para comparar |
+| 11 | Hiperparámetros | no se decía | validación cruzada dentro de entrenamiento; la validación, para comparar, recalibrar e interpretar |
 | 12 | Resultado de la escalera | cada escalón tiene que ganarle al anterior | la logística gana; CatBoost no le gana a la logística; la regla de 10 mil no le gana a la prevalencia |
-| 13 | Calibración | — | los modelos sobreestiman en 2024 porque cambió cómo se cargan los datos de contacto |
+| 13 | Calibración | — | los modelos sobreestiman: bajó la tasa de vuelta y, sobre todo, cambió la carga de los datos de contacto |
 | 14 | Recalibración | no estaba prevista | la logística se recalibra con validación corriendo el intercepto |
 | 15 | Interpretación (H2) | SHAP sobre el mejor modelo | SHAP más reentrenar sin cada grupo de variables, con intervalo |
 | 16 | Prueba | un modelo, evaluado en la cohorte nueva | principal más secundarios declarados en un plan versionado antes de abrir la prueba |
 | 17 | Resultado final | rendimiento moderado pero útil, lift claro en el decil superior | H1 confirmada en la prueba: lift 1,87 en el 10% y 1,59 en el 20% superior |
 | 18 | Uso del modelo | no se preveía dejarlo para usar | exportado y portable; puntuar fichas nuevas desde la base, sin automatizar por decisión del usuario |
 | 19 | Identidad del cliente | «verificamos que no use información posterior» | no se verificó |
+| 20 | Regla de decisión | si el boosting no le gana a la logística, alcanza con la regla simple | se recomienda la logística, que sí le gana a la regla |
 
 El estado de las tres hipótesis está al final.
 
@@ -231,7 +232,7 @@ La utilidad viene como índice. Multiplicar por una constante no cambia el orden
   - Logística: el C de la regularización, por PR-AUC.
   - CatBoost: la cantidad de árboles, por parada temprana sobre la log-loss; la configuración (profundidad y regularización), por PR-AUC entre 4.
   - Reglas: cada una predice la tasa de vuelta que tuvo su grupo en entrenamiento.
-- **La validación (2024) solo se usa para medir y comparar.** Las comparaciones llevan intervalos bootstrap pareados: 2.000 remuestreos de los mismos clientes para todos los modelos.
+- **En la escalera, la validación (2024) solo se usa para medir y comparar.** Después se usó también para recalibrar (punto 14), interpretar (15) y definir el modelo reducido (16). Las comparaciones llevan intervalos bootstrap pareados: 2.000 remuestreos de los mismos clientes para todos los modelos.
 - **La prueba (2025) no se tocó.**
 - **Logística y CatBoost se ajustan en tres brazos para H3:** sin datos de contacto, con los del día 0 y con los de la ficha única.
 
@@ -261,7 +262,7 @@ Brazo día 0, sobre 13.595 clientes de 2024, de los que vuelve el 20,4%. Entre c
   - PR-AUC: −0,001 [−0,008; 0,007].
   - ROC-AUC: −0,006 [−0,012; 0,000].
   - En lift 20% es peor: −0,08 [−0,13; −0,01].
-- **El 10% de clientes con mayor probabilidad** según la logística vuelve 1,9 veces más que el promedio: 38,8%, contra 20,4%.
+- **El 10% de clientes con mayor probabilidad** según la logística vuelve 1,9 veces el promedio: 38,8%, contra 20,4% (tasa de vuelta del décimo superior, en validación).
 
 **Implica.**
 
@@ -277,6 +278,8 @@ Brazo día 0, sobre 13.595 clientes de 2024, de los que vuelve el 20,4%. Entre c
 
 1. **Bajó la tasa de vuelta:** 21,9% en 2023 contra 20,4% en 2024. Eso explica 1,5 puntos de la sobreestimación: la prevalencia de entrenamiento, aplicada a 2024, predice 21,9%.
 2. **Cambió cómo se cargan los datos de contacto.**
+
+Fuente: [`modelo/resultados/carga_contacto.md`](../modelo/resultados/carga_contacto.md). La columna de 2025 se midió después de la prueba.
 
 | | 2023 (entrenamiento) | 2024 (validación) | Ene–ago 2025 (prueba) *(posterior a la prueba)* |
 |---|---|---|---|
@@ -401,8 +404,9 @@ Corrida una sola vez el 2026-11-19. El plan y el script se versionaron en el com
 - **Calibración: la sobreestimación siguió en 2025.**
   - La principal recalibrada predice 23,9% en promedio y vuelve el 20,8%. Sin recalibrar predecía 27,9%.
   - La recalibración con 2024 corrigió parte (Brier −0,0046 [−0,0052; −0,0039]), pero no todo: la deriva continuó, como advertía el punto 14.
-  - La logística sin datos de contacto predice 22,5%, y la principal sin recalibrar, 27,9%. La mayor parte de la sobreestimación de 2025 viene de los datos de contacto: en 2025 el mail se cargó al 94,7% de los clientes nuevos (punto 13, *posterior a la prueba*).
-- **Simulación de campaña.** Contactando al 20% de mayor probabilidad (2.030 clientes), quedan contactados 670 de los 2.109 que vuelven (31,8%), contra 422 al azar. Entre los contactados vuelve el 33,0%. Ordenando por probabilidad × utilidad de la primera compra se contacta a menos de los que vuelven (474), pero queda el 67,5% de la utilidad de primera compra de quienes vuelven (38,8% ordenando solo por probabilidad).
+  - Sin recalibrar, la principal predice 27,9%. La logística sin datos de contacto predice 22,5%: los 5,4 puntos de diferencia son la parte que agregan los datos de contacto. En 2025 el mail se cargó al 94,7% de los clientes nuevos (punto 13, *posterior a la prueba*).
+  - La recalibración con 2024 ya absorbía la caída de la tasa de vuelta respecto de 2023. Lo que queda (23,9% contra 20,8%) es la deriva de la carga de contacto entre 2024 y 2025; la tasa incluso subió (20,4% → 20,8%).
+- **Simulación de campaña.** Contactando al 20% de mayor probabilidad (2.030 clientes), quedan contactados 670 de los 2.109 que vuelven (31,8%), contra 422 al azar. Entre los contactados vuelve el 33,0%. Ordenando por probabilidad × utilidad de la primera compra se contacta a menos de los que vuelven (474), pero queda el 67,5% de la utilidad de primera compra de quienes vuelven (ordenando solo por probabilidad, esa parte de la utilidad es 38,8%; no es la tasa del décimo superior del punto 12, que en validación también da 38,8%).
 
 **Implica.**
 
@@ -418,7 +422,7 @@ Corrida una sola vez el 2026-11-19. El plan y el script se versionaron en el com
 
 **Ahora.**
 
-- Los dos modelos evaluados en la prueba (principal y reducido) están exportados como JSON en [`modelo/exportado/`](../modelo/exportado/). [`modelo/puntuar.py`](../modelo/puntuar.py) los aplica sin instalar nada. Reproducen el modelo original en validación y corren en una computadora sin librerías.
+- El modelo principal y el reducido (dos de los siete evaluados en la prueba) están exportados como JSON en [`modelo/exportado/`](../modelo/exportado/). [`modelo/puntuar.py`](../modelo/puntuar.py) los aplica sin instalar nada. Reproducen el modelo original en validación y corren en una computadora sin librerías.
 - **El 2026-11-19 el usuario decidió no armar, por ahora, el script que puntúa fichas nuevas desde la base.** Su indicación: eso «se maneja con el timeline de un cliente».
 
 **Lo medido.** El modelo recibe filas en el formato de la tabla, no fichas. Del timeline del cliente (`gold.mart_jetuy_persona_timeline`) salen 13 de las 29 variables del modelo principal y 5 de las 12 del reducido. Las demás necesitan:
@@ -435,7 +439,7 @@ Detalle, variable por variable: [`docs/uso_del_modelo.md`](uso_del_modelo.md).
 
 - **El score:** es la probabilidad de volver dentro de los 12 meses, solo para clientes en su primera compra. Sirve más para ordenar que como probabilidad exacta, porque en 2025 sobreestimó (23,9% contra 20,8%).
 - **Si se usa en la agencia,** conviene reentrenarlo con todas las cohortes etiquetadas y recalibrarlo cada año. Las dos cosas serían análisis posteriores a la prueba.
-- **Desde 2025 el mail casi no separa:** se cargó al 94,7% de los clientes nuevos (punto 13).
+- **En enero–agosto de 2025 el mail casi no separa:** se cargó al 94,7% de los clientes nuevos (punto 13, posterior a la prueba).
 
 ## 19. Identidad del cliente: no se verificó
 
@@ -450,6 +454,14 @@ Detalle, variable por variable: [`docs/uso_del_modelo.md`](uso_del_modelo.md).
 - **En los dos casos** puede haber información posterior en la definición de quién es cliente nuevo.
 
 Es un límite declarado.
+
+## 20. Regla de decisión: se recomienda la logística, no la regla simple
+
+**Propuesta.** «Si el boosting no supera a la logística con intervalo, la agencia puede usar la regla simple» (diapositivas 10 y 12).
+
+**Ahora.** CatBoost no superó a la logística, ni en validación ni en la prueba (puntos 12 y 17). Pero la logística sí superó a la regla simple con intervalo, así que la recomendación es la logística, no la regla. La regla de la propuesta («primer viaje de 10 mil o más») ni siquiera supera a la prevalencia.
+
+**Implica.** La frase de la propuesta mezclaba dos comparaciones. Aplicada escalón por escalón, la escalera termina en la logística.
 
 ---
 

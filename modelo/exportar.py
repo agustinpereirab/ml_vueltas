@@ -84,8 +84,9 @@ def main():
         esperado = cal.desde_parametros(calibrador).predict(pipe.predict_proba(val[columnas])[:, 1])
         meta = {
             "nombre": nombre, "exportado": datetime.datetime.now().isoformat(timespec="seconds"),
-            "que_predice": "probabilidad de que un cliente nuevo vuelva a viajar con Jetmar dentro de los "
-                           "12 meses posteriores a su primera compra",
+            "que_predice": "probabilidad de que un cliente nuevo vuelva a comprar con Jetmar (para el o como "
+                           "pasajero en la compra de otro cliente) dentro de los 12 meses posteriores a "
+                           "su primera compra, para un viaje distinto del primero",
             "entrenado_con": "cohorte 2023 (13.655 clientes)", "recalibrado_con": "cohorte 2024",
             "tabla_sha256": huella, "C": C, "variables": columnas,
             "resultado_en_la_prueba": {k: pru["evaluacion"][nombre][k]

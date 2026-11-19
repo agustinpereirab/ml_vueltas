@@ -21,7 +21,7 @@ Se verificó que reproducen las probabilidades del modelo original en los 13.595
 
 ## Qué es el score
 
-`prob_vuelve_12` es la probabilidad de que un cliente **nuevo** (en su primera compra) vuelva a viajar con Jetmar, como titular o como pasajero, dentro de los 12 meses siguientes.
+`prob_vuelve_12` es la probabilidad de que un cliente **nuevo** (en su primera compra) vuelva a comprar con Jetmar (para él o como pasajero en la compra de otro cliente) dentro de los 12 meses siguientes, para un viaje distinto del primero.
 
 - **Solo para clientes en su primera compra.** No aplica a quien ya compró antes.
 - **Sobreestima.** En la prueba (enero a agosto de 2025) predijo 23,9% en promedio y volvió el 20,8%. Sirve más para **ordenar** a quién contactar primero que como probabilidad exacta.

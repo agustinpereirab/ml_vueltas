@@ -2,8 +2,8 @@
   "formato": "logistica_v1",
   "meta": {
     "nombre": "reducido",
-    "exportado": "2026-11-19T17:00:09",
-    "que_predice": "probabilidad de que un cliente nuevo vuelva a viajar con Jetmar dentro de los 12 meses posteriores a su primera compra",
+    "exportado": "2026-11-19T18:10:07",
+    "que_predice": "probabilidad de que un cliente nuevo vuelva a comprar con Jetmar (para el o como pasajero en la compra de otro cliente) dentro de los 12 meses posteriores a su primera compra, para un viaje distinto del primero",
     "entrenado_con": "cohorte 2023 (13.655 clientes)",
     "recalibrado_con": "cohorte 2024",
     "tabla_sha256": "77b71c49b21dcf1ba5393f9b069cde6c2c9e0fcb9bbec7ddef523f65328df2f5",
