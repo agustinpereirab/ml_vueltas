@@ -28,7 +28,7 @@ Proyecto final de Aprendizaje Automático I: «¿Vuelve a viajar?». Busca prede
 - **el informe** (`informe/informe.pdf`, 6 páginas, el máximo de la consigna; se entrega el 23 de noviembre). Está escrito como evaluación retrospectiva entre cohortes (registro de cambios, punto 21). Se arma con `py informe/armar_informe.py`, que dibuja las figuras desde `modelo/resultados/` y necesita Playwright;
 - **la presentación de la defensa** (`presentacion/`, 25 de noviembre): 20 minutos con cuatro oradores, estilo «postal» (viaje en ómnibus de Montevideo a Florianópolis; elegido entre tres bocetos en `presentacion/bocetos/`), más `GUION.md` y `GUIA.md` con preguntas probables. El PDF de respaldo se arma con `py presentacion/exportar_pdf.py`. El caso C-00412 es un cliente inventado, puntuado con el modelo exportado.
 
-**No se versionan** (`.gitignore`, decisión del usuario del 2026-11-20): `informe/`, `presentacion/` y `consigna.pdf`. Viven solo en la máquina del equipo; no se agregan a ningún commit.
+**No se versionan** (`.gitignore`, decisiones del usuario del 2026-11-20 y 2026-11-22): `informe/`, `presentacion/`, `consigna.pdf` y la página escrita de la propuesta (`PropuestaProyectoML_Grupo6.pdf`). Viven solo en la máquina del equipo; no se agregan a ningún commit.
 
 **Decidido no hacer:** el script para puntuar fichas nuevas desde la base (decisión del usuario, 2026-11-19; ver `docs/uso_del_modelo.md`).
 

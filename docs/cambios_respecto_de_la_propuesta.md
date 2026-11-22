@@ -1,6 +1,6 @@
 # Cambios respecto de la propuesta
 
-Este registro compara la propuesta (Entrega 1: la presentación en clase, [`presentacion_propuesta.html`](../presentacion_propuesta.html), y su página escrita, `PropuestaProyectoML_Grupo6.pdf`) con lo que efectivamente se hizo. Cada entrada dice qué decía la propuesta, qué se hizo, qué medición lo motivó y qué implica para la defensa.
+Este registro compara la propuesta (Entrega 1: la presentación en clase, [`presentacion_propuesta.html`](../presentacion_propuesta.html), y su página escrita, que no está en el repositorio) con lo que efectivamente se hizo. Cada entrada dice qué decía la propuesta, qué se hizo, qué medición lo motivó y qué implica para la defensa.
 
 **De dónde salen las cifras.** Salvo que se indique otra fuente, salen de la tabla del modelo ([`datos/tabla_modelo.csv`](../datos/DICCIONARIO.md)). La tabla se armó el 2026-11-11 sobre una foto de la base de ese mismo día, con compras hasta el 2026-11-09. En los puntos 1 a 10, las cifras que miran la etiqueta usan solo el bloque de entrenamiento (cohorte 2023). Hay tres excepciones: los conteos por bloque, la comparación por estación del punto 2 (que usa 2023 y 2024) y los conteos de fichas en proceso del punto 4. Desde el punto 11, cada cifra dice si es de validación (2024) o de la prueba (2025). Los análisis hechos después de correr la prueba están marcados *(posterior a la prueba)*. Las cifras marcadas como *preliminares* son de una copia anterior de la base (septiembre de 2026), con un universo aproximado; sirvieron para decidir, no para citar como resultado.
 
@@ -493,7 +493,9 @@ Anotado el 2026-11-22, al revisar el informe contra la página escrita de la pro
 
 **Ahora.**
 
-- **La extensión no se hizo.** La tabla trae solo variables del día 0 y la etiqueta a 12 meses como sí o no ([`datos/DICCIONARIO.md`](../datos/DICCIONARIO.md)): no trae variables posteriores al viaje ni el tiempo hasta la vuelta. Sumarlas exigía otra exportación, que solo se puede hacer dentro de la empresa, y otra revisión de anonimización.
+- **La extensión no se hizo.**
+  - *Segundo modelo al regreso:* no hay datos posteriores a la compra que se puedan ubicar en el tiempo. La base marca si hubo una devolución (`es_nota_devolucion`), pero la fecha (`fecha_devolucion`) depende de que la cargue el vendedor y no siempre está, así que no se sabe si la devolución fue antes o después del regreso. No hay encuestas de satisfacción ni registros parecidos. Con quién viaja y a dónde ya se sabe el día 0 y está en el modelo.
+  - *Análisis de supervivencia:* era posible con la base, que tiene la fecha de la compra de vuelta (con ella se calcula `vuelve_12`), pero quedó fuera del alcance. La tabla anonimizada guarda solo la etiqueta a 12 meses como sí o no ([`datos/DICCIONARIO.md`](../datos/DICCIONARIO.md)); hacerlo exigía otra exportación, que solo se puede hacer dentro de la empresa, y otra revisión de anonimización.
 - **El repositorio es público y no tiene datos.** No se publicó una muestra de la tabla: aunque está anonimizada, es de acceso restringido. Si el docente pide la tabla para replicar el entrenamiento, el acceso se evalúa al recibir el pedido (decisión del equipo, 2026-11-22).
 - **El Brier**, otra métrica de la página escrita, se calculó en todas las corridas (`modelo/resultados/*.md`); desde el 2026-11-22 figura también en el informe, junto a la calibración.
 

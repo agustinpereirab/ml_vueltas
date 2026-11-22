@@ -101,7 +101,7 @@ Los 22 cambios, cada uno con la medición que lo motivó, están en [`docs/cambi
 - **Lo que no estaba previsto:** la recalibración, el modelo reducido y el plan de la prueba.
 - **Lo que se prometió y no se hizo:**
   - verificar que la identidad del cliente no use información posterior;
-  - la extensión de la página escrita (un segundo modelo al regreso del viaje y un análisis de supervivencia): la tabla no trae datos posteriores al viaje ni el tiempo hasta la vuelta;
+  - la extensión de la página escrita. Para el segundo modelo, al regreso del viaje, no hay datos posteriores a la compra que se puedan fechar: la devolución queda marcada, pero su fecha depende del vendedor. El análisis de supervivencia era posible con la base, pero quedó fuera del alcance;
   - la muestra disociada para replicar: el repositorio es público y la tabla no se publica; si el docente la pide, el acceso se evalúa en ese momento (registro de cambios, punto 22).
 - **La regla de decisión:** la propuesta decía que, si CatBoost no le ganaba a la logística, alcanzaba con la regla simple. CatBoost no le ganó, pero la logística sí le ganó a la regla, así que se recomienda la logística.
 
