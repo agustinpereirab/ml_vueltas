@@ -1,0 +1,104 @@
+1
+00:00:00,750 --> 00:00:04,672
+Antes de predecir quién vuelve, hay que acordar tres cosas.
+
+2
+00:00:04,692 --> 00:00:07,285
+A quién miramos. Qué significa volver.
+
+3
+00:00:07,305 --> 00:00:10,436
+Y cómo comprobarlo sin hacernos trampa.
+
+4
+00:00:10,636 --> 00:00:15,678
+Partimos de 40 mil clientes que compraron por primera vez
+
+5
+00:00:15,698 --> 00:00:19,264
+entre enero de 2023 y agosto de 2025.
+
+6
+00:00:19,284 --> 00:00:23,198
+Sacamos las compras corporativas y a los menores de edad.
+
+7
+00:00:23,218 --> 00:00:28,764
+Quedan 37.398, sin nombres ni documentos.
+
+8
+00:00:28,964 --> 00:00:31,428
+De cada uno miramos cinco cosas:
+
+9
+00:00:31,448 --> 00:00:34,999
+con quién viajó antes, qué compró, a dónde va,
+
+10
+00:00:35,019 --> 00:00:38,575
+quién le vendió y sus datos de contacto.
+
+11
+00:00:38,775 --> 00:00:40,201
+¿Y qué significa volver?
+
+12
+00:00:40,221 --> 00:00:43,757
+Que el cliente compre otra vez dentro de los 12 meses.
+
+13
+00:00:43,777 --> 00:00:45,982
+Cuenta la compra, no el viaje.
+
+14
+00:00:46,002 --> 00:00:50,140
+Si compra en noviembre para viajar en abril, vuelve.
+
+15
+00:00:50,160 --> 00:00:54,209
+También cuenta si viaja como pasajero de otro cliente.
+
+16
+00:00:54,229 --> 00:00:57,582
+Así medido, vuelve uno de cada cinco.
+
+17
+00:00:57,882 --> 00:01:01,285
+Para no hacernos trampa, separamos por año.
+
+18
+00:01:01,305 --> 00:01:04,809
+Con los de 2023, el modelo aprende.
+
+19
+00:01:04,829 --> 00:01:08,832
+Con los de 2024, elegimos y ajustamos.
+
+20
+00:01:08,852 --> 00:01:13,807
+Los de 2025 quedan guardados: se abren una sola vez.
+
+21
+00:01:14,107 --> 00:01:18,311
+Antes de modelar, los datos ya avisaban dos cosas.
+
+22
+00:01:18,331 --> 00:01:21,195
+Quien ya viajó como acompañante
+
+23
+00:01:21,215 --> 00:01:25,124
+vuelve casi el doble: 36 % contra 19 %.
+
+24
+00:01:25,144 --> 00:01:29,077
+Y quien tiene el mail cargado, 30 % contra 15 %.
+
+25
+00:01:29,277 --> 00:01:32,134
+¿Con eso alcanza para ordenar a los clientes?
+
+26
+00:01:32,154 --> 00:01:34,011
+Es lo que viene ahora.
+

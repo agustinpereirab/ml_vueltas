@@ -1,2 +1,6 @@
 * text=auto eol=lf
 *.png binary
+*.mp4 binary
+# La presentación y sus subtítulos se suben tal cual, sin normalizar finales de línea
+presentacion/presentacion.html -text
+presentacion/video_datos.srt -text

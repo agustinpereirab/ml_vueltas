@@ -26,8 +26,15 @@ scratch*
 *.zip
 
 
-# Material de la defensa y consigna: no se versionan (decisión del usuario, 2026-11-20).
-presentacion/
+# Material de la defensa y consigna (decisiones del usuario, 2026-11-20 y 2026-11-22).
+# De la presentación se versiona solo lo necesario para abrirla: el HTML (trae el video
+# adentro), el video suelto con sus subtítulos y el LEEME. Los guiones, el PDF de respaldo,
+# los scripts y la versión anterior quedan en la máquina del equipo.
+presentacion/*
+!presentacion/presentacion.html
+!presentacion/video_datos.mp4
+!presentacion/video_datos.srt
+!presentacion/LEEME.txt
 informe/
 consigna.pdf
 PropuestaProyectoML_Grupo6.pdf

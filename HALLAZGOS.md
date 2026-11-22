@@ -54,10 +54,10 @@ Proyecto final de Aprendizaje Automático I, con datos de Jetmar (5M Travel Grou
    Los hiperparámetros se eligieron con validación cruzada dentro de entrenamiento.
 3. **Usos de la validación.** Sirvió para comparar los escalones, recalibrar las probabilidades, interpretar el modelo (SHAP y reentrenar sin cada grupo de variables) y elegir las variables del modelo reducido.
 4. **Prueba única.**
-   - El plan ([`docs/plan_de_la_prueba.md`](docs/plan_de_la_prueba.md)) y el script se versionaron en git antes de abrir 2025 (commit `69632ac`, 16:46). Los resultados están en el commit `4fb21b8` (16:53).
+   - El plan y el script se versionaron en git antes de abrir 2025 (commit `69632ac`, 16:46; el plan se lee con `git show 69632ac:docs/plan_de_la_prueba.md`). Los resultados están en el commit `4fb21b8` (16:53).
    - Antes de abrirla se conocían el tamaño del bloque y su tasa de vuelta (20,8%), porque están en el manifiesto de la tabla. Ningún modelo se había entrenado ni evaluado con esos clientes.
    - El script se niega a correr una segunda vez.
-   - **Es una evaluación retrospectiva entre cohortes.** El ajuste usó solo 2023, pero la elección y la recalibración usaron etiquetas de 2024 que se cerraron durante 2025, cuando ya entraban clientes de prueba. Detalle en el registro de cambios, punto 21.
+   - **Es una evaluación retrospectiva entre cohortes.** El ajuste usó solo 2023, pero la elección y la recalibración usaron etiquetas de 2024 que se cerraron durante 2025, cuando ya entraban clientes de prueba. Ese modelo no podría haber existido el 1 de enero de 2025. Para simular el uso real habría que elegir y recalibrar solo con cohortes que ya cumplieron los 12 meses.
 
 ## 3. Resultados en la prueba
 
@@ -70,7 +70,7 @@ Proyecto final de Aprendizaje Automático I, con datos de Jetmar (5M Travel Grou
 | Regresión logística reducida (12 variables) | 0,319 | 0,628 | 1,84 | 1,58 |
 | CatBoost | 0,312 | 0,614 | 1,85 | 1,53 |
 
-- **Escalera:** la logística le gana a la prevalencia y a la mejor regla en PR-AUC y ROC-AUC, con intervalo. CatBoost no le gana a la logística. La regla de la propuesta no le gana a la prevalencia.
+- **Escalera:** la logística le gana a la prevalencia y a la mejor regla en PR-AUC y ROC-AUC, con intervalo. CatBoost rinde parecido a la logística, sin ganarle. La regla de la propuesta no le gana a la prevalencia.
 - **Campaña:** contactando al 20% de mayor probabilidad (2.030 clientes) quedan contactados 670 de los 2.109 que vuelven, contra 422 contactando al azar.
 - **Modelo reducido.** Usa 12 variables: compañía previa, datos de contacto del día 0 y viaje.
   - Ordena igual que el principal en PR-AUC (+0,000 [−0,007; 0,008]) y algo mejor en ROC-AUC (+0,009 [0,0003; 0,017]).
@@ -85,13 +85,13 @@ Detalle completo, con intervalos: [`modelo/resultados/prueba.md`](modelo/resulta
 |---|---|
 | **H1.** La recompra se puede predecir por encima de la prevalencia y de una regla simple. | **Confirmada** en la prueba, con el criterio fijado antes de abrirla. |
 | **H2.** Pesan más el destino regional, viajar con un cliente previo o haber sido acompañante, y el vendedor. | **En parte,** medido en validación. El grupo que más aporta es la compañía previa (4 variables), y dentro de él, haber sido acompañante. Sin evidencia de aporte adicional del destino regional ni del vendedor. Viajar con un cliente previo agrega poco por encima de viajar con alguien con historial (×1,02). |
-| **H3.** Parte de la asociación entre «datos de contacto cargados» y volver es fuga de información. | **Señal adicional incierta** (antes «no se sostiene»; registro de cambios, punto 21). Entrenar con la ficha única rinde igual que con el registro de la primera compra, en validación y en la prueba. Los dos se observaron al exportar y pueden compartir ediciones posteriores, así que no se descarta esa fuga. Los datos de contacto del registro inicial sí aportan frente a no tenerlos. |
+| **H3.** Parte de la asociación entre «datos de contacto cargados» y volver es fuga de información. | **Señal adicional incierta** (antes figuraba como «no se sostiene»). Entrenar con la ficha única rinde igual que con el registro de la primera compra, en validación y en la prueba. Los dos se observaron al exportar y pueden compartir ediciones posteriores, así que no se descarta esa fuga. Los datos de contacto del registro inicial sí aportan frente a no tenerlos. |
 
-Las mediciones de cada una están al final de [`docs/cambios_respecto_de_la_propuesta.md`](docs/cambios_respecto_de_la_propuesta.md).
+Las mediciones están en [`modelo/resultados/prueba.md`](modelo/resultados/prueba.md) (H1 y H3 en la prueba), [`modelo/resultados/escalera_validacion.md`](modelo/resultados/escalera_validacion.md) (H3 en validación) e [`modelo/resultados/interpretacion_validacion.md`](modelo/resultados/interpretacion_validacion.md) (H2).
 
 ## 5. Qué cambió respecto de la propuesta
 
-Los 22 cambios, cada uno con la medición que lo motivó, están en [`docs/cambios_respecto_de_la_propuesta.md`](docs/cambios_respecto_de_la_propuesta.md). Los que cambian lo que se presentó:
+Los cambios que alteran lo que se presentó en la propuesta:
 
 - **Prevalencia:** vuelve el 21,9%, no «entre 10 y 20».
 - **Cohortes:** 2023 a agosto de 2025, no 2021 a 2025, por falta de detalle de servicios antes de 2023.
@@ -102,13 +102,13 @@ Los 22 cambios, cada uno con la medición que lo motivó, están en [`docs/cambi
 - **Lo que se prometió y no se hizo:**
   - verificar que la identidad del cliente no use información posterior;
   - la extensión de la página escrita. Para el segundo modelo, al regreso del viaje, no hay datos posteriores a la compra que se puedan fechar: la devolución queda marcada, pero su fecha depende del vendedor. El análisis de supervivencia era posible con la base, pero quedó fuera del alcance;
-  - la muestra disociada para replicar: el repositorio es público y la tabla no se publica; si el docente la pide, el acceso se evalúa en ese momento (registro de cambios, punto 22).
+  - la muestra disociada para replicar: el repositorio es público y la tabla no se publica; si el docente la pide, el acceso se evalúa en ese momento.
 - **La regla de decisión:** la propuesta decía que, si CatBoost no le ganaba a la logística, alcanzaba con la regla simple. CatBoost no le ganó, pero la logística sí le ganó a la regla, así que se recomienda la logística.
 
 ## 6. Límites
 
 - **Sobreestimación.** Sin recalibrar, el modelo principal predijo 27,9% en la prueba, y volvió el 20,8%: 7,1 puntos de más.
-  - **La logística entrenada sin datos de contacto predice 22,5%,** 5,4 puntos menos que la principal sin recalibrar. Es la diferencia entre dos modelos: compatible con que parte del exceso venga de los datos de contacto, no una prueba de la causa (registro de cambios, punto 21).
+  - **La logística entrenada sin datos de contacto predice 22,5%,** 5,4 puntos menos que la principal sin recalibrar. Es la diferencia entre dos modelos: compatible con que parte del exceso venga de los datos de contacto, no una prueba de la causa.
   - **El mail figura cada vez más.** El modelo aprendió con 2023 que tener mail separa, y la carga del mail pasó del 42,7% de los clientes nuevos en 2023 al 59,2% en 2024 y al 94,7% en enero–agosto de 2025. Es un descriptivo posterior a la prueba: [`modelo/resultados/carga_contacto.md`](modelo/resultados/carga_contacto.md).
   - **La recalibración con 2024** corrigió la parte que ya se veía ese año y dejó el modelo en 23,9%. Quedan 3,1 puntos; la tasa de vuelta incluso subió de 2024 a 2025 (20,4% → 20,8%), así que no los explica una caída de la tasa.
   - **Para usarlo** hay que reentrenar y recalibrar con datos recientes.
@@ -133,15 +133,13 @@ python modelo/puntuar.py modelo/exportado/principal.json clientes.csv clientes_c
 - **Cuidado con el mail:** en enero–agosto de 2025 casi todos los clientes nuevos lo tenían cargado (94,7%, descriptivo posterior a la prueba), así que esa variable ya no separa como en 2023.
 - **Comprobado:** el JSON reproduce las probabilidades del modelo original en los 13.595 clientes de validación.
 
-Detalle: [`docs/uso_del_modelo.md`](docs/uso_del_modelo.md).
-
-## 8. Estado y pendientes (2026-11-20)
+## 8. Estado y pendientes (2026-11-22)
 
 - **Terminado:** la tabla, la exploración, la escalera, la recalibración, la interpretación, la prueba y los modelos exportados.
 - **La prueba ya se usó.** No se vuelve a correr ni se usa para elegir nada. Un análisis nuevo sobre esos clientes se declara como posterior a la prueba. Uno ya hecho: la carga del mail en 2025.
 - **Decidido no hacer por ahora:** el script que puntúa fichas nuevas desde la base.
 - **No evaluado:** la etiqueta alternativa `vuelve_12_comprando` y la partición `bloque_60_20_20`. Están en la tabla por si se piden.
-- **Material de la defensa (2026-11-20):** el informe (`informe/informe.pdf`) y la presentación (`presentacion/presentacion.html`, con su PDF, `GUION.md` y `GUIA.md`). Ninguno de los dos se versiona. Las cifras salen de este resumen y de `modelo/resultados/`.
+- **Material de la defensa (2026-11-22):** la presentación de 16 minutos está en [`presentacion/`](presentacion/): se descarga `presentacion.html`, que trae el video adentro, y se abre en Chrome. El informe (`informe/informe.pdf`) no se versiona. Las cifras de los dos salen de este resumen y de `modelo/resultados/`.
 - **Historial de git.** El zip de hallazgos trae `HISTORIAL_GIT.txt` y `repo.bundle`, con las fechas de cada commit. Con `git clone repo.bundle` se recupera el historial completo.
 
 ## 9. Dónde está cada cosa
@@ -149,13 +147,8 @@ Detalle: [`docs/uso_del_modelo.md`](docs/uso_del_modelo.md).
 | Archivo | Qué es |
 |---|---|
 | [`HALLAZGOS.md`](HALLAZGOS.md) | Este resumen. |
-| [`CLAUDE.md`](CLAUDE.md) | Instrucciones para una sesión de Claude que retome el proyecto: orden de lectura, estado y reglas. |
-| [`presentacion_propuesta.html`](presentacion_propuesta.html) | La propuesta presentada en clase (Entrega 1). Sus cifras están superadas. |
+| [`presentacion/`](presentacion/) | La defensa oral, versión de 16 minutos: `presentacion.html` (anda sin conexión y trae el video incrustado), el video suelto con sus subtítulos y `LEEME.txt`. Los guiones y el PDF de respaldo quedan en la máquina del equipo. |
 | `informe/` | El informe final (6 páginas, el máximo de la consigna), armado con `informe/armar_informe.py`. No se versiona. |
-| `presentacion/` | La defensa oral: `presentacion.html` (sin conexión), su PDF, `GUION.md` y `GUIA.md`. No se versiona: está solo en la máquina del equipo. |
-| [`docs/cambios_respecto_de_la_propuesta.md`](docs/cambios_respecto_de_la_propuesta.md) | Los 22 cambios respecto de la propuesta, con su medición, y el estado de las hipótesis. **Es la fuente de verdad.** |
-| [`docs/plan_de_la_prueba.md`](docs/plan_de_la_prueba.md) | El plan fijado antes de abrir la prueba. No se edita. |
-| [`docs/uso_del_modelo.md`](docs/uso_del_modelo.md) | Qué da el modelo, qué necesita para un cliente nuevo y qué está decidido. |
 | [`datos/DICCIONARIO.md`](datos/DICCIONARIO.md) | Las 40 columnas de la tabla, cómo se definió cada cosa y cómo se anonimizó. |
 | [`analisis/exploracion.html`](analisis/exploracion.html) | Gráficas de exploración con entrenamiento (abrir en el navegador). |
 | [`modelo/resultados/escalera_validacion.md`](modelo/resultados/escalera_validacion.md) | La escalera de modelos en validación. |

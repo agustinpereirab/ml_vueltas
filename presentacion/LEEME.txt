@@ -1,0 +1,51 @@
+DEFENSA · ¿VUELVE A VIAJAR? · 25 de noviembre
+Versión de 16 minutos (plan: 14:50)
+
+
+CÓMO ABRIRLA
+
+Descargá presentacion.html y abrilo con doble clic, en Chrome y en una computadora.
+Es un solo archivo y anda sin conexión: el video ya está adentro.
+
+  →  (o espacio, o clic)   avanza un paso
+  ←                        vuelve
+  N                        notas de quien habla, con reloj
+  S                        ventana del presentador, para la otra pantalla
+  O                        índice y anexo (para las preguntas)
+  F                        pantalla completa
+  ?                        todas las teclas
+
+
+QUIÉN TIENE QUÉ
+
+  Emilia      láminas 1 a 5     3:05   el problema
+  Ekaterina   láminas 6 y 7     2:50   los datos: video de 1:35 y la analogía del examen
+  Federico    láminas 8 a 13    4:05   el método y H1
+  Agustín     láminas 14 a 20   4:50   resultados, lo que no salió, límites y cierre
+
+El color del fondo cambia con quien habla. El ómnibus de abajo es la barra
+de avance.
+
+
+QUÉ HAY EN LA CARPETA
+
+En el repositorio:
+
+  presentacion.html            la presentación, con el video incrustado
+  video_datos.mp4              el video del bloque de datos, suelto (para verlo
+                               aparte o como plan B)
+  video_datos.srt              sus subtítulos
+  LEEME.txt                    este archivo
+
+Solo en la máquina del equipo (no se versionan):
+
+  presentacion.pdf             respaldo: una página por lámina (el video, como imagen fija)
+  guion_16min.pdf              qué dice cada uno, lámina por lámina
+  guion_ekaterina_es_ru.pdf    el guion de Ekaterina, en español y ruso, para imprimir
+  exportar_pdf.py              rearma presentacion.pdf:  py presentacion/exportar_pdf.py
+  armar_guion.py               rearma guion_16min.pdf desde las notas:
+                               py presentacion/armar_guion.py
+  anterior_20min/              la versión anterior, de 20 minutos
+
+Si cambia una nota, se cambia en presentacion.html y se corren los dos scripts.
+El video no se toca.
