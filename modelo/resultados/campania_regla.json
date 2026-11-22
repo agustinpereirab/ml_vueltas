@@ -1,0 +1,26 @@
+{
+ "generado": "2026-11-21T00:26:16",
+ "tabla_sha256": "77b71c49b21dcf1ba5393f9b069cde6c2c9e0fcb9bbec7ddef523f65328df2f5",
+ "posterior_a_la_prueba": true,
+ "clientes": 10148,
+ "vuelven": 2109,
+ "plazas": 2029.6000000000001,
+ "acompaniantes_previos": 1748,
+ "vuelven_acompaniantes": 584,
+ "resto": 8400,
+ "vuelven_resto": 1525,
+ "regla": {
+  "vueltas_esperadas": 635.1238095238095,
+  "captura": 0.30114926957032223
+ },
+ "logistica": {
+  "vueltas": 670.0,
+  "captura": 0.3176861071597914
+ },
+ "diferencia_captura_logistica_menos_regla": {
+  "punto": 0.016536837589469177,
+  "desde": 0.001256831731747953,
+  "hasta": 0.03022061183203705
+ },
+ "fuente_diferencia": "prueba.json, diferencia declarada de lift al 20% (logística − regla) multiplicada por 0,20"
+}

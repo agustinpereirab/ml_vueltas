@@ -1,0 +1,409 @@
+{
+ "generado": "2026-11-22T19:27:26",
+ "tabla_sha256": "77b71c49b21dcf1ba5393f9b069cde6c2c9e0fcb9bbec7ddef523f65328df2f5",
+ "aprende_con": "entrenamiento (2023)",
+ "mide_en": "validación (2024)",
+ "clientes_validacion": 13595,
+ "tasa_validacion": 0.20448694372931225,
+ "repeticiones_bootstrap": 2000,
+ "semilla": 2026,
+ "C_modelo": 0.1,
+ "versiones": {
+  "python": "3.14.4",
+  "numpy": "2.5.5",
+  "pandas": "3.1.1",
+  "scikit-learn": "1.9.1"
+ },
+ "variables": [
+  {
+   "variable": "__modelo__",
+   "nombre": "Logística principal (29 variables)",
+   "grupo": "modelo",
+   "roc_auc": {
+    "punto": 0.648497290932857,
+    "desde": 0.6369014339588843,
+    "hasta": 0.6598826584683893
+   },
+   "pr_auc": 0.3398432505247826,
+   "r": 0.2320843151405728,
+   "r2": 0.053863129334268706
+  },
+  {
+   "variable": "d0_tiene_telefono",
+   "nombre": "Teléfono cargado el día 0",
+   "grupo": "Datos de contacto (día 0)",
+   "roc_auc": {
+    "punto": 0.5898439085070363,
+    "desde": 0.580344168151601,
+    "hasta": 0.5998805471143482
+   },
+   "pr_auc": 0.24188209798649218,
+   "r": 0.14498553207895043,
+   "r2": 0.021020804512216364
+  },
+  {
+   "variable": "d0_tiene_mail",
+   "nombre": "Mail cargado el día 0",
+   "grupo": "Datos de contacto (día 0)",
+   "roc_auc": {
+    "punto": 0.5820942136720582,
+    "desde": 0.5729499633193176,
+    "hasta": 0.5913363760492535
+   },
+   "pr_auc": 0.23709174079330006,
+   "r": 0.1347275952912374,
+   "r2": 0.018151524932959455
+  },
+  {
+   "variable": "viajes_previos_acompaniante",
+   "nombre": "Viajes previos como acompañante",
+   "grupo": "H2 · compañía previa",
+   "roc_auc": {
+    "punto": 0.575124943041406,
+    "desde": 0.5657443711468733,
+    "hasta": 0.5842908094234386
+   },
+   "pr_auc": 0.27105063216028524,
+   "r": 0.19463541867404927,
+   "r2": 0.03788294620242245
+  },
+  {
+   "variable": "fue_acompaniante_antes",
+   "nombre": "Viajó antes como acompañante",
+   "grupo": "H2 · compañía previa",
+   "roc_auc": {
+    "punto": 0.5705438423186555,
+    "desde": 0.561517806273726,
+    "hasta": 0.5793095974673653
+   },
+   "pr_auc": 0.2428721292213326,
+   "r": 0.15260516741526195,
+   "r2": 0.023288337121840127
+  },
+  {
+   "variable": "vendedor",
+   "nombre": "Vendedor (código)",
+   "grupo": "H2 · vendedor",
+   "roc_auc": {
+    "punto": 0.5350100446688418,
+    "desde": 0.5224773576568263,
+    "hasta": 0.5476732843147298
+   },
+   "pr_auc": 0.22653067030285476,
+   "r": 0.04356535163438654,
+   "r2": 0.0018979398630277458
+  },
+  {
+   "variable": "viaja_con_alguien_con_historial",
+   "nombre": "Viaja con alguien con historial",
+   "grupo": "H2 · compañía previa",
+   "roc_auc": {
+    "punto": 0.531697332841078,
+    "desde": 0.5218370812183398,
+    "hasta": 0.5411776495144731
+   },
+   "pr_auc": 0.2166655198937315,
+   "r": 0.05702694790169067,
+   "r2": 0.0032520727869821417
+  },
+  {
+   "variable": "utilidad_indice",
+   "nombre": "Utilidad (índice)",
+   "grupo": "Montos",
+   "roc_auc": {
+    "punto": 0.5303882663633309,
+    "desde": 0.518726320760296,
+    "hasta": 0.5423713899272429
+   },
+   "pr_auc": 0.21782881545392094,
+   "r": 0.04267217838505305,
+   "r2": 0.0018209148081257888
+  },
+  {
+   "variable": "d0_tiene_nacimiento",
+   "nombre": "Nacimiento cargado el día 0",
+   "grupo": "Datos de contacto (día 0)",
+   "roc_auc": {
+    "punto": 0.5252674143625461,
+    "desde": 0.5183615203951768,
+    "hasta": 0.5321421351341046
+   },
+   "pr_auc": 0.21310096570545342,
+   "r": 0.05559858967943532,
+   "r2": 0.0030912031743422115
+  },
+  {
+   "variable": "viaja_con_cliente_previo",
+   "nombre": "Viaja con un cliente previo",
+   "grupo": "H2 · compañía previa",
+   "roc_auc": {
+    "punto": 0.5252176899257293,
+    "desde": 0.5160828900096341,
+    "hasta": 0.5342622489633455
+   },
+   "pr_auc": 0.21418309449534895,
+   "r": 0.04905235334457512,
+   "r2": 0.00240613336864105
+  },
+  {
+   "variable": "destinos",
+   "nombre": "Cantidad de destinos",
+   "grupo": "Viaje",
+   "roc_auc": {
+    "punto": 0.5250555450230661,
+    "desde": 0.5136705954447077,
+    "hasta": 0.536701685121525
+   },
+   "pr_auc": 0.21350310685066567,
+   "r": 0.03661255622545175,
+   "r2": 0.0013404792733618658
+  },
+  {
+   "variable": "vendedor_antiguedad",
+   "nombre": "Antigüedad del vendedor",
+   "grupo": "H2 · vendedor",
+   "roc_auc": {
+    "punto": 0.523496276487825,
+    "desde": 0.5119698883838077,
+    "hasta": 0.5343988451933935
+   },
+   "pr_auc": 0.21438297129852843,
+   "r": 0.03717177457854171,
+   "r2": 0.00138174082531792
+  },
+  {
+   "variable": "venta_usd",
+   "nombre": "Venta",
+   "grupo": "Montos",
+   "roc_auc": {
+    "punto": 0.5232343168461071,
+    "desde": 0.5111720397727778,
+    "hasta": 0.5356160802111294
+   },
+   "pr_auc": 0.21511165262633325,
+   "r": 0.026807654796106768,
+   "r2": 0.0007186503556672262
+  },
+  {
+   "variable": "anticipacion",
+   "nombre": "Anticipación",
+   "grupo": "Viaje",
+   "roc_auc": {
+    "punto": 0.5219785336779121,
+    "desde": 0.5092700850307131,
+    "hasta": 0.5336186285914811
+   },
+   "pr_auc": 0.21552289129095042,
+   "r": 0.02499641511308888,
+   "r2": 0.0006248207685058581
+  },
+  {
+   "variable": "aerolinea",
+   "nombre": "Aerolínea",
+   "grupo": "Producto",
+   "roc_auc": {
+    "punto": 0.5218224089244554,
+    "desde": 0.5101039016097804,
+    "hasta": 0.5338756929034467
+   },
+   "pr_auc": 0.21420013743378608,
+   "r": 0.025678347162523395,
+   "r2": 0.0006593775129990733
+  },
+  {
+   "variable": "servicios",
+   "nombre": "Servicios",
+   "grupo": "Producto",
+   "roc_auc": {
+    "punto": 0.5200030433350962,
+    "desde": 0.5082213155318968,
+    "hasta": 0.5316100848214017
+   },
+   "pr_auc": 0.21200317086112974,
+   "r": 0.028846769469606577,
+   "r2": 0.0008321361088326261
+  },
+  {
+   "variable": "regimen_hotel",
+   "nombre": "Régimen del hotel",
+   "grupo": "Producto",
+   "roc_auc": {
+    "punto": 0.5183067914600359,
+    "desde": 0.5071470801615345,
+    "hasta": 0.5294456612551917
+   },
+   "pr_auc": 0.21073658557453034,
+   "r": 0.01913461123332958,
+   "r2": 0.00036613334705066255
+  },
+  {
+   "variable": "noches",
+   "nombre": "Noches",
+   "grupo": "Viaje",
+   "roc_auc": {
+    "punto": 0.5176853524115521,
+    "desde": 0.5062303617827165,
+    "hasta": 0.5291987308221993
+   },
+   "pr_auc": 0.21283865652502232,
+   "r": 0.027785113468000625,
+   "r2": 0.0007720125304296697
+  },
+  {
+   "variable": "pasajeros",
+   "nombre": "Pasajeros",
+   "grupo": "Viaje",
+   "roc_auc": {
+    "punto": 0.5168304080729869,
+    "desde": 0.5058337025335935,
+    "hasta": 0.5284241753821358
+   },
+   "pr_auc": 0.21158842570809874,
+   "r": 0.027403161411307293,
+   "r2": 0.0007509332553341611
+  },
+  {
+   "variable": "tipo_producto",
+   "nombre": "Tipo de producto",
+   "grupo": "Producto",
+   "roc_auc": {
+    "punto": 0.5159686120728937,
+    "desde": 0.5046627146334248,
+    "hasta": 0.5265551415223895
+   },
+   "pr_auc": 0.2127844612919198,
+   "r": 0.021873893181188764,
+   "r2": 0.0004784672029020563
+  },
+  {
+   "variable": "pais_destino",
+   "nombre": "País de destino",
+   "grupo": "H2 · destino",
+   "roc_auc": {
+    "punto": 0.5144234626168691,
+    "desde": 0.5027486219472532,
+    "hasta": 0.5261278406555178
+   },
+   "pr_auc": 0.21138167650880682,
+   "r": 0.020447111723379187,
+   "r2": 0.0004180843778283506
+  },
+  {
+   "variable": "venta_por_pasajero_usd",
+   "nombre": "Venta por pasajero",
+   "grupo": "Montos",
+   "roc_auc": {
+    "punto": 0.5119497633515934,
+    "desde": 0.4999609827099686,
+    "hasta": 0.5238637359201779
+   },
+   "pr_auc": 0.21307204655021292,
+   "r": 0.03108909648411995,
+   "r2": 0.0009665319201989194
+  },
+  {
+   "variable": "vendedor_fichas_12m",
+   "nombre": "Cartera del vendedor",
+   "grupo": "H2 · vendedor",
+   "roc_auc": {
+    "punto": 0.511205343630782,
+    "desde": 0.4994618465563693,
+    "hasta": 0.5223658366046858
+   },
+   "pr_auc": 0.20941327580664476,
+   "r": 0.01985587644917275,
+   "r2": 0.00039425582956481304
+  },
+  {
+   "variable": "lleva_hotel",
+   "nombre": "Lleva hotel",
+   "grupo": "Producto",
+   "roc_auc": {
+    "punto": 0.5110332538407554,
+    "desde": 0.5010486006314797,
+    "hasta": 0.5214578489926924
+   },
+   "pr_auc": 0.2082315422214457,
+   "r": 0.018119307212275018,
+   "r2": 0.0003283092938528015
+  },
+  {
+   "variable": "tiene_seguro",
+   "nombre": "Seguro",
+   "grupo": "Producto",
+   "roc_auc": {
+    "punto": 0.5079319623358179,
+    "desde": 0.4987410838530901,
+    "hasta": 0.5171685350645752
+   },
+   "pr_auc": 0.2071989800786106,
+   "r": 0.014819818989135269,
+   "r2": 0.0002196270348707343
+  },
+  {
+   "variable": "region_destino",
+   "nombre": "Región de destino",
+   "grupo": "H2 · destino",
+   "roc_auc": {
+    "punto": 0.5068945343032093,
+    "desde": 0.49435925981240414,
+    "hasta": 0.5189772079611897
+   },
+   "pr_auc": 0.21057052337104967,
+   "r": 0.0005139116893401078,
+   "r2": 2.641052244404035e-07
+  },
+  {
+   "variable": "canje_millas",
+   "nombre": "Canje de millas",
+   "grupo": "Producto",
+   "roc_auc": {
+    "punto": 0.501322852952035,
+    "desde": 0.4908646317087434,
+    "hasta": 0.511283272129909
+   },
+   "pr_auc": 0.2049200959188337,
+   "r": 0.0022746033966980607,
+   "r2": 5.173820612270355e-06
+  },
+  {
+   "variable": "vendedor_es_persona",
+   "nombre": "Vendedor es persona",
+   "grupo": "H2 · vendedor",
+   "roc_auc": {
+    "punto": 0.5010221780966351,
+    "desde": 0.5004238606999429,
+    "hasta": 0.5015727779937614
+   },
+   "pr_auc": 0.20482004523053923,
+   "r": 0.018520488032721234,
+   "r2": 0.00034300847697017045
+  },
+  {
+   "variable": "d0_tiene_documento",
+   "nombre": "Documento cargado el día 0",
+   "grupo": "Datos de contacto (día 0)",
+   "roc_auc": {
+    "punto": 0.5000811556025636,
+    "desde": 0.49849195160702753,
+    "hasta": 0.5015735967506318
+   },
+   "pr_auc": 0.20451335065253973,
+   "r": 0.0008559159975159355,
+   "r2": 7.325921948036989e-07
+  },
+  {
+   "variable": "pagador",
+   "nombre": "Quién pagó",
+   "grupo": "Producto",
+   "roc_auc": {
+    "punto": 0.50006753543074,
+    "desde": 0.49561086385943626,
+    "hasta": 0.5044840357505627
+   },
+   "pr_auc": 0.20446708202546102,
+   "r": 0.007035719764102526,
+   "r2": 4.950135259898291e-05
+  }
+ ]
+}

@@ -24,3 +24,12 @@ scratch*
 
 # El zip de hallazgos se arma con git archive; no se versiona.
 *.zip
+
+
+# Material de la defensa y consigna: no se versionan (decisión del usuario, 2026-11-20).
+presentacion/
+informe/
+consigna.pdf
+
+# Registro que Chromium deja al exportar los PDF
+debug.log

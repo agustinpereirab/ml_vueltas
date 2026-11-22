@@ -14,7 +14,7 @@ Proyecto final de Aprendizaje Automático I: «¿Vuelve a viajar?». Busca prede
 4. [`docs/plan_de_la_prueba.md`](docs/plan_de_la_prueba.md) y [`modelo/resultados/prueba.md`](modelo/resultados/prueba.md): la evaluación final.
 5. [`docs/uso_del_modelo.md`](docs/uso_del_modelo.md): qué da el modelo, qué necesita y qué está decidido sobre usarlo con clientes nuevos.
 
-## Estado (2026-11-19)
+## Estado (2026-11-20)
 
 **Hecho:**
 
@@ -23,12 +23,16 @@ Proyecto final de Aprendizaje Automático I: «¿Vuelve a viajar?». Busca prede
 - **la prueba, corrida una sola vez:**
   - H1 confirmada;
   - H2 en parte;
-  - H3 no se sostiene;
-- los modelos exportados para usarlos en otra computadora.
+  - H3: señal adicional incierta (registro de cambios, punto 21);
+- los modelos exportados para usarlos en otra computadora;
+- **el informe** (`informe/informe.pdf`, 6 páginas, el máximo de la consigna; se entrega el 23 de noviembre). Está escrito como evaluación retrospectiva entre cohortes (registro de cambios, punto 21). Se arma con `py informe/armar_informe.py`, que dibuja las figuras desde `modelo/resultados/` y necesita Playwright;
+- **la presentación de la defensa** (`presentacion/`, 25 de noviembre): 20 minutos con cuatro oradores, estilo «postal» (viaje en ómnibus de Montevideo a Florianópolis; elegido entre tres bocetos en `presentacion/bocetos/`), más `GUION.md` y `GUIA.md` con preguntas probables. El PDF de respaldo se arma con `py presentacion/exportar_pdf.py`. El caso C-00412 es un cliente inventado, puntuado con el modelo exportado.
+
+**No se versionan** (`.gitignore`, decisión del usuario del 2026-11-20): `informe/`, `presentacion/` y `consigna.pdf`. Viven solo en la máquina del equipo; no se agregan a ningún commit.
 
 **Decidido no hacer:** el script para puntuar fichas nuevas desde la base (decisión del usuario, 2026-11-19; ver `docs/uso_del_modelo.md`).
 
-**Pendiente:** el material para la defensa (informe o presentación). El usuario todavía no dijo el formato ni la fecha. Antes de armarlo, preguntar.
+**Pendiente:** ensayar la defensa. Si cambia una cifra, se cambia el script o el resultado de origen y se vuelven a armar el informe y la presentación (ver `presentacion/GUIA.md`, «Si algo cambia»).
 
 ## Reglas que no se rompen
 
@@ -83,6 +87,8 @@ Proyecto final de Aprendizaje Automático I: «¿Vuelve a viajar?». Busca prede
 | `modelo/reducido.py` | ~1 min |
 | `modelo/exportar.py` | segundos |
 | `modelo/carga_contacto.py` (descriptivo posterior a la prueba; no elige nada) | segundos |
+| `modelo/variables_solas.py` (cada variable sola en validación; exploratorio, no elige nada ni usa la prueba; no necesita CatBoost) | ~3 min |
+| `modelo/campania_regla.py` (cómo llena la regla el cupo del 20% en la prueba; descriptivo posterior a la prueba) | segundos |
 
 Cada script se niega a correr si la tabla no coincide con la huella de `datos/manifiesto.json`.
 
@@ -91,7 +97,10 @@ Cada script se niega a correr si la tabla no coincide con la huella de `datos/ma
 ## Entorno
 
 - **Python:** 3.14, con las versiones de [`requirements.txt`](requirements.txt).
-- **Entorno virtual:** crearlo fuera de OneDrive; si no, sincroniza cientos de MB.
-- **En la máquina del usuario:** el intérprete es `py`, porque `python` no responde.
+- **Entorno virtual:** fuera del proyecto y fuera de OneDrive: adentro pesa unos 840 MB y el editor lo indexa.
+- **En la máquina del usuario:**
+  - el entorno del proyecto está en `C:\Users\apere\entornos\ml_vueltas`, con las versiones de `requirements.txt`; los scripts del modelo y las pruebas automáticas se corren con su `Scripts\python.exe`;
+  - la terminal de VS Code activa ese entorno, así que `py` lo usa; tiene también Playwright, que necesitan `informe/armar_informe.py` y `presentacion/exportar_pdf.py` (Playwright no está en `requirements.txt` porque solo sirve para esos dos, que no se versionan);
+  - `python` no responde.
 - **Git:** no tiene identidad global configurada. Los commits van con `-c user.name=... -c user.email=...`. Los datos nunca se versionan.
 - **Desde el zip de hallazgos** (no trae `.git`): el historial está en `HISTORIAL_GIT.txt` y en `repo.bundle`, que se recupera con `git clone repo.bundle ml_vueltas`. Ahí se ven las fechas del plan de la prueba (`69632ac`) y de sus resultados (`4fb21b8`).

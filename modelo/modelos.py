@@ -6,7 +6,6 @@ y la prueba (2025) para el final.
 """
 import numpy as np
 import pandas as pd
-from catboost import CatBoostClassifier, Pool, cv as catboost_cv
 from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LogisticRegression
@@ -78,6 +77,8 @@ def ajustar_catboost(x, y, cats, configs, semilla, iteraciones=2000, tasa=0.05, 
     sin one-hot. Para cada configuracion, la cantidad de arboles sale de la
     parada temprana sobre la log-loss en validacion cruzada; entre
     configuraciones gana la de mayor PR-AUC en esa misma validacion cruzada."""
+    # CatBoost se importa aca: los scripts que solo usan la logistica corren sin el
+    from catboost import CatBoostClassifier, Pool, cv as catboost_cv
     preparar = _CatBoost(None, cats)._preparar
     pool = Pool(preparar(x), y, cat_features=cats)
     resultados = []

@@ -1,6 +1,6 @@
 # Cambios respecto de la propuesta
 
-Este registro compara la propuesta presentada en clase ([`presentacion_propuesta.html`](../presentacion_propuesta.html), Entrega 1) con lo que efectivamente se hizo. Cada entrada dice qué decía la propuesta, qué se hizo, qué medición lo motivó y qué implica para la defensa.
+Este registro compara la propuesta (Entrega 1: la presentación en clase, [`presentacion_propuesta.html`](../presentacion_propuesta.html), y su página escrita, `PropuestaProyectoML_Grupo6.pdf`) con lo que efectivamente se hizo. Cada entrada dice qué decía la propuesta, qué se hizo, qué medición lo motivó y qué implica para la defensa.
 
 **De dónde salen las cifras.** Salvo que se indique otra fuente, salen de la tabla del modelo ([`datos/tabla_modelo.csv`](../datos/DICCIONARIO.md)). La tabla se armó el 2026-11-11 sobre una foto de la base de ese mismo día, con compras hasta el 2026-11-09. En los puntos 1 a 10, las cifras que miran la etiqueta usan solo el bloque de entrenamiento (cohorte 2023). Hay tres excepciones: los conteos por bloque, la comparación por estación del punto 2 (que usa 2023 y 2024) y los conteos de fichas en proceso del punto 4. Desde el punto 11, cada cifra dice si es de validación (2024) o de la prueba (2025). Los análisis hechos después de correr la prueba están marcados *(posterior a la prueba)*. Las cifras marcadas como *preliminares* son de una copia anterior de la base (septiembre de 2026), con un universo aproximado; sirvieron para decidir, no para citar como resultado.
 
@@ -28,6 +28,8 @@ Este registro compara la propuesta presentada en clase ([`presentacion_propuesta
 | 18 | Uso del modelo | no se preveía dejarlo para usar | exportado y portable; puntuar fichas nuevas desde la base, sin automatizar por decisión del usuario |
 | 19 | Identidad del cliente | «verificamos que no use información posterior» | no se verificó |
 | 20 | Regla de decisión | si el boosting no le gana a la logística, alcanza con la regla simple | se recomienda la logística, que sí le gana a la regla |
+| 21 | Encuadre | evaluar en la cohorte nueva; confirmar o descartar hipótesis | evaluación retrospectiva entre cohortes; H3 «señal adicional incierta»; el mail, explicación plausible de la sobreestimación |
+| 22 | Extensión y réplica | segundo modelo al regreso del viaje y supervivencia; repositorio privado con una muestra disociada para replicar | la extensión no se hizo; repositorio público sin datos; la tabla, a pedido del docente |
 
 El estado de las tres hipótesis está al final.
 
@@ -73,7 +75,7 @@ La tabla trae además `bloque_60_20_20`, que corta en septiembre de 2024 y en ma
 **Por qué.**
 
 - Hace falta un bloque para elegir hiperparámetros y comparar escalones sin tocar la prueba.
-- Con años enteros, la etiqueta del último cliente de entrenamiento se cierra el 2024-12-31, antes de que compre el primero de prueba. El modelo evaluado podría haber existido el 1 de enero de 2025.
+- Con años enteros, la etiqueta del último cliente de entrenamiento se cierra el 2024-12-31, antes de que compre el primero de prueba. Eso vale para el ajuste, no para el modelo evaluado: la elección y la recalibración usaron etiquetas de 2024, que se cerraron durante 2025 (corregido el 2026-11-21; ver punto 21).
 - Con el 60-20-20 eso no se cumple: las etiquetas de entrenamiento se cierran durante el período de prueba. Se dejó la columna por si la cátedra pide esa proporción.
 
 **Implica.**
@@ -404,7 +406,7 @@ Corrida una sola vez el 2026-11-19. El plan y el script se versionaron en el com
 - **Calibración: la sobreestimación siguió en 2025.**
   - La principal recalibrada predice 23,9% en promedio y vuelve el 20,8%. Sin recalibrar predecía 27,9%.
   - La recalibración con 2024 corrigió parte (Brier −0,0046 [−0,0052; −0,0039]), pero no todo: la deriva continuó, como advertía el punto 14.
-  - Sin recalibrar, la principal predice 27,9%. La logística sin datos de contacto predice 22,5%: los 5,4 puntos de diferencia son la parte que agregan los datos de contacto. En 2025 el mail se cargó al 94,7% de los clientes nuevos (punto 13, *posterior a la prueba*).
+  - Sin recalibrar, la principal predice 27,9%. La logística sin datos de contacto predice 22,5%: 5,4 puntos menos (diferencia entre las medias de dos modelos; es compatible con que parte del exceso venga de los datos de contacto, no lo demuestra; ver punto 21). En 2025 el mail se cargó al 94,7% de los clientes nuevos (punto 13, *posterior a la prueba*).
   - La recalibración con 2024 ya absorbía la caída de la tasa de vuelta respecto de 2023. Lo que queda (23,9% contra 20,8%) es la deriva de la carga de contacto entre 2024 y 2025; la tasa incluso subió (20,4% → 20,8%).
 - **Simulación de campaña.** Contactando al 20% de mayor probabilidad (2.030 clientes), quedan contactados 670 de los 2.109 que vuelven (31,8%), contra 422 al azar. Entre los contactados vuelve el 33,0%. Ordenando por probabilidad × utilidad de la primera compra se contacta a menos de los que vuelven (474), pero queda el 67,5% de la utilidad de primera compra de quienes vuelven (ordenando solo por probabilidad, esa parte de la utilidad es 38,8%; no es la tasa del décimo superior del punto 12, que en validación también da 38,8%).
 
@@ -463,6 +465,40 @@ Es un límite declarado.
 
 **Implica.** La frase de la propuesta mezclaba dos comparaciones. Aplicada escalón por escalón, la escalera termina en la logística.
 
+## 21. Encuadre: evaluación retrospectiva y conclusiones más acotadas
+
+Decidido por el equipo el 2026-11-21, al revisar el informe y la defensa.
+
+**Propuesta.** Evaluar el modelo en «la cohorte que el modelo nunca vio», como si se usara en la agencia, y confirmar o descartar cada hipótesis.
+
+**Ahora.**
+
+- **La prueba es una evaluación retrospectiva entre cohortes.** El ajuste usó solo 2023, cuyas etiquetas se cerraron antes de que comprara el primer cliente de prueba. Pero la elección del modelo y la recalibración usaron etiquetas de 2024, que se cerraron durante 2025, mientras ya entraban clientes de prueba. El modelo evaluado no podría haber existido el 1 de enero de 2025; se pudo armar porque la foto de la base es de noviembre de 2026. Esto corrige lo que decía el punto 2.
+- **Simular el uso prospectivo** exigiría entrenar, elegir y recalibrar solo con cohortes de 12 meses ya cumplidos en cada fecha de corte, guardar las variables y la identidad de cada cliente al comprar, y medir la cohorte siguiente cuando cierre su seguimiento.
+- **H3 pasa de «no se sostiene» a «señal adicional incierta».** La comparación mide lo que la ficha única agrega sobre el registro de la primera compra, y eso no aparece (intervalos que incluyen cero). Pero los dos registros se observaron al exportar y pueden compartir ediciones posteriores a la compra, así que la comparación no puede descartar esa fuga.
+- **La sobreestimación y el mail.** Que la carga del mail haya cambiado entre años es una explicación plausible de parte de la sobreestimación, no una causa demostrada. Los «5,4 puntos» de los puntos 13 y 17 son la diferencia entre las medias de dos modelos distintos (con y sin datos de contacto), no una descomposición causal.
+- **El modelo frente a la regla, en la campaña.** Con el cupo del 20%, la logística capta el 31,8% de las vueltas y la regla «viajó antes como acompañante», el 30,1%: 1,65 puntos porcentuales más [0,13; 3,02], unas 35 vueltas. No es un análisis nuevo: es la diferencia de lift al 20% que el plan de la prueba ya declaraba, por 0,20. Cuántos acompañantes previos hay en la prueba (1.748) y cómo llena el cupo la regla salen de un descriptivo *posterior a la prueba*: [`modelo/resultados/campania_regla.md`](../modelo/resultados/campania_regla.md).
+- **Redacción de H2 y de la escalera.** «Sin evidencia de aporte adicional» en lugar de «no aporta» (destino, vendedor, montos, producto), y «CatBoost rindió de forma comparable» en lugar de «no la mejora». Las mediciones no cambian.
+
+**Implica.** Ninguna cifra cambia. Cambian cómo se presentan el diseño de la evaluación, el estado de H3 y la explicación de la sobreestimación. El informe y la presentación de la defensa ya usan este encuadre.
+
+## 22. La extensión y la muestra para replicar: no se hicieron
+
+Anotado el 2026-11-22, al revisar el informe contra la página escrita de la propuesta. Los dos puntos están en esa página, no en la presentación.
+
+**Propuesta.**
+
+- Subpregunta 3, marcada como extensión: «¿Conviene predecir al comprar o al regreso del viaje?». Un segundo modelo que sume lo que se sabe después del viaje (devoluciones, cobros) y un análisis de supervivencia del tiempo hasta volver, con censura.
+- Reproducibilidad: «Código y modelo en repositorio privado con acceso para el docente, con una muestra disociada para replicar».
+
+**Ahora.**
+
+- **La extensión no se hizo.** La tabla trae solo variables del día 0 y la etiqueta a 12 meses como sí o no ([`datos/DICCIONARIO.md`](../datos/DICCIONARIO.md)): no trae variables posteriores al viaje ni el tiempo hasta la vuelta. Sumarlas exigía otra exportación, que solo se puede hacer dentro de la empresa, y otra revisión de anonimización.
+- **El repositorio es público y no tiene datos.** No se publicó una muestra de la tabla: aunque está anonimizada, es de acceso restringido. Si el docente pide la tabla para replicar el entrenamiento, el acceso se evalúa al recibir el pedido (decisión del equipo, 2026-11-22).
+- **El Brier**, otra métrica de la página escrita, se calculó en todas las corridas (`modelo/resultados/*.md`); desde el 2026-11-22 figura también en el informe, junto a la calibración.
+
+**Implica.** El informe lo dice en las secciones 5 y 7. Ninguna cifra cambia.
+
 ---
 
 ## Estado de las hipótesis
@@ -510,7 +546,7 @@ Modelo completo: 0,340. Prevalencia: 0,204.
   - No se listan ni se ordenan vendedores.
 - **Fuera de H2 pesan los datos de contacto del día 0.** Sin ellos, el ROC-AUC cae 0,046, la mayor caída de todos los grupos. El mail cargado el día 0 es la variable con mayor contribución individual (SHAP medio 0,374, contra 0,136 de «viajó antes como acompañante»).
 
-**H3 · Parte de la asociación entre «datos de contacto cargados» y volver es fuga, y se reduce al reconstruir desde la primera compra.** **No se sostiene**, ni en validación ni en la prueba. En la prueba, ficha única − día 0 da PR-AUC +0,002 [−0,003; 0,008] y ROC-AUC +0,004 [−0,002; 0,011]. Los datos de contacto del día 0 sí aportan: sin ellos, el PR-AUC baja 0,014 [0,008; 0,020]. En validación:
+**H3 · Parte de la asociación entre «datos de contacto cargados» y volver es fuga, y se reduce al reconstruir desde la primera compra.** **Señal adicional incierta** (reformulado el 2026-11-21, punto 21; antes figuraba como «no se sostiene»). La ficha única no ordena mejor que el registro de la primera compra, ni en validación ni en la prueba, pero los dos registros pueden compartir ediciones posteriores. En la prueba, ficha única − día 0 da PR-AUC +0,002 [−0,003; 0,008] y ROC-AUC +0,004 [−0,002; 0,011]. Los datos de contacto del día 0 sí aportan: sin ellos, el PR-AUC baja 0,014 [0,008; 0,020]. En validación:
 
 | Comparación | PR-AUC | ROC-AUC | Brier |
 |---|---|---|---|
@@ -522,7 +558,7 @@ Modelo completo: 0,340. Prevalencia: 0,204.
 - **Los datos del día 0 sí agregan.** Comparado con no tenerlos, mejoran el PR-AUC y el ROC-AUC con intervalo.
 - **Es consistente con la exploración:** quienes cargaron el dato después vuelven parecido a quienes no lo tienen (punto 8), así que sumar ese dato no agrega señal.
 - **Lo que sí apareció es otro problema:** la relación entre datos de contacto y vuelta cambió entre 2023 y 2024, y en 2025 el mail ya se cargaba a casi todos (punto 13).
-- **Limitación:** el registro del día 0 se ve como está hoy (punto 8). Esta medición no descarta fuga por edición del mismo registro.
+- **Limitación:** el registro del día 0 se ve como está hoy (punto 8). Los dos registros se observaron al exportar y pueden compartir ediciones posteriores a la compra: esta medición no descarta esa fuga. Comprobarlo requiere un historial de ediciones o una copia del registro guardada al comprar.
 
 ## Riesgos de la propuesta: dónde quedaron
 

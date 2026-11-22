@@ -12,9 +12,9 @@ Proyecto final de Aprendizaje Automático I, con datos de Jetmar (5M Travel Grou
 - **Lo que más pesa,** medido en validación:
   - **Haber viajado antes con Jetmar como acompañante de otro cliente.** Frente a no haberlo hecho, multiplica las chances de volver por 1,51 con un viaje previo, por 2,15 con dos y por 4,23 con tres o más. Son odds ratios del modelo entrenado con 2023, combinando dos variables anidadas.
   - **Tener cargados el mail y la fecha de nacimiento en el registro de la primera compra,** sobre todo el mail.
-- **Lo que no aporta** una vez que están las variables anteriores, también medido en validación: el destino (tampoco la marca «regional»), el vendedor, los montos y el tipo de producto.
+- **Sin evidencia de aporte adicional** una vez que están las variables anteriores, también medido en validación: el destino (tampoco la marca «regional»), el vendedor, los montos y el tipo de producto.
 - **Límites:**
-  - El modelo sobreestima: en la prueba, ya recalibrado con 2024, predijo 23,9% y volvió el 20,8%. La causa principal es que cambió la carga del mail: se cargaba al 42,7% de los clientes nuevos en 2023, al 59,2% en 2024 y al 94,7% en enero–agosto de 2025, así que tenerlo dejó de distinguir. La cifra de 2025 es un descriptivo hecho después de la prueba.
+  - El modelo sobreestima: en la prueba, ya recalibrado con 2024, predijo 23,9% y volvió el 20,8%. Una explicación plausible, no demostrada, es que cambió la carga del mail: se cargaba al 42,7% de los clientes nuevos en 2023, al 59,2% en 2024 y al 94,7% en enero–agosto de 2025, así que tenerlo dejó de distinguir. La cifra de 2025 es un descriptivo hecho después de la prueba.
   - El modelo mide quién tiende a volver, no cuánto suma contactarlo.
 
 ## 1. Los datos
@@ -57,6 +57,7 @@ Proyecto final de Aprendizaje Automático I, con datos de Jetmar (5M Travel Grou
    - El plan ([`docs/plan_de_la_prueba.md`](docs/plan_de_la_prueba.md)) y el script se versionaron en git antes de abrir 2025 (commit `69632ac`, 16:46). Los resultados están en el commit `4fb21b8` (16:53).
    - Antes de abrirla se conocían el tamaño del bloque y su tasa de vuelta (20,8%), porque están en el manifiesto de la tabla. Ningún modelo se había entrenado ni evaluado con esos clientes.
    - El script se niega a correr una segunda vez.
+   - **Es una evaluación retrospectiva entre cohortes.** El ajuste usó solo 2023, pero la elección y la recalibración usaron etiquetas de 2024 que se cerraron durante 2025, cuando ya entraban clientes de prueba. Detalle en el registro de cambios, punto 21.
 
 ## 3. Resultados en la prueba
 
@@ -83,14 +84,14 @@ Detalle completo, con intervalos: [`modelo/resultados/prueba.md`](modelo/resulta
 | Hipótesis | Resultado |
 |---|---|
 | **H1.** La recompra se puede predecir por encima de la prevalencia y de una regla simple. | **Confirmada** en la prueba, con el criterio fijado antes de abrirla. |
-| **H2.** Pesan más el destino regional, viajar con un cliente previo o haber sido acompañante, y el vendedor. | **En parte,** medido en validación. El grupo que más aporta es la compañía previa (4 variables), y dentro de él, haber sido acompañante. No aportan el destino regional ni el vendedor. Viajar con un cliente previo agrega poco por encima de viajar con alguien con historial (×1,02). |
-| **H3.** Parte de la asociación entre «datos de contacto cargados» y volver es fuga de información. | **No se sostiene,** ni en validación ni en la prueba: entrenar con la ficha única de hoy rinde igual que con la ficha del día de la primera compra. Límite: la ficha del día 0 se ve como está hoy, así que no se descarta fuga por edición del mismo registro. Los datos de contacto del día 0 sí aportan. |
+| **H2.** Pesan más el destino regional, viajar con un cliente previo o haber sido acompañante, y el vendedor. | **En parte,** medido en validación. El grupo que más aporta es la compañía previa (4 variables), y dentro de él, haber sido acompañante. Sin evidencia de aporte adicional del destino regional ni del vendedor. Viajar con un cliente previo agrega poco por encima de viajar con alguien con historial (×1,02). |
+| **H3.** Parte de la asociación entre «datos de contacto cargados» y volver es fuga de información. | **Señal adicional incierta** (antes «no se sostiene»; registro de cambios, punto 21). Entrenar con la ficha única rinde igual que con el registro de la primera compra, en validación y en la prueba. Los dos se observaron al exportar y pueden compartir ediciones posteriores, así que no se descarta esa fuga. Los datos de contacto del registro inicial sí aportan frente a no tenerlos. |
 
 Las mediciones de cada una están al final de [`docs/cambios_respecto_de_la_propuesta.md`](docs/cambios_respecto_de_la_propuesta.md).
 
 ## 5. Qué cambió respecto de la propuesta
 
-Los 20 cambios, cada uno con la medición que lo motivó, están en [`docs/cambios_respecto_de_la_propuesta.md`](docs/cambios_respecto_de_la_propuesta.md). Los que cambian lo que se presentó:
+Los 22 cambios, cada uno con la medición que lo motivó, están en [`docs/cambios_respecto_de_la_propuesta.md`](docs/cambios_respecto_de_la_propuesta.md). Los que cambian lo que se presentó:
 
 - **Prevalencia:** vuelve el 21,9%, no «entre 10 y 20».
 - **Cohortes:** 2023 a agosto de 2025, no 2021 a 2025, por falta de detalle de servicios antes de 2023.
@@ -98,15 +99,18 @@ Los 20 cambios, cada uno con la medición que lo motivó, están en [`docs/cambi
 - **Variables:** no están el mes de compra ni el de viaje, la ciudad ni la categoría del hotel. Identificaban clientes y casi no aportaban.
 - **Regla simple:** se sumó «viajó antes como acompañante», porque la regla de la propuesta no separa.
 - **Lo que no estaba previsto:** la recalibración, el modelo reducido y el plan de la prueba.
-- **Lo que se prometió y no se hizo:** verificar que la identidad del cliente no use información posterior.
+- **Lo que se prometió y no se hizo:**
+  - verificar que la identidad del cliente no use información posterior;
+  - la extensión de la página escrita (un segundo modelo al regreso del viaje y un análisis de supervivencia): la tabla no trae datos posteriores al viaje ni el tiempo hasta la vuelta;
+  - la muestra disociada para replicar: el repositorio es público y la tabla no se publica; si el docente la pide, el acceso se evalúa en ese momento (registro de cambios, punto 22).
 - **La regla de decisión:** la propuesta decía que, si CatBoost no le ganaba a la logística, alcanzaba con la regla simple. CatBoost no le ganó, pero la logística sí le ganó a la regla, así que se recomienda la logística.
 
 ## 6. Límites
 
 - **Sobreestimación.** Sin recalibrar, el modelo principal predijo 27,9% en la prueba, y volvió el 20,8%: 7,1 puntos de más.
-  - **1,7 puntos no dependen de los datos de contacto:** la logística entrenada sin ellos predice 22,5%. De esos, 1,1 son que la tasa de vuelta es más baja que la de 2023 (21,9%).
-  - **5,4 puntos vienen de los datos de contacto.** El modelo aprendió con 2023 que tener mail separa, y la carga del mail pasó del 42,7% de los clientes nuevos en 2023 al 59,2% en 2024 y al 94,7% en enero–agosto de 2025. Es un descriptivo posterior a la prueba: [`modelo/resultados/carga_contacto.md`](modelo/resultados/carga_contacto.md).
-  - **La recalibración con 2024** corrigió la parte que ya se veía ese año y dejó el modelo en 23,9%. Los 3,1 puntos que quedan son la deriva de 2024 a 2025: la caída de la tasa ya estaba absorbida, y de 2024 a 2025 la tasa incluso subió (20,4% → 20,8%).
+  - **La logística entrenada sin datos de contacto predice 22,5%,** 5,4 puntos menos que la principal sin recalibrar. Es la diferencia entre dos modelos: compatible con que parte del exceso venga de los datos de contacto, no una prueba de la causa (registro de cambios, punto 21).
+  - **El mail figura cada vez más.** El modelo aprendió con 2023 que tener mail separa, y la carga del mail pasó del 42,7% de los clientes nuevos en 2023 al 59,2% en 2024 y al 94,7% en enero–agosto de 2025. Es un descriptivo posterior a la prueba: [`modelo/resultados/carga_contacto.md`](modelo/resultados/carga_contacto.md).
+  - **La recalibración con 2024** corrigió la parte que ya se veía ese año y dejó el modelo en 23,9%. Quedan 3,1 puntos; la tasa de vuelta incluso subió de 2024 a 2025 (20,4% → 20,8%), así que no los explica una caída de la tasa.
   - **Para usarlo** hay que reentrenar y recalibrar con datos recientes.
 - **Propensión, no efecto.** Cuánto suma contactar a un cliente solo se sabe con un experimento.
 - **Un solo canal.** No se cuentan las vueltas por otras marcas del grupo.
@@ -131,13 +135,13 @@ python modelo/puntuar.py modelo/exportado/principal.json clientes.csv clientes_c
 
 Detalle: [`docs/uso_del_modelo.md`](docs/uso_del_modelo.md).
 
-## 8. Estado y pendientes (2026-11-19)
+## 8. Estado y pendientes (2026-11-20)
 
 - **Terminado:** la tabla, la exploración, la escalera, la recalibración, la interpretación, la prueba y los modelos exportados.
 - **La prueba ya se usó.** No se vuelve a correr ni se usa para elegir nada. Un análisis nuevo sobre esos clientes se declara como posterior a la prueba. Uno ya hecho: la carga del mail en 2025.
 - **Decidido no hacer por ahora:** el script que puntúa fichas nuevas desde la base.
 - **No evaluado:** la etiqueta alternativa `vuelve_12_comprando` y la partición `bloque_60_20_20`. Están en la tabla por si se piden.
-- **Pendiente:** el material para la defensa (informe o presentación). Falta definir el formato y la fecha.
+- **Material de la defensa (2026-11-20):** el informe (`informe/informe.pdf`) y la presentación (`presentacion/presentacion.html`, con su PDF, `GUION.md` y `GUIA.md`). Ninguno de los dos se versiona. Las cifras salen de este resumen y de `modelo/resultados/`.
 - **Historial de git.** El zip de hallazgos trae `HISTORIAL_GIT.txt` y `repo.bundle`, con las fechas de cada commit. Con `git clone repo.bundle` se recupera el historial completo.
 
 ## 9. Dónde está cada cosa
@@ -147,7 +151,9 @@ Detalle: [`docs/uso_del_modelo.md`](docs/uso_del_modelo.md).
 | [`HALLAZGOS.md`](HALLAZGOS.md) | Este resumen. |
 | [`CLAUDE.md`](CLAUDE.md) | Instrucciones para una sesión de Claude que retome el proyecto: orden de lectura, estado y reglas. |
 | [`presentacion_propuesta.html`](presentacion_propuesta.html) | La propuesta presentada en clase (Entrega 1). Sus cifras están superadas. |
-| [`docs/cambios_respecto_de_la_propuesta.md`](docs/cambios_respecto_de_la_propuesta.md) | Los 20 cambios respecto de la propuesta, con su medición, y el estado de las hipótesis. **Es la fuente de verdad.** |
+| `informe/` | El informe final (6 páginas, el máximo de la consigna), armado con `informe/armar_informe.py`. No se versiona. |
+| `presentacion/` | La defensa oral: `presentacion.html` (sin conexión), su PDF, `GUION.md` y `GUIA.md`. No se versiona: está solo en la máquina del equipo. |
+| [`docs/cambios_respecto_de_la_propuesta.md`](docs/cambios_respecto_de_la_propuesta.md) | Los 22 cambios respecto de la propuesta, con su medición, y el estado de las hipótesis. **Es la fuente de verdad.** |
 | [`docs/plan_de_la_prueba.md`](docs/plan_de_la_prueba.md) | El plan fijado antes de abrir la prueba. No se edita. |
 | [`docs/uso_del_modelo.md`](docs/uso_del_modelo.md) | Qué da el modelo, qué necesita para un cliente nuevo y qué está decidido. |
 | [`datos/DICCIONARIO.md`](datos/DICCIONARIO.md) | Las 40 columnas de la tabla, cómo se definió cada cosa y cómo se anonimizó. |
@@ -158,6 +164,8 @@ Detalle: [`docs/uso_del_modelo.md`](docs/uso_del_modelo.md).
 | [`modelo/resultados/reducido_validacion.md`](modelo/resultados/reducido_validacion.md) | El modelo reducido. |
 | [`modelo/resultados/prueba.md`](modelo/resultados/prueba.md) | **Resultados finales en la prueba.** |
 | [`modelo/resultados/carga_contacto.md`](modelo/resultados/carga_contacto.md) | Carga de los datos de contacto por año. Descriptivo posterior a la prueba. |
+| [`modelo/resultados/campania_regla.md`](modelo/resultados/campania_regla.md) | Cómo llena la regla del acompañante el cupo del 20% en la prueba (1.748 acompañantes previos). Descriptivo posterior a la prueba. |
+| [`modelo/resultados/variables_solas.md`](modelo/resultados/variables_solas.md) | Cuánto ordena cada variable por sí sola, en validación (ROC-AUC, PR-AUC, r y r²). Exploratorio. |
 | [`modelo/exportado/`](modelo/exportado/) | Los modelos listos para usar. |
 | `exportacion/`, `modelo/` | El código, con pruebas automáticas (tests) en sus carpetas `pruebas/`. |
 | `analisis/` | El código de las gráficas, sin tests. |
