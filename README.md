@@ -7,6 +7,7 @@ Proyecto final de Aprendizaje Automático I. El objetivo es predecir, el día de
 | Carpeta o archivo | Qué es |
 |---|---|
 | [`HALLAZGOS.md`](HALLAZGOS.md) | **El resumen de todo: empezar por acá.** |
+| [`informe/informe.pdf`](informe/informe.pdf) | **El informe final entregado.** `informe/armar_informe.py` lo vuelve a armar sin la tabla: dibuja las figuras desde `modelo/resultados/`. |
 | [`presentacion/`](presentacion/) | La defensa oral (16 minutos). Se descarga `presentacion.html` y se abre en Chrome: anda sin conexión y trae el video adentro. Ver `LEEME.txt`. |
 | [`datos/`](datos/) | `DICCIONARIO.md` (las columnas de la tabla) y `manifiesto.json` (fecha, filas y huella de la tabla). **La tabla no se versiona.** |
 | [`exportacion/`](exportacion/) | Cómo se arma y se verifica la tabla. Los pasos 1 y 2 solo corren dentro de la empresa. |
@@ -32,6 +33,13 @@ py -m venv <carpeta fuera de OneDrive>
 <carpeta>\Scripts\python -m pip install -r requirements.txt
 ```
 
+Para armar el informe hace falta además Playwright, que no está en `requirements.txt` porque solo sirve para eso:
+
+```
+<carpeta>\Scripts\python -m pip install playwright
+<carpeta>\Scripts\python -m playwright install chromium
+```
+
 ## Cómo se corre
 
 ```
@@ -46,6 +54,7 @@ python modelo/exportar.py                                 # exporta los modelos 
 python modelo/carga_contacto.py                           # descriptivo de datos de contacto por año (posterior a la prueba)
 python modelo/campania_regla.py                           # cómo llena la regla el cupo del 20% (posterior a la prueba)
 python modelo/variables_solas.py                          # cada variable sola, en validación (exploratorio), ~3 min
+python informe/armar_informe.py                           # el informe en PDF (no necesita la tabla; sí Playwright con Chromium)
 python -m unittest discover -s exportacion/pruebas -t .   # pruebas automáticas (tests) del armado de la tabla
 python -m unittest discover -s modelo/pruebas -t .        # pruebas automáticas (tests) del modelo
 ```

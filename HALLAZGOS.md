@@ -139,7 +139,7 @@ python modelo/puntuar.py modelo/exportado/principal.json clientes.csv clientes_c
 - **La prueba ya se usó.** No se vuelve a correr ni se usa para elegir nada. Un análisis nuevo sobre esos clientes se declara como posterior a la prueba. Uno ya hecho: la carga del mail en 2025.
 - **Decidido no hacer por ahora:** el script que puntúa fichas nuevas desde la base.
 - **No evaluado:** la etiqueta alternativa `vuelve_12_comprando` y la partición `bloque_60_20_20`. Están en la tabla por si se piden.
-- **Material de la defensa (2026-11-22):** la presentación de 16 minutos está en [`presentacion/`](presentacion/): se descarga `presentacion.html`, que trae el video adentro, y se abre en Chrome. El informe (`informe/informe.pdf`) no se versiona. Las cifras de los dos salen de este resumen y de `modelo/resultados/`.
+- **Entrega (2026-11-22):** el informe final está en [`informe/informe.pdf`](informe/informe.pdf), y la presentación de 16 minutos, en [`presentacion/`](presentacion/): se descarga `presentacion.html`, que trae el video adentro, y se abre en Chrome. Las cifras de los dos salen de este resumen y de `modelo/resultados/`.
 - **Historial de git.** El zip de hallazgos trae `HISTORIAL_GIT.txt` y `repo.bundle`, con las fechas de cada commit. Con `git clone repo.bundle` se recupera el historial completo.
 
 ## 9. Dónde está cada cosa
@@ -148,7 +148,7 @@ python modelo/puntuar.py modelo/exportado/principal.json clientes.csv clientes_c
 |---|---|
 | [`HALLAZGOS.md`](HALLAZGOS.md) | Este resumen. |
 | [`presentacion/`](presentacion/) | La defensa oral, versión de 16 minutos: `presentacion.html` (anda sin conexión y trae el video incrustado), el video suelto con sus subtítulos y `LEEME.txt`. Los guiones y el PDF de respaldo quedan en la máquina del equipo. |
-| `informe/` | El informe final (6 páginas, el máximo de la consigna), armado con `informe/armar_informe.py`. No se versiona. |
+| [`informe/informe.pdf`](informe/informe.pdf) | **El informe final entregado** (6 páginas, el máximo de la consigna). Se vuelve a armar con `informe/armar_informe.py`, que dibuja las figuras desde `modelo/resultados/`. |
 | [`datos/DICCIONARIO.md`](datos/DICCIONARIO.md) | Las 40 columnas de la tabla, cómo se definió cada cosa y cómo se anonimizó. |
 | [`analisis/exploracion.html`](analisis/exploracion.html) | Gráficas de exploración con entrenamiento (abrir en el navegador). |
 | [`modelo/resultados/escalera_validacion.md`](modelo/resultados/escalera_validacion.md) | La escalera de modelos en validación. |

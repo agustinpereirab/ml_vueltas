@@ -35,7 +35,16 @@ presentacion/*
 !presentacion/video_datos.mp4
 !presentacion/video_datos.srt
 !presentacion/LEEME.txt
-informe/
+# Del informe se versiona el PDF entregado y lo necesario para volver a armarlo
+# (py informe/armar_informe.py): el script, el HTML fuente y las fuentes con su licencia.
+# Las figuras SVG y el HTML armado se generan.
+informe/*
+!informe/informe.pdf
+!informe/armar_informe.py
+!informe/fuente/
+informe/fuente/*
+!informe/fuente/informe.html
+!informe/fuente/fuentes/
 consigna.pdf
 PropuestaProyectoML_Grupo6.pdf
 

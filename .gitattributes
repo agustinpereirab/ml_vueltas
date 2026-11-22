@@ -4,3 +4,5 @@
 # La presentación y sus subtítulos se suben tal cual, sin normalizar finales de línea
 presentacion/presentacion.html -text
 presentacion/video_datos.srt -text
+*.pdf binary
+*.woff2 binary

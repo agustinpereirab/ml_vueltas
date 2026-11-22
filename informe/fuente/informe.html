@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>¿Vuelve a viajar? · Informe del proyecto final</title>
+<style>
+@font-face { font-family: "Source Serif 4"; src: url(fuentes/source-serif-4-200-900.woff2) format("woff2"); font-weight: 200 900; font-style: normal; }
+@font-face { font-family: "Source Serif 4"; src: url(fuentes/source-serif-4-200-900-italica.woff2) format("woff2"); font-weight: 200 900; font-style: italic; }
+@font-face { font-family: "Source Sans 3"; src: url(fuentes/source-sans-3-200-900.woff2) format("woff2"); font-weight: 200 900; font-style: normal; }
+@font-face { font-family: "IBM Plex Mono"; src: url(fuentes/ibm-plex-mono-400.woff2) format("woff2"); font-weight: 400; }
+@font-face { font-family: "IBM Plex Mono"; src: url(fuentes/ibm-plex-mono-500.woff2) format("woff2"); font-weight: 500; }
+
+:root {
+  --tinta: #17202b; --tinta2: #4a5562; --tinta3: #6b7682;
+  --linea: #cfd5dc; --grilla: #e8ebef;
+  --acento: #1d5b8f; --acento-suave: #eaf1f8;
+  --serif: "Source Serif 4", Georgia, serif;
+  --sans: "Source Sans 3", "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", Consolas, monospace;
+}
+@page { size: A4; }
+@media print { .pagina-nueva { break-before: page; } }
+* { box-sizing: border-box; }
+html { font: 400 9.55pt/1.4 var(--serif); color: var(--tinta); background: #fff;
+  font-optical-sizing: auto; font-variant-numeric: lining-nums; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body { margin: 0; }
+p { margin: 0 0 .5em; text-align: justify; hyphens: auto; }
+.bloque { break-inside: avoid; }
+p { orphans: 3; widows: 3; }
+table.esperado td:nth-child(2) { white-space: nowrap; font-weight: 650; }
+b, strong { font-weight: 650; }
+em { font-style: italic; }
+code, .mono { font: 400 .86em/1 var(--mono); color: var(--tinta2); }
+
+/* Encabezado */
+.encabezado { padding-bottom: 9pt; margin-bottom: 9pt; border-bottom: 2px solid var(--acento); }
+.kicker { font: 500 7.2pt/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--acento); margin-bottom: 7pt; }
+h1 { font: 800 25pt/1 var(--sans); letter-spacing: -.02em; margin: 0 0 4pt; }
+.bajada { font: italic 400 11.6pt/1.3 var(--serif); color: var(--tinta2); margin: 0 0 8pt; text-wrap: balance; text-align: left; hyphens: none; }
+.autores, .meta { text-align: left; hyphens: none; }
+h2.sin-numero { margin-left: 0; }
+.autores { font: 650 9.6pt/1.3 var(--sans); margin: 0 0 2pt; }
+.meta { font: 400 8.4pt/1.35 var(--sans); color: var(--tinta2); }
+.meta a { color: var(--acento); text-decoration: none; font-weight: 600; }
+
+.resumen { font-size: 9.1pt; line-height: 1.38; margin: 0 0 10pt; }
+.resumen b:first-child { font: 700 8.6pt/1 var(--sans); letter-spacing: .02em; color: var(--acento); }
+
+/* Secciones */
+h2 { font: 700 11.6pt/1.15 var(--sans); letter-spacing: -.005em; margin: 11pt 0 4pt; break-after: avoid; }
+h2 span { color: var(--acento); margin-right: 5pt; font-variant-numeric: tabular-nums; }
+h3 { font: 700 9.6pt/1.2 var(--sans); margin: 7pt 0 2pt; break-after: avoid; }
+p > b.titulo, li > b.titulo { font-family: var(--sans); font-weight: 700; font-size: .98em; }
+
+.pregunta { margin: 5pt 0 7pt; padding: 6pt 10pt; border-left: 2.5px solid var(--acento); background: var(--acento-suave);
+  font: italic 500 10.4pt/1.35 var(--serif); }
+
+ul.hip { list-style: none; margin: 0 0 6pt; padding: 0; }
+ul.hip li { display: grid; grid-template-columns: 22pt 1fr; margin-bottom: 2.5pt; }
+ul.hip li > span:first-child { font: 700 9pt/1.4 var(--sans); color: var(--acento); }
+
+ol.escalera { margin: 0 0 .5em; padding-left: 14pt; }
+ol.escalera li { margin-bottom: 1.5pt; text-align: justify; }
+
+/* Tablas */
+table { width: 100%; border-collapse: collapse; font: 400 8.3pt/1.3 var(--sans); margin: 4pt 0 2pt;
+  font-variant-numeric: tabular-nums lining-nums; break-inside: avoid; }
+caption { caption-side: top; text-align: left; font: 400 8.2pt/1.3 var(--sans); color: var(--tinta2); padding-bottom: 3pt; }
+caption b { color: var(--tinta); font-weight: 700; }
+th { font-weight: 650; text-align: left; vertical-align: bottom; padding: 2.5pt 5pt; border-bottom: 1px solid var(--tinta); color: var(--tinta); }
+td, tbody th { padding: 2.2pt 5pt; border-bottom: 1px solid var(--grilla); vertical-align: top; }
+tbody th { font-weight: 400; }
+th.n, td.n { text-align: right; white-space: nowrap; }
+tr.grupo th { border-bottom: 1px solid var(--linea); font-weight: 600; color: var(--tinta2); text-align: center; padding-bottom: 1pt; }
+tr.destacada td { background: var(--acento-suave); font-weight: 650; }
+tbody tr:last-child :is(td, th) { border-bottom: 1px solid var(--tinta3); }
+.nota { font: 400 7.7pt/1.3 var(--sans); color: var(--tinta2); margin: 2pt 0 8pt; text-align: left; }
+td .ic { color: var(--tinta2); font-weight: 400; font-size: .92em; }
+
+/* Figuras */
+figure { margin: 4pt 0 6pt; break-inside: avoid; }
+.fila-figuras { display: flex; gap: 14pt; justify-content: space-between; }
+.fila-figuras > div { flex: 1; }
+figure svg { display: block; width: 100%; height: auto; }
+figcaption { font: 400 8pt/1.32 var(--sans); color: var(--tinta2); margin-top: 3pt; text-align: left; }
+figcaption b { color: var(--tinta); font-weight: 700; }
+
+.refs { font-size: 7.9pt; line-height: 1.26; }
+.refs p { text-align: left; padding-left: 12pt; text-indent: -12pt; margin-bottom: 1.6pt; hyphens: none; }
+
+.conclusiones p { margin-bottom: .45em; }
+</style>
+</head>
+<body>
+
+<header class="encabezado">
+  <div class="kicker">Aprendizaje Automático I · Proyecto final · Informe</div>
+  <h1>¿Vuelve a viajar?</h1>
+  <p class="bajada">Evaluación retrospectiva de la predicción de recompra a 12 meses en una agencia de viajes uruguaya</p>
+  <p class="autores">Ekaterina Chechina · Federico Conde · Emilia Lapetina · Agustín Pereira</p>
+  <p class="meta">Datos de Jetmar (5M Travel Group), usados con autorización · noviembre de 2026 · Código, resultados y modelos: <a href="https://github.com/agustinpereirab/ml_vueltas">github.com/agustinpereirab/ml_vueltas</a></p>
+</header>
+
+<p class="resumen"><b>Resumen.</b> En Jetmar queremos saber si, al hacer la primera compra, se puede anticipar quién vuelve dentro de los 12 meses. Con 37.398 clientes hicimos una evaluación retrospectiva entre cohortes. Entrenamos con 2023, elegimos y recalibramos la logística con 2024 y evaluamos en clientes de enero a agosto de 2025. La logística superó a la prevalencia y a la mejor regla simple en PR-AUC y ROC-AUC. Al seleccionar el 20% de clientes, captó el 31,8% de las vueltas observadas, frente al 30,1% esperado con la regla del acompañante y al 20% al azar. CatBoost rindió de forma comparable a la logística en ambas AUC. La compañía previa fue el grupo que más aportó en PR-AUC. La ventaja estimada de la ficha única sobre el registro de la primera compra fue pequeña e incierta. Ambos registros pudieron incorporar información posterior a la compra. La logística recalibrada sobreestimó la tasa de vuelta. El aumento en la frecuencia con que figuran datos de contacto podría explicar parte de esa diferencia.</p>
+
+<h2><span>1</span>El problema y la pregunta</h2>
+
+<p>Jetmar es una agencia de viajes uruguaya del grupo 5M Travel Group. El seguimiento después de la venta depende del criterio de cada vendedor. Queremos saber si hay información para ordenar a los clientes nuevos según su probabilidad de volver. Al momento de predecir tienen su primera compra y pueden haber viajado antes como acompañantes.</p>
+
+<p class="pregunta">El día de su primera compra, ¿se puede predecir si un cliente nuevo vuelve con la agencia, como titular o como pasajero en la compra de otra persona, dentro de los 12 meses siguientes?</p>
+
+<p><b class="titulo">Antecedentes.</b> Lemmens y Croux (2006) estudian el abandono de clientes con historial de compras usando árboles y boosting. Acá buscamos predecir el regreso desde la primera compra como titular. Un riesgo en ese escenario es la fuga de información, que ocurre si las variables incorporan datos posteriores al momento en que se quiere predecir (Kaufman et al., 2012).</p>
+
+<p><b class="titulo">Hipótesis de la propuesta.</b></p>
+<ul class="hip">
+  <li><span>H1</span><span>La recompra a 12 meses se puede predecir por encima de la prevalencia y de una regla simple.</span></li>
+  <li><span>H2</span><span>Pesan más el destino regional (Argentina, Brasil, Chile, Paraguay), viajar con un cliente previo o haber sido acompañante, y el vendedor.</span></li>
+  <li><span>H3</span><span>Parte de la asociación entre «datos de contacto cargados» y volver es fuga de información, y se reduce al reconstruir esas variables desde la primera compra.</span></li>
+</ul>
+
+<h2><span>2</span>Los datos</h2>
+
+<p><b class="titulo">Fuente.</b> Usamos con autorización una exportación de la base privada de Jetmar del 11 de noviembre de 2026. La convertimos en una tabla anonimizada de una fila por cliente y 40 columnas.</p>
+
+<p><b class="titulo">Universo.</b> Un cliente es nuevo si su primera compra facturada como titular, mirando el historial desde 2019, cae entre enero de 2023 y agosto de 2025. Excluimos primeras compras corporativas, menores de 18 años y 31 filas que no cumplían los criterios de anonimización. Quedaron 37.398 clientes.</p>
+
+<p><b class="titulo">Etiqueta.</b> <code>vuelve_12</code> vale 1 si el cliente figura como titular o pasajero en otra compra facturada, hecha dentro de los 12 meses posteriores a la primera. Para contarla, las fechas de los viajes deben estar separadas por más de 7 días. En la exportación, todos los clientes tenían el seguimiento completo.</p>
+
+<p><b class="titulo">Variables.</b> El modelo principal usa 29 variables sobre la compañía previa, la compra, el viaje, el vendedor y los datos de contacto. El «día 0» es la fecha de la primera compra. Para el contacto, llamamos «registro de la primera compra» al registro de la persona que se usó ese día, tal como figuraba en la exportación de 2026. Incluye indicadores de mail, teléfono, documento y fecha de nacimiento cargados. La ficha única reúne los registros de la persona tal como estaban al exportar.</p>
+
+<p><b class="titulo">Partición en el tiempo.</b> Separamos a los clientes por fecha de primera compra (Tabla 1). Los seguimientos de 2023 se completaron durante 2024. Los de 2024 se completaron durante 2025, cuando ya entraban clientes de prueba. Al comienzo de 2025 faltaban etiquetas de validación para elegir y recalibrar el modelo. Pudimos hacerlo en retrospectiva porque la exportación es de noviembre de 2026.</p>
+
+<table>
+  <caption><b>Tabla 1.</b> Bloques por fecha de primera compra y tasa de vuelta.</caption>
+  <thead><tr><th>Bloque</th><th>Primera compra</th><th class="n">Clientes</th><th class="n">Vuelve</th><th>Para qué se usó</th></tr></thead>
+  <tbody>
+    <tr><td>Entrenamiento</td><td>2023</td><td class="n">13.655</td><td class="n">21,9%</td><td>ajustar los modelos y elegir hiperparámetros por validación cruzada</td></tr>
+    <tr><td>Validación</td><td>2024</td><td class="n">13.595</td><td class="n">20,4%</td><td>comparar escalones, recalibrar, interpretar (H2 y H3)</td></tr>
+    <tr><td>Prueba</td><td>enero a agosto de 2025</td><td class="n">10.148</td><td class="n">20,8%</td><td>evaluación final, una sola vez</td></tr>
+  </tbody>
+</table>
+
+<p style="margin-top:6pt"><b class="titulo">Anonimización.</b> Reemplazamos los identificadores por códigos al azar y quitamos los datos personales directos y las fechas exactas. Agrupamos o redondeamos los montos y expresamos la utilidad como índice. Para que las combinaciones de datos generales del viaje se repitieran en al menos 5 clientes, suprimimos algunos valores. La tabla es de acceso restringido.</p>
+
+<h2><span>3</span>Cómo se trabajó</h2>
+
+<p><b class="titulo">Escalera de modelos.</b> Comparamos los escalones en orden de complejidad.</p>
+<ol class="escalera" start="0">
+  <li><b>Prevalencia.</b> Asigna a todos la tasa de vuelta de 2023.</li>
+  <li><b>Reglas binarias.</b> «Primer viaje de 10 mil USD o más» y «viajó antes como acompañante». Cada una asigna la tasa de vuelta de su grupo (sí o no) en 2023.</li>
+  <li><b>Regresión logística.</b> Usa regularización L2.</li>
+  <li><b>CatBoost.</b> Gradient boosting con categóricas nativas (Prokhorenkova et al., 2018).</li>
+</ol>
+<p><b class="titulo">Preparación y ajuste.</b> En la logística codificamos las categorías con una columna binaria por valor (one-hot). «Sin dato» es una categoría y los valores nuevos quedan en cero en todas las columnas de esa variable. A las numéricas les aplicamos <code>asinh</code>, imputación por mediana con indicador de faltante y estandarización. Dentro de 2023 usamos cinco pliegues estratificados por etiqueta, con mezcla aleatoria (semilla 2026) y preprocesamiento ajustado en los datos de entrenamiento de cada iteración. Elegimos <i>C</i> por la media de la precisión promedio (<i>average precision</i>) en los cinco pliegues. La principal quedó con <i>C</i> = 0,1. En CatBoost elegimos la configuración por PR-AUC y el número de árboles por log-loss, también dentro de 2023 con cinco pliegues estratificados.</p>
+
+<p><b class="titulo">Métricas.</b> Reportamos PR-AUC (calculada como precisión promedio), con la tasa de vuelta como referencia, y ROC-AUC, con 0,5 como referencia (Saito y Rehmsmeier, 2015). La captura es la parte de las vueltas incluida en la selección. El <i>lift</i> divide esa captura por la que se espera al azar. Para calibración comparamos probabilidades predichas con tasas observadas y reportamos el Brier, el error cuadrático medio entre la probabilidad y lo que pasó (0 o 1).</p>
+
+<p><b class="titulo">Usos de la validación.</b> Con 2024 comparamos los escalones y recalibramos la logística desplazando su intercepto. Para H2 volvimos a entrenarla sin cada grupo de variables y usamos SHAP para interpretar las predicciones (Lundberg y Lee, 2017). Para H3 probamos tres conjuntos de variables de contacto (ninguna, registro de la primera compra y ficha única). La comparación mide la señal adicional de la ficha única. Si ambos registros incorporaron cambios posteriores a la compra, pueden compartir fuga.</p>
+
+<p><b class="titulo">Evaluación final.</b> Fijamos el criterio de H1 antes de evaluar una sola vez con la cohorte de prueba. La logística debía superar a la prevalencia y a la regla del acompañante en PR-AUC y ROC-AUC, con los cuatro intervalos pareados del 95% enteramente por encima de cero.</p>
+
+<p><b class="titulo">Simulación de campaña.</b> Seleccionamos el 20% de la prueba con mayor puntaje y medimos la captura de vueltas observadas. Si un empate cruza el corte, dividimos las plazas restantes por el número de empatados y damos ese peso a cada uno. Es el promedio de desempatar al azar. Una variante ordena por probabilidad × utilidad de la primera compra, tomando las utilidades negativas como cero.</p>
+
+<h2><span>4</span>Resultados</h2>
+
+<p><b class="titulo">H1 en la prueba retrospectiva.</b> Elegimos la logística en validación por su ventaja sobre la regla del acompañante y su rendimiento comparable al de CatBoost. En la prueba cumplió el criterio fijado para H1 (Tabla 3). La Tabla 4 compara la logística principal con la reducida.</p>
+
+<table>
+  <caption><b>Tabla 2.</b> La escalera en validación (13.595 clientes; vuelve el 20,4%) y en la prueba (10.148; vuelve el 20,8%).</caption>
+  <thead>
+    <tr class="grupo"><th></th><th colspan="2">Validación 2024</th><th colspan="4">Prueba, enero a agosto de 2025</th></tr>
+    <tr><th>Modelo</th><th class="n">PR-AUC</th><th class="n">ROC-AUC</th><th class="n">PR-AUC</th><th class="n">ROC-AUC</th><th class="n">Lift 10%</th><th class="n">Lift 20%</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Prevalencia</td><td class="n">0,204</td><td class="n">0,500</td><td class="n">0,208</td><td class="n">0,500</td><td class="n">1,00</td><td class="n">1,00</td></tr>
+    <tr><td>Regla: primer viaje de 10 mil USD o más</td><td class="n">0,204</td><td class="n">0,498</td><td class="n">0,206</td><td class="n">0,494</td><td class="n">0,91</td><td class="n">0,96</td></tr>
+    <tr><td>Regla: viajó antes como acompañante</td><td class="n">0,243</td><td class="n">0,571</td><td class="n">0,243</td><td class="n">0,566</td><td class="n">1,61</td><td class="n">1,51</td></tr>
+    <tr class="destacada"><td>Regresión logística (principal)</td><td class="n">0,340</td><td class="n">0,648</td><td class="n">0,319</td><td class="n">0,620</td><td class="n">1,87</td><td class="n">1,59</td></tr>
+    <tr><td>CatBoost</td><td class="n">0,339</td><td class="n">0,643</td><td class="n">0,312</td><td class="n">0,614</td><td class="n">1,85</td><td class="n">1,53</td></tr>
+    <tr><td>Logística reducida (12 variables)</td><td class="n">—</td><td class="n">—</td><td class="n">0,319</td><td class="n">0,628</td><td class="n">1,84</td><td class="n">1,58</td></tr>
+  </tbody>
+</table>
+<p class="nota">La reducida usa compañía, contacto y viaje, elegidos con 2024. Reportamos su rendimiento en la prueba. Fuente de las tablas 2 y 3: <code>modelo/resultados/escalera_validacion.md</code> y <code>prueba.md</code>.</p>
+
+<table>
+  <caption><b>Tabla 3.</b> Comparaciones: diferencia «primero − segundo», con intervalo bootstrap del 95%. Destacadas, las dos del criterio de H1.</caption>
+  <thead><tr><th>Comparación</th><th>Bloque</th><th class="n">Δ PR-AUC</th><th class="n">Δ ROC-AUC</th></tr></thead>
+  <tbody>
+    <tr><td>Regla de 10 mil − prevalencia</td><td>validación</td><td class="n">−0,000 <span class="ic">[−0,002; 0,001]</span></td><td class="n">−0,002 <span class="ic">[−0,007; 0,004]</span></td></tr>
+    <tr><td>Regla del acompañante − prevalencia</td><td>validación</td><td class="n">+0,038 <span class="ic">[0,032; 0,045]</span></td><td class="n">+0,071 <span class="ic">[0,062; 0,079]</span></td></tr>
+    <tr><td>Logística − regla del acompañante</td><td>validación</td><td class="n">+0,097 <span class="ic">[0,085; 0,110]</span></td><td class="n">+0,078 <span class="ic">[0,068; 0,088]</span></td></tr>
+    <tr><td>CatBoost − logística</td><td>validación</td><td class="n">−0,001 <span class="ic">[−0,008; 0,007]</span></td><td class="n">−0,006 <span class="ic">[−0,012; 0,000]</span></td></tr>
+    <tr class="destacada"><td>Logística − prevalencia (H1)</td><td>prueba</td><td class="n">+0,111 <span class="ic">[0,096; 0,129]</span></td><td class="n">+0,120 <span class="ic">[0,106; 0,133]</span></td></tr>
+    <tr class="destacada"><td>Logística − regla del acompañante (H1)</td><td>prueba</td><td class="n">+0,077 <span class="ic">[0,064; 0,090]</span></td><td class="n">+0,053 <span class="ic">[0,042; 0,065]</span></td></tr>
+    <tr><td>CatBoost − logística</td><td>prueba</td><td class="n">−0,007 <span class="ic">[−0,016; 0,002]</span></td><td class="n">−0,006 <span class="ic">[−0,015; 0,004]</span></td></tr>
+    <tr><td>Ficha única − registro de primera compra (H3)</td><td>prueba</td><td class="n">+0,002 <span class="ic">[−0,003; 0,008]</span></td><td class="n">+0,004 <span class="ic">[−0,002; 0,011]</span></td></tr>
+    <tr><td>Registro de primera compra − sin contacto</td><td>prueba</td><td class="n">+0,014 <span class="ic">[0,008; 0,020]</span></td><td class="n">+0,028 <span class="ic">[0,020; 0,036]</span></td></tr>
+    <tr><td>Logística de 2023 + 2024 − principal</td><td>prueba</td><td class="n">+0,013 <span class="ic">[0,007; 0,019]</span></td><td class="n">+0,019 <span class="ic">[0,011; 0,026]</span></td></tr>
+  </tbody>
+</table>
+<p class="nota">Bootstrap pareado del 95% con 2.000 remuestreos y semilla 2026. En cada remuestreo se usan los mismos clientes para ambos modelos.</p>
+
+
+<p><b class="titulo">Logística entrenada con 2023 y 2024.</b> La variante secundaria, sin recalibrar, ordenó mejor en ambas AUC. Su entrenamiento usó etiquetas de 2024 cuyos seguimientos se completaron durante o después de la entrada de clientes de prueba. La mejora se interpreta dentro de esta comparación retrospectiva.</p>
+
+<p><b class="titulo">A quiénes alcanza la campaña.</b> Con unas 2.030 plazas, la logística incluye a 670 de los 2.109 clientes que volvieron (31,8%). La regla toma a los 1.748 acompañantes previos y reparte las plazas restantes al azar entre los otros clientes, así que captaría unas 635 vueltas (30,1%; descriptivo posterior a la prueba en <code>modelo/resultados/campania_regla.md</code>). Con una lista al azar se esperan 422 (20%) (Figura 2a). La diferencia con la regla es de 1,65 puntos porcentuales (IC pareado del 95% [0,13; 3,02]), unas 35 vueltas observadas más en la lista. No es un cálculo nuevo: es la diferencia de lift al 20% que el plan de la prueba ya declaraba, multiplicada por 0,20; en cada remuestreo se vuelve a seleccionar el 20% para cada método. Es una comparación de propensión. Para medir cuántas recompras genera llamar haría falta un experimento de contacto.</p>
+
+<p>Al ordenar por probabilidad × utilidad se captan 474 vueltas (22,5%) y el 67,5% de la utilidad de primera compra de quienes vuelven, frente al 38,8% al ordenar solo por probabilidad.</p>
+
+
+<p><b class="titulo">H2 se sostiene en parte.</b> En validación, la mayor pérdida de PR-AUC se da al sacar la compañía previa (Figura 1b). Frente a quien nunca fue acompañante, el modelo estima <i>odds ratios</i> de 1,51 con un viaje previo, 2,15 con dos y 4,23 con tres o más, manteniendo fijas las variables ajenas a ese historial. Viajar con un cliente previo, el otro componente de compañía en la hipótesis, agrega poco: frente a viajar sin nadie con historial, el odds ratio estimado es 1,21, y por encima de viajar con alguien con historial, 1,02. El destino regional y el vendedor quedaron sin evidencia de aporte adicional en validación. Son asociaciones estimadas con estos datos.</p>
+
+<p><b class="titulo">H3 y la señal adicional de la ficha única.</b> En validación y prueba, los intervalos de la diferencia de PR-AUC y ROC-AUC entre las dos logísticas con contacto incluyen cero. El registro de primera compra sí aporta frente al modelo sin contacto (Tabla 3). En entrenamiento, vuelve el 30,1% de quienes tienen el mail en el registro de la primera compra, el 17,2% de quienes lo tienen solo en la ficha única y el 15,2% de quienes no lo tienen en ninguno: el mail que aparece en otros registros no se asocia con más vueltas. Es coherente con que no haya fuga a través de registros nuevos. Ambas versiones se observaron al exportar y podrían compartir información incorporada después de la compra. Para verificar esa posible fuga haría falta un historial de ediciones o una copia guardada el día de la compra.</p>
+
+<figure>
+  <div class="fila-figuras">
+    <div><!--SVG:variables--></div>
+    <div><!--SVG:grupos--></div>
+  </div>
+  <figcaption><b>Figura 1.</b> Qué ordena en validación. <b>(a)</b> Las 10 mejores variables por separado, ordenando 2024 por las tasas de vuelta por valor aprendidas con 2023. <b>(b)</b> Cambio de PR-AUC al quitar cada grupo y reentrenar (PR-AUC completa de 0,340).</figcaption>
+</figure>
+
+<figure>
+  <div class="fila-figuras">
+    <div><!--SVG:captura--></div>
+    <div><!--SVG:calibracion--></div>
+  </div>
+  <figcaption><b>Figura 2.</b> El modelo principal en la prueba. <b>(a)</b> Captura acumulada de vueltas. <b>(b)</b> Calibración por decil. Los puntos debajo de la diagonal indican sobreestimación.</figcaption>
+</figure>
+
+<p><b class="titulo">Calibración.</b> La probabilidad media predicha en prueba fue 27,9% antes de recalibrar y 23,9% después. Volvió el 20,8% (Figura 2b). En Brier (más bajo es mejor), la logística recalibrada obtuvo 0,1595, frente a 0,1647 de la prevalencia y 0,1616 de la regla del acompañante; las dos diferencias excluyen el cero (−0,0053 [−0,0071; −0,0033] y −0,0021 [−0,0035; −0,0007]). Recalibrar con 2024 lo cambió en −0,0046 [−0,0052; −0,0039]. El mail figuraba en el 42,7% de los registros de 2023 y en el 94,7% de los de 2025. La logística entrenada sin datos de contacto predijo 22,5% (Figura 3). El cambio en la frecuencia de carga es una explicación plausible de parte de la sobreestimación. La comparación entre modelos reentrenados y el descriptivo por año dejan abierta la causa del cambio.</p>
+
+<figure>
+  <!--SVG:deriva-->
+  <figcaption><b>Figura 3.</b> <b>(a)</b> Mail cargado en el registro de la primera compra. <b>(b)</b> Tasa de vuelta según si figuraba el mail. <b>(c)</b> Probabilidad media predicha en prueba. * Enero a agosto de 2025. Los datos de 2025 en (a) y (b) se resumieron después de la prueba.</figcaption>
+</figure>
+
+<h3>Logística principal y reducida</h3>
+
+<p>La logística principal usa 29 variables, que después de la preparación ocupan 248 columnas. Con los resultados de validación (Figura 1b) armamos una versión de 12 variables y 42 columnas. Conservamos compañía previa, contacto y viaje, y retiramos destino, vendedor, montos y producto. Entrenamos ambas con los mismos 13.655 clientes de 2023, de los cuales volvieron 2.985. Las dos usan regularización L2 (<i>C</i>&nbsp;=&nbsp;0,1 para la principal y <i>C</i>&nbsp;=&nbsp;1 para la reducida) y se recalibraron por intercepto con 2024.</p>
+
+<table>
+  <caption><b>Tabla 4.</b> Comparación en prueba (10.148 clientes). La diferencia se calcula como reducida menos principal.</caption>
+  <thead><tr><th scope="col">Métrica</th><th scope="col" class="n">Principal (29)</th><th scope="col" class="n">Reducida (12)</th><th scope="col" class="n">Diferencia e IC pareado del 95%</th></tr></thead>
+  <tbody>
+    <tr><th scope="row">PR-AUC</th><td class="n">0,319</td><td class="n">0,319</td><td class="n">+0,0001 <span class="ic">[−0,0068; 0,0076]</span></td></tr>
+    <tr><th scope="row">ROC-AUC</th><td class="n">0,620</td><td class="n">0,628</td><td class="n">+0,0086 <span class="ic">[0,0003; 0,0166]</span></td></tr>
+    <tr><th scope="row">Captura al seleccionar el 20%</th><td class="n">31,8%</td><td class="n">31,6%</td><td class="n">−0,15 pp <span class="ic">[−1,41; 1,23]</span></td></tr>
+  </tbody>
+</table>
+<p class="nota">IC por bootstrap pareado, como en la Tabla 3. Para la captura, multiplicamos la diferencia de lift y sus límites por 0,20 y expresamos el resultado en puntos porcentuales (pp). Fuente: <code>modelo/resultados/prueba.json</code>.</p>
+
+<p>La versión de 12 variables obtuvo una ROC-AUC algo mayor. Con el mismo cupo de unas 2.030 plazas, la reducida dejó unas tres vueltas observadas menos en la lista. Los intervalos de las diferencias de PR-AUC y de captura incluyen cero. La reducida se fijó como análisis secundario antes de abrir la prueba, y el criterio de H1 se aplicó a la principal.</p>
+
+<p><b class="titulo">Otra forma de simplificar.</b> La regularización L1 puede llevar coeficientes exactamente a cero. Con one-hot, una variable categórica deja de ser necesaria para puntuar solo si quedan en cero los coeficientes de todas sus categorías. Una evaluación futura podría comparar L1 y L2 por cuántas variables originales necesita cada modelo, su PR-AUC y su captura al 20% en una cohorte posterior.</p>
+
+<h2><span>5</span>Qué cambió respecto de la propuesta</h2>
+
+<p>La propuesta empezaba en 2021. El detalle de servicios está disponible desde 2023, así que entrenamos con ese año, reservamos 2024 para validar y recalibrar y fijamos de antemano la prueba de 2025. Quitamos el mes de compra y de viaje, la ciudad y la categoría del hotel por riesgo de reidentificación. El historial disponible solo permitió recuperar el registro de la primera compra tal como figuraba al exportar. Sumamos la regla del acompañante al ver el desempeño de la de 10 mil USD y probamos una logística reducida a partir de los resultados de validación.</p>
+
+<p>Dos puntos de la propuesta quedaron sin hacer. El primero es la extensión: un segundo modelo al regreso del viaje y un análisis de supervivencia del tiempo hasta volver. Para el segundo modelo no hay datos posteriores a la compra que se puedan ubicar en el tiempo: la base marca si hubo una devolución, pero su fecha depende de que la cargue el vendedor, y no hay encuestas de satisfacción ni registros parecidos. Con quién viaja y a dónde ya se sabe el día 0. El análisis de supervivencia sí era posible con la base, que tiene la fecha de la compra de vuelta, pero quedó fuera del alcance: la tabla anonimizada guarda solo si volvió dentro de los 12 meses. El segundo punto es la muestra disociada para replicar (sección 7).</p>
+
+<table class="esperado">
+  <caption><b>Tabla 5.</b> Lo que anticipaba la propuesta frente a lo que encontramos.</caption>
+  <thead><tr><th>En la propuesta</th><th>Resultado</th><th>Qué encontramos</th></tr></thead>
+  <tbody>
+    <tr><td>«Lift claro en el decil superior»</td><td>Se cumplió</td><td>El 10% de mayor probabilidad vuelve 1,87 veces el promedio en la prueba.</td></tr>
+    <tr><td>«Pesan el destino regional, la compañía y el vendedor»</td><td>En parte</td><td>La compañía previa fue el grupo de mayor aporte en PR-AUC; el destino regional y el vendedor, sin evidencia de aporte adicional.</td></tr>
+    <tr><td>«La ficha única infla el resultado por fuga»</td><td>Incierto</td><td>Su ventaja sobre el registro de la primera compra es pequeña e incierta, y los dos registros pueden compartir fuga.</td></tr>
+    <tr><td>«Si el boosting no supera a la logística, alcanza con la regla simple»</td><td>Cambió</td><td>CatBoost no superó a la logística, pero la logística sí superó a la regla del acompañante en PR-AUC y ROC-AUC. Con el cupo del 20%, la diferencia fue de unas 35 vueltas.</td></tr>
+  </tbody>
+</table>
+
+<h2><span>6</span>Conclusiones</h2>
+<div class="conclusiones">
+<p><b class="titulo">Qué podemos concluir.</b> En la prueba retrospectiva, la logística superó a la prevalencia y a la regla del acompañante en las métricas de orden. La ventaja sobre la regla fue acotada al seleccionar el 20%. La señal adicional de la ficha única quedó incierta y sigue abierta la posibilidad de fuga compartida. La sobreestimación limita el uso de los puntajes como probabilidades de vuelta.</p>
+<p><b class="titulo">Por qué salió así.</b> Son lecturas nuestras de los resultados, no comparaciones fijadas antes de la prueba.</p>
+<p><i>La caída de validación a prueba.</i> La PR-AUC de la logística bajó de 0,340 a 0,319, mientras la de la regla del acompañante quedó en 0,243 en los dos bloques (Tabla 2): bajó lo que el modelo agrega a la regla. Hay dos causas posibles, que no separamos: elegimos el modelo con 2024, lo que favorece su rendimiento en ese año, y la relación entre los datos de contacto y la vuelta siguió cambiando (Figura 3).</p>
+<p><i>La regla de 10 mil USD.</i> En 2023 separaba poco: volvía el 24,6% de los 890 clientes que la cumplían, contra el 21,7% del resto. En 2024 ordenó igual que la prevalencia (Tabla 3). Es coherente con que el monto ordene poco: en validación, quitar los montos de la logística no dio evidencia de pérdida de PR-AUC (0,001 [−0,001; 0,003]; Figura 1b).</p>
+<p><i>La ventaja acotada sobre la regla del acompañante.</i> Con unas 2.030 plazas, la regla ya incluye a los 1.748 acompañantes previos, de los que volvieron 584 (descriptivo posterior a la prueba). El modelo solo puede mejorar las plazas restantes y el orden dentro de ese grupo, y por eso la diferencia crece con un cupo más chico: al seleccionar el 10%, el <i>lift</i> fue 1,87 contra 1,61 (Tabla 2). Además, ninguna variable sola llega a 0,60 de ROC-AUC (Figura 1a), y el grupo que más PR-AUC aporta, la compañía previa (Figura 1b), es el que ya usa la regla.</p>
+<p><b class="titulo">Cómo simular el uso prospectivo.</b> En cada fecha de corte usaríamos para entrenar, elegir y recalibrar solo cohortes con 12 meses de seguimiento ya cumplidos. Para usar 2024 entero habría que evaluar a partir de 2026. Guardaríamos las variables y la identificación de cada cliente al momento de su primera compra, puntuaríamos con el modelo ya fijado y mediríamos orden y calibración cuando se complete el seguimiento de esa nueva cohorte.</p>
+<p><b class="titulo">Alcance.</b> La prueba cubre las primeras compras de enero a agosto de 2025 y solo las vueltas a Jetmar. El valor de campaña se midió con la utilidad de la primera compra. La identidad viene resuelta por la base de la empresa y queda pendiente comprobar si puede cambiar con información posterior.</p>
+</div>
+
+<h2><span>7</span>Reproducibilidad</h2>
+<p>El repositorio que figura en el encabezado es público y no contiene datos: tiene el código, los resultados, los modelos exportados, este informe y la presentación de la defensa. Su historial muestra que el plan de la prueba se versionó antes que sus resultados (commits <code>69632ac</code> y <code>4fb21b8</code>). Con entradas del formato descrito en <code>datos/DICCIONARIO.md</code>, cualquiera puede aplicar ambas logísticas con <code>modelo/puntuar.py</code>, y las pruebas automáticas del código corren con datos inventados. Reproducir el entrenamiento y la evaluación requiere además la tabla. Aunque está anonimizada, es de acceso restringido; por eso no publicamos la muestra disociada que preveía la propuesta. El docente puede pedírsela a Agustín Pereira, y el acceso se evalúa al recibir el pedido. Cada script se niega a correr si la tabla no coincide con la huella de <code>datos/manifiesto.json</code>.</p>
+
+<h2 class="sin-numero">Referencias</h2>
+<div class="refs">
+<p>Kaufman, S., Rosset, S., Perlich, C. y Stitelman, O. (2012). Leakage in data mining: formulation, detection, and avoidance. <em>ACM Transactions on Knowledge Discovery from Data</em>, 6(4).</p>
+<p>Lemmens, A. y Croux, C. (2006). Bagging and boosting classification trees to predict churn. <em>Journal of Marketing Research</em>, 43(2), 276–286.</p>
+<p>Lundberg, S. M. y Lee, S.-I. (2017). A unified approach to interpreting model predictions. <em>Advances in Neural Information Processing Systems 30</em>.</p>
+<p>Prokhorenkova, L., Gusev, G., Vorobev, A., Dorogush, A. V. y Gulin, A. (2018). CatBoost: unbiased boosting with categorical features. <em>Advances in Neural Information Processing Systems 31</em>.</p>
+<p>Saito, T. y Rehmsmeier, M. (2015). The precision-recall plot is more informative than the ROC plot when evaluating binary classifiers on imbalanced datasets. <em>PLoS ONE</em>, 10(3), e0118432.</p>
+</div>
+
+
+</body>
+</html>
